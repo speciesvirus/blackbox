@@ -1,0 +1,187 @@
+﻿@{
+    ViewBag.Title = "ItemCode";
+}
+
+<h2>Report ItemCode</h2>
+<form ng-app="MyApp" ng-controller="ReportItemCodeController" name="ValidateForm" id="ValidateForm">
+    <div class="row" style="margin-left:0;margin-right:0;">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Filter</div>
+            <div class="panel-body">
+                <div class="col-sm-3">
+                    <label>Game Name</label>
+                    <select ng-model="input.gameId" ng-change="findPromotion()" class="form-control" name="gameId">
+                        @*<option value="0">Please select game</option>*@
+                        @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
+                        {
+                            <option value="@game.GameId">@game.GameName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label>Promotion</label>
+                    <select ng-model="input.promotionId" class="form-control" name="promotionId"
+                            ng-options="pro.ID as pro.Name for pro in promotions"></select>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>Start Date</label>
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                               ng-model="input.startDate" is-open="status.openedStart" name="startDate"
+                               datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openStart($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-2">
+                    <label>End Date</label>
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                               ng-model="input.endDate" is-open="status.openedEnd" name="endDate"
+                               min-date="input.startDate"
+                               datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openEnd($event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-sm-2">
+                    <label>NumberOfRecord</label>
+                    <select class="form-control" ng-model="input.pageSize">
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-2">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-info" type="button" ng-click="search()" style="margin-top:23px;">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Record</div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Promotion</td>
+                            <td>Lot</td>
+                            <td>Code</td>
+                            <td>Facebook User</td>
+                            <td>Create at</td>
+                            <td>Top-Up at</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in itemCodes">
+                            <td>{{ $index+1 }}</td>
+                            <td>{{ item.PromotionID }}</td>
+                            <td>{{ item.LotID }}</td>
+                            <td>{{ item.Code }}</td>
+                            <td>{{ item.FacebookID }}</td>
+                            <td>{{ item.TimeCreate }}</td>
+                            <td>{{ item.TimeUse }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <uib-pagination total-items="input.total" ng-model="input.page" max-size="20"
+                                ng-change="search()" items-per-page="input.pageSize"></uib-pagination>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        angular.module('MyApp', ['ui.bootstrap']).controller('ReportItemCodeController', ['$scope', '$http', function ($scope, $http) {
+            $scope.input = {};
+            $scope.input.page = 1;
+            $scope.input.pageSize = 20;
+            $scope.input.total = 0;
+            $scope.promotions = [];
+            $scope.status = {};
+            $scope.status.openedStart = false;
+            $scope.status.openedEnd = false;
+            $scope.itemCodes = [];
+
+            $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+            $scope.format = $scope.formats[1];
+
+            $scope.findPromotion = function () {
+                $http.get('@Url.Action("GetPromotions","Report")/' + $scope.input.gameId)
+                    .success(function (d) {
+                        if (d.result) {
+                            $scope.promotions = d.data;
+                        }
+                    });
+            }
+
+            $scope.log = function () {
+                console.log($scope.input);
+            }
+
+            $scope.openStart = function ($even) {
+                $scope.status.openedStart = true;
+            }
+
+            $scope.openEnd = function ($even) {
+                $scope.status.openedEnd = true;
+            }
+
+            $scope.search = function () {
+                console.log("click", $scope.input);
+               
+                if ($scope.input.endDate < $scope.input.startDate) { alert('Please select EndDate > StartDate'); return; }
+                if (!$("#ValidateForm").valid()) return;
+                $('#spinner').toggle(true);
+                $http.post('@Url.Action("GetRecord","Report")', $scope.input)
+                    .success(function (d) {
+                        console.log(d);
+                        $('#spinner').toggle(false);
+                        if (d.result) {
+                            $scope.itemCodes = d.data;
+                            $scope.input.total = d.total;
+                        }
+                    }).error(function (error) {
+                        $('#spinner').toggle(false);
+                        console.log(error);
+                    });
+            }
+        }]);
+
+        $(document).ready(function () {
+            $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+                return arg != value;
+            }, "Please select some value.");
+
+            $("#ValidateForm").validate({
+                rules: {
+                    gameId: { required: true, valueNotEquals: '? undefined:undefined ?' },
+                    promotionId: { required: true , valueNotEquals: '?' },
+                    startData: { required: true },
+                    endDate: { required: true },
+
+                },
+            });
+
+
+
+        });
+     
+    </script>
+}

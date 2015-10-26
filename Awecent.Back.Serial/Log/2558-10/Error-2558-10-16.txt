@@ -1,0 +1,2 @@
+{"Data":null,"DateTime":"2558-10-16 09:55:23.489","Function":"GetPromotions","Exception":"Unable to connect to any of the specified MySQL hosts.","Return":null},
+{"Data":{"Email":"jirayut.kha@awecent.com","Password":"wZ3I2fIzDljvh+uWTMFIApta3ys6JnNt1HLtfa8whTs=","RememberMe":false},"DateTime":"2558-10-16 18:20:47.244","Function":"ValidateAccount","Exception":"Illegal mix of collations (utf8_unicode_ci,IMPLICIT) and (utf8_general_ci,IMPLICIT) for operation '='","Return":null},
