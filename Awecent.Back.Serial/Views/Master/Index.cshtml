@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .row {
+        margin:5px 0;
+    }
+    div#myModalUpdate .modal-dialog {
+        width:70%;
+    }
+</style>
+<h2>Master Code</h2>
+<form ng-app="MyApp" ng-controller="MasterCodeController" name="ValidateForm" id="ValidateForm">
+    <div class="row"><a class="btn btn-sm btn-primary" href="@Url.Action("Create","Master")">Create</a></div>
+    <div class="row">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Filter</div>
+            <div class="panel-body">
+                <div class="col-sm-4">
+                    <label>Game Name</label>
+                    <select ng-model="input.gameId" ng-change="findPromotion()" class="form-control" name="gameId">
+                        @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
+                        {
+                            <option value="@game.GameId">@game.GameName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-sm-1">
+                    <button class="btn btn-info" type="button" ng-click="search()" style="margin-top:23px;">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Promotions</div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>PromotionID</td>
+                            <td>Name</td>
+                            <td>Lot</td>
+                            <td>Code</td>
+                            <td>Create at</td>
+                            <td>Create by</td>
+                            <td>Start at</td>
+                            <td>End at</td>
+                            <td>Status</td>
+                            <td>#</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>99</td>
+                            <td>Pre Register</td>
+                            <td>1</td>
+                            <td>awe9ag5u19a</td>
+                            <td>2015-10-26 00:00:00</td>
+                            <td>Snooker</td>
+                            <td>2015-10-26 00:00:00</td>
+                            <td>2016-10-26 00:00:00</td>
+                            <td>Active</td>
+                            <td><a href="javascript://" ng-click="showModel()">edit</a></td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+
+                <uib-pagination total-items="input.total" ng-model="input.page" max-size="20"
+                                ng-change="search()" items-per-page="input.pageSize"></uib-pagination>
+
+            
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("~/Views/Master/_UpdateModel.cshtml")
+
+</form>
+@section Scripts{
+    <script type="text/javascript">
+        angular.module('MyApp', ['ui.bootstrap']).controller('MasterCodeController', ['$scope', '$http', function ($scope, $http) {
+            $scope.input = {};
+            $scope.input.page = 1;
+            $scope.input.pageSize = 20;
+            $scope.input.total = 0;
+            
+            $scope.table = [];
+
+            $scope.showModel = function () {
+                $('#myModalUpdate').modal('show')
+            }
+
+
+        }]);
+
+
+
+    </script>    
+}

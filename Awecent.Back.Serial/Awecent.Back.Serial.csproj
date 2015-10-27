@@ -172,6 +172,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MasterController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -181,6 +182,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LogFile.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MasterCodeContext.cs" />
     <Compile Include="Models\MySQLContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -255,6 +257,11 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Auth\SignIn.cshtml" />
     <Content Include="Views\Report\ItemCode.cshtml" />
+    <Content Include="Views\Master\Index.cshtml" />
+    <Content Include="Views\Master\Create.cshtml" />
+    <Content Include="Views\Master\_UpdateModel.cshtml" />
+    <Content Include="Views\Master\Import.cshtml" />
+    <Content Include="Views\Master\Generate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

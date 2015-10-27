@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Generate";
+}
+
+
+<style>
+    .row {
+        margin: 5px 0;
+    }
+</style>
+
+<h2>Generate Code</h2>
+<form ng-app="MyApp" ng-controller="GenerateCodeController" name="ValidateForm" id="ValidateForm">
+    <div class="row" style="margin-left:0;margin-right:0;">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Detail</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Serial Code Amount</label>
+                        <input type="text" class="form-control" ng-model="input.amount" name="amount" placeholder="1000" />
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Degit</label>
+                        <input type="text" ng-model="input.degit" class="form-control" name="degit" placeholder="11" />
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>Lot Number</label>
+                        <input type="text" class="form-control" ng-model="input.lotNumber" name="lotNumber" />
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-info" type="button" ng-click="create()" style="margin-top:23px;">Generate</button>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        angular.module('MyApp', ['ui.bootstrap']).controller('GenerateCodeController', ['$scope', '$http', function ($scope, $http) {
+            $scope.input = {};
+
+        }]);
+    
+    </script>
+
+
+}
