@@ -53,13 +53,17 @@ namespace Awecent.Back.Serial.Controllers
         }
 
         #region json function 
-        public MasterCode CreateMaster(MasterCode model) {
-            if (!ModelState.IsValid) { model.Result = false; model.Message = "Model state validate false."; return model; }
+        public JsonResult CreateMaster(MasterCode model) {
+            if (!ModelState.IsValid) {
+                model.Result = false;
+                model.Message = "Model state valid fail.";
+                return Json(model); 
+            }
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             var name = identity.Claims.Where(c => c.Type ==  ClaimTypes.Name)
                               .Select(c => c.Value).SingleOrDefault();
-            MasterCode master = context.CreateMasterCode(model, name );
-            return master;
+            MasterCode master = context.CreateMasterCode(model, name);
+            return Json(master);
         }
 
         #endregion

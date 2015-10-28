@@ -42,7 +42,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <label>Promotion Code(Master Code)</label>
-                        <input type="text" class="form-control" ng-model="input.Code" name="masterCode" placeholder="awe0000000" readonly />
+                        <input type="text" class="form-control" ng-model="input.Code" name="Code" placeholder="awe0000000" readonly />
                     </div>
 
                     <div class="col-sm-4">
@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-sm-4">
                         <label>Item Code Prefix</label>
-                        <input type="text" class="form-control" ng-disabled="prefix" ng-model="input.itemPrefix" name="itemPrefix" placeholder="3 character" maxlength="3" />
+                        <input type="text" class="form-control" ng-disabled="prefix" ng-model="input.serialPrefix" name="serialPrefix" placeholder="3 character" maxlength="3" />
                     </div>
                 </div>
 
@@ -145,11 +145,18 @@
 
             $scope.create = function () {
                 console.log($scope.input);
+                if ($scope.input == null) return;
+               // $('.top-left').notify({ message: { text: d.Message }, type: 'success' }).show();
+                return;
+                $('#spinner').toggle(true);
                 $http.post('@Url.Action("CreateMaster", "Master")', $scope.input)
                     .success(function (d) {
+                        console.log('return', d);
                         if (d.Result) {
-                            $scope.Code = d.Code;
+                            $scope.input.Code = d.Code;
+                         //   $('.top-left').notify({ message: { text: d.Message }, type: 'success' }).show();
                         }
+                        $('#spinner').toggle(false);
                     });
             }
         }]);

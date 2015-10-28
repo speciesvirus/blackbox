@@ -106,8 +106,12 @@ namespace Awecent.Back.Serial.Models
 
 
     public class MasterCode {
+        [Required]
         public int GameID { get; set; }
+
         public int PromotionID { get; set; }
+
+        [Required]
         public string PromotionName { get; set; }
         public string PromotionDescription { get; set; }
         public string Lot { get; set; }
@@ -115,10 +119,12 @@ namespace Awecent.Back.Serial.Models
         public string CreateBy { get; set; }
         public string ItemID { get; set; }
         public DateTime? CreateAt { get; set; }
-        public DateTime? StartAt { get; set; }
-        public DateTime? EndAt { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public string Status { get; set; }
+        [Required]
         public int SerialType { get; set; }
+        [Required]
         public int GenerateType { get; set; }
         public string SerialPrefix { get; set; }
         public string URLShared { get; set; }
