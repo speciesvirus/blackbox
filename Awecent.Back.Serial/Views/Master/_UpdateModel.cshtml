@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Edit From</h4>
+                <h4 class="modal-title" id="myModalLabel">Edit From {{input.GameID}}</h4>
             </div>
             <div class="modal-body">
                 
@@ -15,23 +15,17 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <label>Game Name</label>
-                        <select ng-model="input.gameId" ng-change="findPromotion()" class="form-control" name="gameId">
-
-                            @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
-                            {
-                                <option value="@game.GameId">@game.GameName</option>
-                            }
-                        </select>
+                        <input type="text" class="form-control" ng-model="input.GameID" name="GameID" readonly />
                     </div>
                     <div class="col-sm-4">
                         <label>Serial Type</label>
-                        <select ng-model="input.serialtype" class="form-control" name="serialtype"
+                        <select ng-model="input.SerialType" class="form-control" name="serialtype"
                                 ng-options="ser.id as ser.name for ser in serialtypes"></select>
                     </div>
 
                     <div class="col-sm-4">
                         <label>Item ID(In-Game)</label>
-                        <input type="text" class="form-control" ng-model="input.itemId" name="itemId" placeholder="99" />
+                        <input type="text" class="form-control" ng-model="input.ItemID" name="itemId" placeholder="99" />
                     </div>
 
                 </div>
@@ -39,17 +33,17 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <label>Promotion Code(Master Code)</label>
-                        <input type="text" class="form-control" ng-model="input.masterCode" name="masterCode" placeholder="awe0000000" readonly />
+                        <input type="text" class="form-control" ng-model="input.Code" name="masterCode" placeholder="awe0000000" readonly />
                     </div>
 
                     <div class="col-sm-4">
                         <label>Promotion Name</label>
-                        <input type="text" class="form-control" ng-model="input.promotionName" name="promotionName" />
+                        <input type="text" class="form-control" ng-model="input.PromotionName" name="promotionName" />
                     </div>
 
                     <div class="col-sm-4">
                         <label>Promotion Description</label>
-                        <input type="text" class="form-control" ng-model="input.promotionDescription" name="promotionDescription" />
+                        <input type="text" class="form-control" ng-model="input.PromotionDescription" name="promotionDescription" />
                     </div>
 
                 </div>
@@ -60,7 +54,7 @@
                         <label>Start Date</label>
                         <p class="input-group">
                             <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
-                                   ng-model="input.startDate" is-open="status.openedStart" name="startDate"
+                                   ng-model="input.StartDate" is-open="status.openedStart" name="startDate"
                                    placeholder="dd-MMMM-yyyy"
                                    datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                             <span class="input-group-btn">
@@ -75,8 +69,8 @@
                         <label>End Date</label>
                         <p class="input-group">
                             <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
-                                   ng-model="input.endDate" is-open="status.openedEnd" name="endDate"
-                                   min-date="input.startDate" placeholder="dd-MMMM-yyyy"
+                                   ng-model="input.EndDate" is-open="status.openedEnd" name="endDate"
+                                   min-date="input.StartDate" placeholder="dd-MMMM-yyyy"
                                    datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="openEnd($event)">
@@ -88,19 +82,19 @@
 
                     <div class="col-sm-4">
                         <label>URL Shared</label>
-                        <input type="text" class="form-control" ng-model="input.urlShared" name="urlShared" placeholder="http://" />
+                        <input type="text" class="form-control" ng-model="input.URLShared" name="urlShared" placeholder="http://" />
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-4">
                         <label>Generate Type</label>
-                        <select class="form-control" ng-model="input.generateType" name="generateType"
+                        <select class="form-control" ng-model="input.GenerateType" name="generateType"
                                 ng-options="gt.id as gt.name for gt in generateTypes" ng-change="enablePrefix()"></select>
                     </div>
                     <div class="col-sm-4">
                         <label>Item Code Prefix</label>
-                        <input type="text" class="form-control" ng-disabled="prefix" ng-model="input.itemPrefix" name="itemPrefix" placeholder="3 character" maxlength="3" />
+                        <input type="text" class="form-control" ng-disabled="prefix" ng-model="input.SerialPrefix" name="SerialPrefix" placeholder="3 character" maxlength="3" />
                     </div>
                 </div>
 

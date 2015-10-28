@@ -20,7 +20,7 @@
             <div class="panel-body">
                 <div class="col-sm-4">
                     <label>Game Name</label>
-                    <select ng-model="input.gameId" ng-change="findPromotion()" class="form-control" name="gameId">
+                    <select ng-model="input.GameID" ng-change="findPromotion()" class="form-control" name="GameID">
                         @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
                         {
                             <option value="@game.GameId">@game.GameName</option>
@@ -39,30 +39,28 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <td>PromotionID</td>
+                            <td>ProID</td>
                             <td>Name</td>
-                            <td>Lot</td>
                             <td>Code</td>
-                            <td>Create at</td>
+                            <td>CreateDate</td>
                             <td>Create by</td>
-                            <td>Start at</td>
-                            <td>End at</td>
+                            <td>StartDate</td>
+                            <td>EndDate</td>
                             <td>Status</td>
                             <td>#</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>99</td>
-                            <td>Pre Register</td>
-                            <td>1</td>
-                            <td>awe9ag5u19a</td>
-                            <td>2015-10-26 00:00:00</td>
-                            <td>Snooker</td>
-                            <td>2015-10-26 00:00:00</td>
-                            <td>2016-10-26 00:00:00</td>
-                            <td>Active</td>
-                            <td><a href="javascript://" ng-click="showModel()">edit</a></td>
+                        <tr ng-repeat="object in table">
+                            <td>{{object.PromotionID}}</td>
+                            <td>{{object.PromotionName}}</td>
+                            <td>{{object.Code}}</td>
+                            <td>{{convertDate(object.CreateDate) | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td>{{object.CreateUser}}</td>
+                            <td>{{convertDate(object.StartDate) | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td>{{convertDate(object.EndDate) | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td>{{object.Status}}</td>
+                            <td><a href="javascript://" ng-click="getDetail($index);showModel()">edit</a></td>
                         </tr>
                         
                     </tbody>
@@ -84,15 +82,47 @@
         angular.module('MyApp', ['ui.bootstrap']).controller('MasterCodeController', ['$scope', '$http', function ($scope, $http) {
             $scope.input = {};
             $scope.input.page = 1;
-            $scope.input.pageSize = 20;
+            $scope.input.pageSize = 5;
             $scope.input.total = 0;
             
+            $scope.serialtypes = [{ id: '1', name: 'Master Serial' }, { id: '2', name: 'Raw Serial' }];
+            $scope.generateTypes = [{ id: '1', name: 'Generate' }, { id: '2', name: 'Import' }];
+
             $scope.table = [];
 
             $scope.showModel = function () {
                 $('#myModalUpdate').modal('show')
             }
 
+            $scope.search = function () {
+                $http.post('@Url.Action("SearchMaster", "Master")', $scope.input)
+                    .success(function (d) {
+                        if (d.Result) {
+                            $scope.table = d.Data;
+                            console.log('data', d.Data[0]);
+
+                            $scope.convertDate(d.Data[0].StartDate);
+
+                            $scope.input.total = d.Total;
+                            notifyInfo("record "+d.Data.length+'/'+d.Total);
+                        }
+                });
+            }
+
+            $scope.getDetail = function (index) {
+                $scope.input = $scope.table[index];
+                $scope.input.StartDate = $scope.convertDate($scope.table[index].StartDate);
+                $scope.input.EndDate = $scope.convertDate($scope.table[index].EndDate);
+            }
+
+            $scope.convertDate = function (strDate) {
+                if (strDate == null) return;
+                if (strDate instanceof Date) return strDate;
+                var milisec = strDate.substring(6 , strDate.length -2);
+                var longMili = parseFloat(milisec);
+                var myDate = new Date(longMili);
+                return myDate;
+            }
 
         }]);
 

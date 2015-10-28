@@ -23,7 +23,7 @@ namespace Awecent.Back.Serial.Models
                 {
                     MySqlCommand cmd = new MySqlCommand("ValidateAccountAndGetRoleName", con);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    
+
                     cmd.Parameters.Add(new MySqlParameter("_Password", ""));
                     cmd.Parameters.Add(new MySqlParameter("_UserId", MySqlDbType.Int64) { Direction = ParameterDirection.InputOutput });
                     cmd.Parameters.Add(new MySqlParameter("_Role", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
@@ -41,7 +41,7 @@ namespace Awecent.Back.Serial.Models
                         PromotionName = row["PromotionName"].ToString()
                     }).ToList();
 
-                   // user.UserGameList = q;
+                    // user.UserGameList = q;
 
                     return null;
                 }
@@ -55,8 +55,7 @@ namespace Awecent.Back.Serial.Models
 
         }
 
-
-        public MasterCode CreateMasterCode(MasterCode model, string userName)
+        public MasterCode CreateMasterCode(MasterCode model)
         {
             using (MySqlConnection con = new MySqlConnection(ItemConnection))
             {
@@ -72,7 +71,7 @@ namespace Awecent.Back.Serial.Models
                     cmd.Parameters.Add(new MySqlParameter("_StartDate", model.StartDate.Value));
                     cmd.Parameters.Add(new MySqlParameter("_EndDate", model.EndDate.Value));
                     cmd.Parameters.Add(new MySqlParameter("_ItemID", model.ItemID));
-                    cmd.Parameters.Add(new MySqlParameter("_CreateUser", userName));
+                    cmd.Parameters.Add(new MySqlParameter("_CreateUser", model.CreateUser));
                     cmd.Parameters.Add(new MySqlParameter("_GenerateType", model.GenerateType));
                     cmd.Parameters.Add(new MySqlParameter("_PrefixCode", model.SerialPrefix));
 
@@ -88,7 +87,8 @@ namespace Awecent.Back.Serial.Models
                     {
                         model.Result = false; model.Message = "Create Master Code fail.";
                     }
-                    else {
+                    else
+                    {
                         model.Result = true; model.Code = result; model.Message = "Create Master Code success.";
                     }
 
@@ -104,8 +104,9 @@ namespace Awecent.Back.Serial.Models
 
         }
 
-        public MasterCodeList GetMasterCodeList(MasterCode model) {
-        using (MySqlConnection con = new MySqlConnection(ItemConnection))
+        public MasterCodeList GetMasterCodeList(MasterCode model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
             {
                 try
                 {
@@ -120,25 +121,43 @@ namespace Awecent.Back.Serial.Models
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
                     int row = Convert.ToInt32(cmd.Parameters["_row"].Value.ToString());
-                    if(row <= 0 )
-                    if (string.IsNullOrEmpty(result) || code != 200)
+                    if (row <= 0) return new MasterCodeList { Result = false };
+                    MasterCodeList list = new MasterCodeList();
+                    list.Result = true;
+                    list.Total = row;
+                    var q = dt.AsEnumerable().Select(x => new MasterCode()
                     {
-                        model.Result = false; model.Message = "Create Master Code fail.";
-                    }
-                    
-
-                    return model;
+                        GameID = x.Field<int?>("GameID") ,
+                        PromotionID = x.Field<long?>("PromotionID") == null ? 0 : x.Field<long?>("PromotionID"),
+                        PromotionName = x.Field<string>("PromotionName"),
+                        PromotionDescription = x.Field<string>("PromotionDescription"),
+                        SerialType = x.Field<string>("SerialType"),
+                        StartDate = x.Field<DateTime?>("StartDate").Value,
+                        EndDate = x.Field<DateTime?>("EndDate").Value,
+                        Status = x.Field<string>("Status"),
+                        ItemID = x.Field<long>("ItemID") == null ? "" : x.Field<long>("ItemID").ToString(),
+                        GenerateType = x.Field<string>("GenerateType") ,
+                        SerialPrefix = x.Field<string>("SerialPrefix"),
+                        CodeAmount = x.Field<int?>("CodeAmount") == null ? 0 : x.Field<int?>("CodeAmount"),
+                        URLShared = x.Field<string>("URLShared"),
+                        CreateUser = x.Field<string>("CreateUser"),
+                        Code = x.Field<string>("Code"),
+                        CreateDate = x.Field<DateTime?>("CreateDate").Value,
+                    }).ToList();
+                    list.Data = q;
+                    return list;
                 }
                 catch (Exception ex)
                 {
-                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GetMasterCode" });
-                    model.Result = false; model.Message = ex.Message;
-                    return model;
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GetMasterCodeList" });
+                    return new MasterCodeList { Result = false , Message = ex.Message   };
                 }
-        }
+            }
         #endregion
 
 
+
+        }
 
     }
 }
