@@ -104,7 +104,38 @@ namespace Awecent.Back.Serial.Models
 
         }
 
+        public MasterCodeList GetMasterCodeList(MasterCode model) {
+        using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_getPromotionByGameId", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_GameID", model.GameID));
+                    cmd.Parameters.Add(new MySqlParameter("_Page", model.Page));
+                    cmd.Parameters.Add(new MySqlParameter("_PageSize", model.PageSize));
 
+                    cmd.Parameters.Add(new MySqlParameter("_row", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int row = Convert.ToInt32(cmd.Parameters["_row"].Value.ToString());
+                    if(row <= 0 )
+                    if (string.IsNullOrEmpty(result) || code != 200)
+                    {
+                        model.Result = false; model.Message = "Create Master Code fail.";
+                    }
+                    
+
+                    return model;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GetMasterCode" });
+                    model.Result = false; model.Message = ex.Message;
+                    return model;
+                }
+        }
         #endregion
 
 

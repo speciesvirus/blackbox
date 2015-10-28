@@ -140,6 +140,7 @@ namespace Awecent.Back.Serial.Models
     public class MasterCodeList {
         public int total { get; set; }
         public List<MasterCode> data { get; set; }
+        public bool result { get; set; }
 
     }
 
