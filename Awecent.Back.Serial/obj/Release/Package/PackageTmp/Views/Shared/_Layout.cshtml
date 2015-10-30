@@ -7,6 +7,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+
     @Scripts.Render("~/bundles/bootstrap")
 
     <script src="~/Scripts/angular.min.js"></script>
@@ -17,6 +18,7 @@
 
 </head>
 <body>
+   
     <style>
         .navbar.navbar-inverse.navbar-fixed-top {
             position: relative;
@@ -57,12 +59,13 @@
                 <ul class="nav nav-sidebar admin">
                     <li><a href="@Url.Action("Index","Home")">Home</a></li>
                 </ul>
-                @if (User.IsInRole("Administrator"))
+                @if (User.IsInRole("Administrator") || User.IsInRole("Product"))
                 {
                     <text>
                         <small>admin</small>
                         <ul class="nav nav-sidebar admin">
-                            <li><a href="#">Members</a></li>
+                            <li><a href="@Url.Action("Index","Master")">Master Code</a></li>
+                            
                         </ul>
                     </text>
 

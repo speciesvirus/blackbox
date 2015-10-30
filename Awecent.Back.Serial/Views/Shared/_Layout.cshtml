@@ -59,7 +59,7 @@
                 <ul class="nav nav-sidebar admin">
                     <li><a href="@Url.Action("Index","Home")">Home</a></li>
                 </ul>
-                @if (User.IsInRole("Administrator"))
+                @if (User.IsInRole("Administrator") || User.IsInRole("Product"))
                 {
                     <text>
                         <small>admin</small>

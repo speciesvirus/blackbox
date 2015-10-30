@@ -111,6 +111,6 @@ C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.Owin.Sec
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.Owin.Security.Google.xml
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.Owin.Security.Twitter.xml
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\Debug\Awecent.Back.Serial.csprojResolveAssemblyReference.cache
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\Debug\Awecent.Back.Serial.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\Debug\Awecent.Back.Serial.pdb
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\Debug\Awecent.Back.Serial.csprojResolveAssemblyReference.cache
