@@ -1,12 +1,16 @@
 ﻿using Awecent.Back.Serial.Models;
+using LinqToExcel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+//using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Awecent.Back.Serial.Controllers
 {
@@ -37,14 +41,81 @@ namespace Awecent.Back.Serial.Controllers
             List<Game> list = JsonConvert.DeserializeObject<List<Game>>(name);
             ViewBag.Games = list;
 
-
-
             return View();
         }
 
-        public ActionResult Import()
+        public ActionResult Import(HttpPostedFileBase excelFile , int? degit , string id)
         {
+            if (!ModelState.IsValid) {
+                ViewBag.PromotionID = id;
+                return View(); 
+            }
+
+            if (excelFile != null && (excelFile.FileName.EndsWith("xls") || excelFile.FileName.EndsWith("xlsx"))) {
+                var folder = AppDomain.CurrentDomain.BaseDirectory + "File";
+
+                string file = Server.MapPath("~/File/" + excelFile.FileName);
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                if (System.IO.File.Exists(file))
+                {
+                    System.IO.File.Delete(file);
+                }
+                excelFile.SaveAs(file);
+
+                var excel = new ExcelQueryFactory(file);
+                var list  = from c in excel.Worksheet<ItemCode>()
+                       where c.Code != null
+                       select c;
+
+                int valid = 0;
+                foreach (ItemCode item in list) { 
+                    if(item.Code.Length != degit){
+                        valid++;
+                    }
+                }
+
+                int total = list.ToList().Count;
+                ViewBag.PromotionID = id;
+                ViewBag.TempData = list;
+                ViewBag.Total = total;
+                ViewBag.TotalValid = valid;
+                ViewBag.FileName = excelFile.FileName;
+                ViewBag.Degit = degit;
+                return View();
+                    
+            }
+            ViewBag.PromotionID = id;
             return View();
+        }
+
+        public JsonResult SaveImport(string id, string promotionid)
+        {
+            string file = Server.MapPath("~/File/" + id);
+            if (!System.IO.File.Exists(file)) return Json(new MasterCode { Result = false , Message = "file not found." });
+            if (promotionid == null || string.IsNullOrEmpty(promotionid)) return Json(new MasterCode { Result = false, Message = "file not found." });
+            
+            var excel = new ExcelQueryFactory(file);
+            var list = from c in excel.Worksheet<ItemCode>()
+                       where c.Code != null
+                       select c;
+            var total = list.ToList().Count;
+            string name = ClaimName();
+            string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            MasterCode master = context.CreateLotItemCode(new MasterCode { PromotionID = Convert.ToInt64(promotionid) ,CreateBy = name , CodeAmount = total  });
+            if (master == null) return Json(new MasterCode { Result = false, Message = "can not create lot." });
+            StringBuilder sb = new StringBuilder();
+
+            foreach (ItemCode item in list)
+            {
+                sb.AppendFormat("INSERT INTO `gameitemcode`(`iPromotionID`,`iLotID`,`vCode`,`cIsUse`,`dtCreateUser`,`dtCreateDate`) "
+                    +"VALUES('{0}','{1}','{2}','N','{3}','{4}');"
+                    , item.PromotionID, master.Lot , item.Code , name , date);
+            }
+
+            string sql = sb.ToString();
+            master =  context.InsertExecute(sql);
+            return Json(master);
         }
 
         public ActionResult Generate()

@@ -173,7 +173,10 @@
                 return myDate;
             }
 
-            $scope.importCode = function () { window.location = '@Url.Action("Import","Master")'; }
+            $scope.importCode = function () {
+                //alert('Promotion id' + $scope.input.PromotionID);
+                window.location = '@Url.Action("Import","Master")/'+ $scope.input.PromotionID;
+            }
             $scope.generateCode = function () { window.location = '@Url.Action("Generate","Master")'; }
 
             $scope.setStatus = function (id ,status) {

@@ -13,8 +13,6 @@ namespace Awecent.Back.Serial.Models
         string BackOfficeConnection = WebConfigurationManager.ConnectionStrings["BackOfficeConnection"].ToString();
         string ItemConnection = WebConfigurationManager.ConnectionStrings["ItemConnection"].ToString();
 
-        #region MasterCode
-
         public MasterCodeList GetMasterCode(MasterCode model)
         {
             using (MySqlConnection con = new MySqlConnection(ItemConnection))
@@ -55,6 +53,41 @@ namespace Awecent.Back.Serial.Models
 
         }
 
+        public MasterCode CreateLotItemCode(MasterCode model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_generateLot", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_PromotionId", model.PromotionID));
+                    cmd.Parameters.Add(new MySqlParameter("_CodeAmount", model.CodeAmount));
+                    cmd.Parameters.Add(new MySqlParameter("_CreateUser", model.CreateBy));
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int code = int.Parse(cmd.Parameters["_ReturnCode"].Value.ToString());
+                    if (code == 200)
+                    {
+                        model.Result = true;
+                        model.Lot = cmd.Parameters["_ReturnMsg"].Value.ToString();
+                        return model;
+                    }
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "CreateLotItemCode" });
+                    return null;
+                    //hendle exception
+                }
+            }
+
+        }
+
         public MasterCode CreateMasterCode(MasterCode model)
         {
             using (MySqlConnection con = new MySqlConnection(ItemConnection))
@@ -86,7 +119,7 @@ namespace Awecent.Back.Serial.Models
 
                     if (string.IsNullOrEmpty(result) || code != 200)
                     {
-                        model.Result = false; model.Message = "Create Master Code fail "+result;
+                        model.Result = false; model.Message = "Create Master Code fail " + result;
                     }
                     else
                     {
@@ -165,7 +198,7 @@ namespace Awecent.Back.Serial.Models
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(new MySqlParameter("_PromotionID", model.PromotionID));
                     cmd.Parameters.Add(new MySqlParameter("_UserName", model.CreateUser));
-                    
+
                     cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
                     cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
@@ -205,7 +238,6 @@ namespace Awecent.Back.Serial.Models
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(new MySqlParameter("_PromotionID", model.PromotionID));
                     cmd.Parameters.Add(new MySqlParameter("_UserName", model.CreateUser));
-
                     cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
                     cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
@@ -220,7 +252,7 @@ namespace Awecent.Back.Serial.Models
                     }
                     else
                     {
-                        model.Result = true; 
+                        model.Result = true;
                         model.Code = result;
                         model.Message = "Update Master Code success.";
                     }
@@ -260,7 +292,7 @@ namespace Awecent.Back.Serial.Models
                     list.Total = row;
                     var q = dt.AsEnumerable().Select(x => new MasterCode()
                     {
-                        GameID = x.Field<int?>("GameID") ,
+                        GameID = x.Field<int?>("GameID"),
                         PromotionID = x.Field<long?>("PromotionID") == null ? 0 : x.Field<long?>("PromotionID"),
                         PromotionName = x.Field<string>("PromotionName"),
                         PromotionDescription = x.Field<string>("PromotionDescription"),
@@ -269,7 +301,7 @@ namespace Awecent.Back.Serial.Models
                         EndDate = x.Field<DateTime?>("EndDate").Value,
                         Status = x.Field<string>("Status"),
                         ItemID = x.Field<long>("ItemID") == null ? "" : x.Field<long>("ItemID").ToString(),
-                        GenerateType = x.Field<string>("GenerateType") ,
+                        GenerateType = x.Field<string>("GenerateType"),
                         SerialPrefix = x.Field<string>("SerialPrefix"),
                         CodeAmount = x.Field<int?>("CodeAmount") == null ? 0 : x.Field<int?>("CodeAmount"),
                         URLShared = x.Field<string>("URLShared"),
@@ -283,13 +315,35 @@ namespace Awecent.Back.Serial.Models
                 catch (Exception ex)
                 {
                     new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GetMasterCodeList" });
-                    return new MasterCodeList { Result = false , Message = ex.Message   };
+                    return new MasterCodeList { Result = false, Message = ex.Message };
+                }
+
+            }
+        }
+
+        public MasterCode InsertExecute(string sql)
+        {
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                MySqlTransaction tx = null;
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand();
+                    con.Open();
+                    tx = con.BeginTransaction();
+                    cmd.Connection = con;
+                    cmd.Transaction = tx;
+                    cmd.CommandText = sql;
+                    cmd.ExecuteNonQuery();
+                    tx.Commit();
+                    return new MasterCode { Result = true , Message="Import success." };
+                }
+                catch (Exception ex) {
+                    new LogFile().WriterError(new LogModel { Exception = ex.Message, Function = "InsertExecute" });
+                    tx.Rollback();
+                    return new MasterCode { Result = false, Message =ex.Message};
                 }
             }
-        #endregion
-
-
-
         }
 
     }
