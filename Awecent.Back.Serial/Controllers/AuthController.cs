@@ -35,6 +35,7 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
+        
         public ActionResult ValidateAccount(LoginViewModel model)
         {
             if(string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.Email))

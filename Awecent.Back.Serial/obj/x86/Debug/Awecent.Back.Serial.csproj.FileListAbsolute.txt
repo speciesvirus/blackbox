@@ -4,6 +4,8 @@ C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Awecent.Back.Seria
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Antlr3.Runtime.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\EntityFramework.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\EntityFramework.SqlServer.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\LinqToExcel.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\log4net.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.AspNet.Identity.Core.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.AspNet.Identity.EntityFramework.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.AspNet.Identity.Owin.dll
@@ -22,6 +24,9 @@ C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\mysql.data.entity.
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\MySql.Web.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Newtonsoft.Json.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Owin.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.Data.Linq.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.Interfaces.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.Helpers.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.Mvc.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.Optimization.dll
@@ -30,6 +35,8 @@ C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.WebPage
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.WebPages.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.WebPages.Razor.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\WebGrease.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\LinqToExcel.xml
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\log4net.xml
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.Helpers.xml
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.Mvc.xml
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\System.Web.Optimization.xml
@@ -55,11 +62,3 @@ C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.Owin.Sec
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\x86\Debug\Awecent.Back.Serial.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\x86\Debug\Awecent.Back.Serial.pdb
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\x86\Debug\Awecent.Back.Serial.csprojResolveAssemblyReference.cache
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\LinqToExcel.dll
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\log4net.dll
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.Data.Linq.dll
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.dll
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.Interfaces.dll
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\LinqToExcel.xml
-C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\log4net.xml

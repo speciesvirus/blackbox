@@ -114,3 +114,10 @@ C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Microsoft.Owin.Sec
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\Release\Awecent.Back.Serial.csprojResolveAssemblyReference.cache
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\Release\Awecent.Back.Serial.dll
 C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\obj\Release\Awecent.Back.Serial.pdb
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\LinqToExcel.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\log4net.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.Data.Linq.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\Remotion.Interfaces.dll
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\LinqToExcel.xml
+C:\CSharp\Net-wwwBackBok-ItemCode.git\Awecent.Back.Serial\bin\log4net.xml

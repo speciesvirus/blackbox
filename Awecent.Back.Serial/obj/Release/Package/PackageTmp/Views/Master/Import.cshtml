@@ -1,7 +1,127 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Import";
 }
+<style>
+    .row {
+        margin: 5px 0;
+    }
+
+    .margin-left {
+        margin-left: 20px;
+    }
+</style>
 
 <h2>Import</h2>
+<form action="@Url.Action("Import","Master")" method="post" enctype="multipart/form-data" name="Upload" id="Upload">
 
+    <div class="panel panel-default">
+        <div class="panel-heading">Upload</div>
+        <div class="panel-body">
+
+            <div class="form-inline ">
+                <div class="form-group">
+                    <label>File</label>
+                    <input type="file" name="excelFile" class="form-control" required />
+                </div>
+                <div class="form-group margin-left">
+                    <label>Degit</label>
+                    <input type="text" name="degit" class="form-control" value="@ViewBag.Degit" required placeholder="11" maxlength="2"/>
+                </div>
+                <div class="form-group margin-left">
+                    <label>PromotionID</label>
+                    <input type="text" name="PromotionID" class="form-control" value="@ViewBag.PromotionID" readonly />
+                </div>
+                <button type="submit" class="btn btn-info" form="Upload">submit</button>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+<div class="row">
+    <form ng-app="MyApp" name="ImportMasterCode" ng-controller="ImportMasterCodeController" id="ImportMasterCode">
+        <div class="panel panel-default">
+            <div class="panel-heading">Validation</div>
+            <div class="panel-body">
+                <div class="form-inline">
+                    <div class="form-group"><strong>Total record :</strong> @(ViewBag.Total == null ? 0 : ViewBag.Total)</div>&nbsp;|&nbsp;
+                    <div class="form-group"><strong>Total valid :</strong> @(ViewBag.TotalValid == null ? 0 : ViewBag.TotalValid)</div>
+                    <input type="hidden" name="filename" id="filename" value="@ViewBag.FileName" required />
+                    <input type="hidden" name="promotionid" id="promotionid" value="@ViewBag.PromotionID" required />
+                    @if (ViewBag.TotalValid != null && ViewBag.TotalValid == 0)
+                    {
+                        <div class="form-group margin-left">
+                            <button class="btn btn-success" type="button" form="Save" id="submit-btn" ng-click="SaveImport()">Submit</button>
+                        </div>
+                    }
+                    else if (ViewBag.TotalValid != null && ViewBag.TotalValid > 0)
+                    {
+                        <div class="form-group margin-left">
+                            <button class="btn btn-danger">Undo</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+
+    
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td width="10%">IDX</td>
+                <td width="10%">PromotionID</td>
+                <td align="center">Code</td>
+                <td width="10%">Status</td>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            @if (ViewBag.TempData != null)
+            {
+                int i = 1;
+                foreach (Awecent.Back.Serial.Models.ItemCode item in ViewBag.TempData)
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>@item.PromotionID</td>
+                        <td>@item.Code</td>
+                        <td>Temp</td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+
+    function resetTable() {
+        $("#tbody").html("<tr> <td></td> <td></td> <td></td> <td></td></tr>");
+    }
+
+    angular.module('MyApp', ['ui.bootstrap'])
+        .controller('ImportMasterCodeController', ['$scope', '$http', function ($scope, $http) {
+            $scope.input = {};
+            $scope.SaveImport = function () {
+                $scope.input.id = $('#filename').val();
+                $scope.input.promotionid = $('#promotionid').val();
+                if ($scope.input.id == null) return;
+                $('#spinner').toggle(true);
+                $http.post('@Url.Action("SaveImport", "Master")', $scope.input)
+                    .success(function (d) {
+                        $('#spinner').toggle(false);
+                        console.log('result', d);
+                        if (d.Result) {
+                            notifySuccess(d.Message);
+                            $("#submit-btn").attr("disabled", true);
+                            resetTable();
+                        } else {
+                            notifyError(d.Message);
+                        }
+                    });
+            }
+        }]);
+
+
+</script>

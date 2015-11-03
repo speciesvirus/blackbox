@@ -13,7 +13,7 @@
 <h2>Master Code</h2>
 <form ng-app="MyApp" ng-controller="MasterCodeController" name="ValidateForm" id="ValidateForm">
     @Html.AntiForgeryToken()
-    <div class="row"><a class="btn btn-sm btn-primary" href="@Url.Action("Create","Master")">Create</a></div>
+    <div class="row"><a class="btn btn-sm btn-primary" href="@Url.Action("Create","Master")" target="_blank">Create</a></div>
     <div class="row">
 
         <div class="panel panel-default">
@@ -177,7 +177,10 @@
                 //alert('Promotion id' + $scope.input.PromotionID);
                 window.location = '@Url.Action("Import","Master")/'+ $scope.input.PromotionID;
             }
-            $scope.generateCode = function () { window.location = '@Url.Action("Generate","Master")'; }
+            $scope.generateCode = function () {
+                //window.location = '@Url.Action("Generate","Master")';
+                window.location = '@Url.Action("Generate", "Master")/' + $scope.input.PromotionID;
+            }
 
             $scope.setStatus = function (id ,status) {
                 if (status == '3') {

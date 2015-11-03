@@ -346,5 +346,31 @@ namespace Awecent.Back.Serial.Models
             }
         }
 
+        public bool UpdateStatusToProgress(string PromotionID) {
+            //awe_updateStatusToInProcess
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_updateStatusToInProcess", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_PromotionID", PromotionID));
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
+                    if (code ==200) return true;
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Exception = ex.Message, Function = "awe_updateStatusToInProcess" });
+                }
+
+            }
+            return false;
+        }
     }
 }

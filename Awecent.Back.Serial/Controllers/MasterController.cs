@@ -110,20 +110,38 @@ namespace Awecent.Back.Serial.Controllers
             {
                 sb.AppendFormat("INSERT INTO `gameitemcode`(`iPromotionID`,`iLotID`,`vCode`,`cIsUse`,`dtCreateUser`,`dtCreateDate`) "
                     +"VALUES('{0}','{1}','{2}','N','{3}','{4}');"
-                    , item.PromotionID, master.Lot , item.Code , name , date);
+                    , promotionid, master.Lot, item.Code, name, date);
             }
 
             string sql = sb.ToString();
             master =  context.InsertExecute(sql);
+            if(master.Result){
+                master.Result = context.UpdateStatusToProgress(promotionid);
+                if (!master.Result) master.Message = "Update status fail.";
+            }
             return Json(master);
         }
 
-        public ActionResult Generate()
+        public ActionResult Generate(string id)
         {
+            ViewBag.PromotionID = id;
             return View();
         }
 
         #region json function
+
+        
+        public JsonResult generateToTemp(MasterCode model) {
+            if (!ModelState.IsValid)
+            {
+                model.Result = false;
+                model.Message = "Model state valid fail.";
+                return Json(model);
+            }
+
+            return Json(null);
+        }
+
         public JsonResult SearchMaster(MasterCode model)
         {
             if (!ModelState.IsValid)
