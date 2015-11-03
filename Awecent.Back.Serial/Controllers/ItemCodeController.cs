@@ -9,6 +9,7 @@ namespace Awecent.Back.Serial.Controllers
     public class ItemCodeController : Controller
     {
         // GET: ItemCode
+        [Authorize]
         public ActionResult Index()
         {
             return RedirectToAction("Index","Home");
