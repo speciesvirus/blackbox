@@ -124,27 +124,35 @@ namespace Awecent.Back.Serial.Controllers
 
         public ActionResult Generate(string id)
         {
+            if (id == null) return RedirectToAction("Index", "Master"); 
             ViewBag.PromotionID = id;
             return View();
         }
 
         #region json function
 
-        
-        public JsonResult generateToTemp(MasterCode model) {
-            if (!ModelState.IsValid)
-            {
-                model.Result = false;
-                model.Message = "Model state valid fail.";
-                return Json(model);
-            }
+        [HttpPost]
+        [Authorize]
+        public JsonResult SaveGenerate(OutputTempMaster model) {
+            if (model == null || model.Key == null) return Json(new MasterCode { Result = false, Message = "Can not reference code in temp table." });
+            model.GenereateBy = ClaimName();
+            MasterCode master = context.SaveTemptoTable(model);
+            return Json(master);
+        }
 
-            return Json(null);
+        [HttpPost]
+        [Authorize]
+        public JsonResult GenerateToTemp(InputTempMaster model)
+        {
+            if (!ModelState.IsValid) return Json(new MasterCode { Result = false , Message = "Model state is valid" });
+            model.GenereateBy = ClaimName();
+            OutputTempMaster output = context.GenerateCodeToTempAndValidateion(model);
+            return Json(output);
         }
 
         public JsonResult SearchMaster(MasterCode model)
         {
-            if (!ModelState.IsValid)
+            if (model.GameID == null)
             {
                 model.Result = false;
                 model.Message = "Model state valid fail.";

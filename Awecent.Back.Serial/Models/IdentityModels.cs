@@ -44,12 +44,14 @@ namespace Awecent.Back.Serial.Models
 
     }
 
-    public class Game{
-        public int GameId {get; set;}
-        public string GameName {get; set;}
+    public class Game
+    {
+        public int GameId { get; set; }
+        public string GameName { get; set; }
     }
 
-    public class ReportItemCodeInput {
+    public class ReportItemCodeInput
+    {
         [Required]
         public int gameId { get; set; }
 
@@ -63,7 +65,8 @@ namespace Awecent.Back.Serial.Models
     }
 
 
-    public class ItemCode {
+    public class ItemCode
+    {
         public long PromotionID { get; set; }
         public int LotID { get; set; }
         public string Code { get; set; }
@@ -73,12 +76,13 @@ namespace Awecent.Back.Serial.Models
         public string TimeCreate { get; set; }
     }
 
-    public class ItemCodeList {
-        public List<ItemCode> data {get; set;}
+    public class ItemCodeList
+    {
+        public List<ItemCode> data { get; set; }
         public int total { get; set; }
         public bool result { get; set; }
 
-    
+
     }
 
     public class LogModel
@@ -91,21 +95,24 @@ namespace Awecent.Back.Serial.Models
 
     }
 
-    public class PromotionsList {
+    public class PromotionsList
+    {
 
         public List<Promotion> data { get; set; }
         public int total { get; set; }
-        public bool result { get; set; } 
+        public bool result { get; set; }
     }
 
-    public class Promotion {
+    public class Promotion
+    {
         public int ID { get; set; }
         public string Name { get; set; }
-    
+
     }
 
 
-    public class MasterCode {
+    public class MasterCode
+    {
         [Required]
         public int? GameID { get; set; }
 
@@ -121,9 +128,9 @@ namespace Awecent.Back.Serial.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string Status { get; set; }
-        
+
         public string SerialType { get; set; }
-        
+
         public string GenerateType { get; set; }
         public string SerialPrefix { get; set; }
         public string URLShared { get; set; }
@@ -134,11 +141,12 @@ namespace Awecent.Back.Serial.Models
         public int Page { get; set; }
         public bool Result { get; set; }
         public String Message { get; set; }
-        
+
 
     }
 
-    public class MasterCodeList {
+    public class MasterCodeList
+    {
         public int Total { get; set; }
         public List<MasterCode> Data { get; set; }
         public bool Result { get; set; }
@@ -146,5 +154,28 @@ namespace Awecent.Back.Serial.Models
 
     }
 
+    public class InputTempMaster
+    {
+        [Required]
+        public string PromotionID { get; set; }
+        [Required]
+        public string Degit { get; set; }
+        [Required]
+        public int  CodeAmount { get; set; }
+
+        public string GenereateBy { get; set; }
+
+    }
+
+
+    public class OutputTempMaster
+    {
+        public bool Result { get; set; }
+        public string Message { get; set; }
+        public string Key { get; set; }
+        public int Amount { get; set; } 
+        public string GenereateBy { get; set; }
+
+    }
 
 }

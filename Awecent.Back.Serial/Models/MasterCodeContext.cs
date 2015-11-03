@@ -321,6 +321,101 @@ namespace Awecent.Back.Serial.Models
             }
         }
 
+        public OutputTempMaster GenerateCodeToTempAndValidateion(InputTempMaster model)
+        {
+            //awe_storeGenItemCodeToTemp
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_storeGenItemCode", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_PromotionID", model.PromotionID));
+                    cmd.Parameters.Add(new MySqlParameter("_DigitCode", model.Degit));
+                    cmd.Parameters.Add(new MySqlParameter("_CodeAmout", model.CodeAmount));
+                    cmd.Parameters.Add(new MySqlParameter("_CreateUser", model.GenereateBy));
+
+                    cmd.Parameters.Add(new MySqlParameter("_CountRow", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnFileName", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
+                    if (code == 200)
+                    {
+                        return new OutputTempMaster
+                        {
+                            Result = true
+                            ,
+                            Key = cmd.Parameters["_ReturnFileName"].Value.ToString()
+                            ,
+                            Amount = Convert.ToInt32(cmd.Parameters["_CountRow"].Value.ToString())
+                        };
+                    }
+                    else
+                    {
+                        return new OutputTempMaster
+                        {
+                            Result = false
+                            ,
+                            Key = cmd.Parameters["_ReturnFileName"].Value.ToString()
+                            ,
+                            Amount = Convert.ToInt32(cmd.Parameters["_CountRow"].Value.ToString())
+                        };
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GenerateCodeToTemp" });
+                    return new OutputTempMaster { Result = false, Message = ex.Message };
+                }
+
+            }
+
+        }
+
+
+        public MasterCode SaveTemptoTable(OutputTempMaster model)
+        {
+            //awe_storeCreateItemCodeFromTemp
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_storeCreateItemCodeFromTemp", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("pi_fileName", model.Key));
+                    cmd.Parameters.Add(new MySqlParameter("pi_CreateUser", model.GenereateBy));
+
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
+                    if (code == 200)
+                        return new MasterCode { Result = true, Message = cmd.Parameters["_ReturnMsg"].Value.ToString() };
+                    else  
+                        return new MasterCode { Result = false, Message = cmd.Parameters["_ReturnMsg"].Value.ToString() };
+
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GenerateCodeToTemp" });
+                    return new MasterCode { Result = false, Message = ex.Message };
+                }
+
+            }
+
+        }
+
+
         public MasterCode InsertExecute(string sql)
         {
             using (MySqlConnection con = new MySqlConnection(ItemConnection))
@@ -336,17 +431,19 @@ namespace Awecent.Back.Serial.Models
                     cmd.CommandText = sql;
                     cmd.ExecuteNonQuery();
                     tx.Commit();
-                    return new MasterCode { Result = true , Message="Import success." };
+                    return new MasterCode { Result = true, Message = "Import success." };
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     new LogFile().WriterError(new LogModel { Exception = ex.Message, Function = "InsertExecute" });
                     tx.Rollback();
-                    return new MasterCode { Result = false, Message =ex.Message};
+                    return new MasterCode { Result = false, Message = ex.Message };
                 }
             }
         }
 
-        public bool UpdateStatusToProgress(string PromotionID) {
+        public bool UpdateStatusToProgress(string PromotionID)
+        {
             //awe_updateStatusToInProcess
             using (MySqlConnection con = new MySqlConnection(ItemConnection))
             {
@@ -361,7 +458,7 @@ namespace Awecent.Back.Serial.Models
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
                     int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
-                    if (code ==200) return true;
+                    if (code == 200) return true;
                     return false;
                 }
                 catch (Exception ex)
