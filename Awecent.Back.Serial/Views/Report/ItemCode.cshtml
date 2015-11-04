@@ -153,9 +153,9 @@
                     .success(function (d) {
                         console.log(d);
                         $('#spinner').toggle(false);
-                        if (d.result) {
-                            $scope.itemCodes = d.data;
-                            $scope.input.total = d.total;
+                        if (d.Result) {
+                            $scope.itemCodes = d.Data;
+                            $scope.input.total = d.Total;
                         }
                     }).error(function (error) {
                         $('#spinner').toggle(false);

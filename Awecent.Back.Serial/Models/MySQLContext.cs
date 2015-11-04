@@ -70,27 +70,28 @@ namespace Awecent.Back.Serial.Models
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
                     ItemCodeList list = new ItemCodeList();
-                    list.total = Convert.ToInt32(cmd.Parameters["_rows"].Value.ToString());
+                    list.Total = Convert.ToInt32(cmd.Parameters["_rows"].Value.ToString());
 
                     var q = dt.AsEnumerable().Select(row => new ItemCode()
                     {
                         PromotionID = Convert.ToInt64(row["iPromotionID"] == null ? "0" : row["iPromotionID"].ToString()),
-                        LotID = Convert.ToInt32(row["iLotID"].ToString()),
+                        LotID = Convert.ToInt64(row["iLotID"].ToString()),
                         Code = row["vCode"].ToString(),
                         IsUsed = row["cIsUse"].ToString(),
                         FacebookID = row["userID"].ToString(),
                         TimeUse = row["dtUsedDate"].ToString(),
-                        TimeCreate = row["dtCreateDate"].ToString()
+                        TimeCreate = row["dtCreateDate"].ToString(),
+                        CreateBy = row["dtCreateUser"].ToString(),
                     }).ToList();
 
                     if (q != null)
                     {
-                        list.result = true;
-                        list.data = q;
+                        list.Result = true;
+                        list.Data = q;
                     }
                     else {
-                        list.result = false;
-                        list.data = q; 
+                        list.Result = false;
+                        list.Data = q; 
                     }
 
                     return list;
@@ -98,7 +99,7 @@ namespace Awecent.Back.Serial.Models
                 catch (Exception ex)
                 {
                     new LogFile().WriterError(new LogModel { Exception = ex.Message, Data = model });
-                    return new ItemCodeList{ result = false };
+                    return new ItemCodeList{ Result = false  ,Message  = ex.Message };
                     //hendle exception
                 }
             }

@@ -293,14 +293,14 @@ namespace Awecent.Back.Serial.Models
                     var q = dt.AsEnumerable().Select(x => new MasterCode()
                     {
                         GameID = x.Field<int?>("GameID"),
-                        PromotionID = x.Field<long?>("PromotionID") == null ? 0 : x.Field<long?>("PromotionID"),
+                        PromotionID = x.Field<long?>("PromotionID"),
                         PromotionName = x.Field<string>("PromotionName"),
                         PromotionDescription = x.Field<string>("PromotionDescription"),
                         SerialType = x.Field<string>("SerialType"),
                         StartDate = x.Field<DateTime?>("StartDate").Value,
                         EndDate = x.Field<DateTime?>("EndDate").Value,
                         Status = x.Field<string>("Status"),
-                        ItemID = x.Field<long>("ItemID") == null ? "" : x.Field<long>("ItemID").ToString(),
+                        ItemID = x.Field<long?>("ItemID"),
                         GenerateType = x.Field<string>("GenerateType"),
                         SerialPrefix = x.Field<string>("SerialPrefix"),
                         CodeAmount = x.Field<int?>("CodeAmount") == null ? 0 : x.Field<int?>("CodeAmount"),
@@ -316,6 +316,95 @@ namespace Awecent.Back.Serial.Models
                 {
                     new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GetMasterCodeList" });
                     return new MasterCodeList { Result = false, Message = ex.Message };
+                }
+
+            }
+        }
+
+        public LotList GetLotList(Lot model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_storeItemLotView", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_promotionId", model.PromotionID));
+                    cmd.Parameters.Add(new MySqlParameter("_Page", model.Page));
+                    cmd.Parameters.Add(new MySqlParameter("_PageSize", model.PageSize));
+
+                    cmd.Parameters.Add(new MySqlParameter("_countRow", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int row = Convert.ToInt32(cmd.Parameters["_countRow"].Value.ToString());
+                    if (row <= 0) return new LotList { Result = false , Message = "0 record."};
+                    LotList list = new LotList();
+                    list.Result = true;
+                    list.Total = row;
+                    var q = dt.AsEnumerable().Select(x => new Lot()
+                    {
+                        ID = x.Field<long>("itemlot_id"),
+                        PromotionID = x.Field<long>("itemlot_promotionId"),
+                        Number = x.Field<int>("itemlot_number"),
+                        Amount = x.Field<int>("itemlot_codeAmount"),
+                        SerialRemain = x.Field<int>("itemlot_serialRemain").ToString(),
+                        CreateUser = x.Field<string>("itemlot_createUser"),
+                        CreateDate = x.Field<DateTime?>("itemlot_createDate").Value,
+
+                    }).ToList();
+                    list.Data = q;
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GetMasterCodeList" });
+                    return new LotList { Result = false, Message = ex.Message };
+                }
+
+            }
+        }
+
+        public ItemCodeList GetItemCodeList(ItemCode model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_storeItemCodeView", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_itemlotId", model.LotID));
+                    cmd.Parameters.Add(new MySqlParameter("_Page", model.Page));
+                    cmd.Parameters.Add(new MySqlParameter("_PageSize", model.PageSize));
+
+                    cmd.Parameters.Add(new MySqlParameter("_countRow", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int row = Convert.ToInt32(cmd.Parameters["_countRow"].Value.ToString());
+                    if (row <= 0) return new ItemCodeList { Result = false, Message = "0 record." };
+                    ItemCodeList list = new ItemCodeList();
+                    list.Result = true;
+                    list.Total = row;
+                    var q = dt.AsEnumerable().Select(x => new ItemCode()
+                    {
+                        PromotionID = Convert.ToInt64(x["iPromotionID"] == null ? "0" : x["iPromotionID"].ToString()),
+                        //LotID = Convert.ToInt64(x["iLotID"].ToString()),
+                        Code = x["vCode"].ToString(),
+                        IsUsed = x["cIsUse"].ToString(),
+                        FacebookID = x["userID"].ToString(),
+                        TimeUse = x["dtUsedDate"].ToString(),
+                        TimeCreate = x["dtCreateDate"].ToString() ,
+                        CreateBy = x["dtCreateUser"].ToString()
+
+                    }).ToList();
+                    list.Data = q;
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GetMasterCodeList" });
+                    return new ItemCodeList { Result = false, Message = ex.Message };
                 }
 
             }
@@ -379,7 +468,6 @@ namespace Awecent.Back.Serial.Models
 
         }
 
-
         public MasterCode SaveTemptoTable(OutputTempMaster model)
         {
             //awe_storeCreateItemCodeFromTemp
@@ -414,7 +502,6 @@ namespace Awecent.Back.Serial.Models
             }
 
         }
-
 
         public MasterCode InsertExecute(string sql)
         {

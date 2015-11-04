@@ -20,6 +20,7 @@ namespace Awecent.Back.Serial.Controllers
 
         // GET: Master
         [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
         public ActionResult Index()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -32,6 +33,7 @@ namespace Awecent.Back.Serial.Controllers
         }
 
         [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
         public ActionResult Create()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -44,14 +46,35 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
-        public ActionResult Import(HttpPostedFileBase excelFile , int? degit , string id)
+        [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
+        public ActionResult Generate(string id)
         {
-            if (!ModelState.IsValid) {
+            if (id == null) return RedirectToAction("Index", "Master");
+            ViewBag.PromotionID = id;
+            return View();
+        }
+
+        [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
+        public ActionResult Lot(string id)
+        {
+            if (id == null) return RedirectToAction("Index","Master");
+            ViewBag.PromotionID = id;
+            return View();
+        }
+
+        [Authorize]
+        public ActionResult Import(HttpPostedFileBase excelFile, int? degit, string id)
+        {
+            if (!ModelState.IsValid)
+            {
                 ViewBag.PromotionID = id;
-                return View(); 
+                return View();
             }
 
-            if (excelFile != null && (excelFile.FileName.EndsWith("xls") || excelFile.FileName.EndsWith("xlsx"))) {
+            if (excelFile != null && (excelFile.FileName.EndsWith("xls") || excelFile.FileName.EndsWith("xlsx")))
+            {
                 var folder = AppDomain.CurrentDomain.BaseDirectory + "File";
 
                 string file = Server.MapPath("~/File/" + excelFile.FileName);
@@ -63,13 +86,15 @@ namespace Awecent.Back.Serial.Controllers
                 excelFile.SaveAs(file);
 
                 var excel = new ExcelQueryFactory(file);
-                var list  = from c in excel.Worksheet<ItemCode>()
-                       where c.Code != null
-                       select c;
+                var list = from c in excel.Worksheet<ItemCode>()
+                           where c.Code != null
+                           select c;
 
                 int valid = 0;
-                foreach (ItemCode item in list) { 
-                    if(item.Code.Length != degit){
+                foreach (ItemCode item in list)
+                {
+                    if (item.Code.Length != degit)
+                    {
                         valid++;
                     }
                 }
@@ -82,18 +107,38 @@ namespace Awecent.Back.Serial.Controllers
                 ViewBag.FileName = excelFile.FileName;
                 ViewBag.Degit = degit;
                 return View();
-                    
+
             }
             ViewBag.PromotionID = id;
             return View();
         }
 
+
+        #region json function
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult GetLotList(Lot model) {
+            LotList list = context.GetLotList(model);
+            return Json(list);
+        }
+
+         [HttpPost]
+        [Authorize]
+        public JsonResult GetItemCodeList(ItemCode model)
+        {
+            ItemCodeList list = context.GetItemCodeList(model);
+            return Json(list);
+        }
+
+        [HttpPost]
+        [Authorize]
         public JsonResult SaveImport(string id, string promotionid)
         {
             string file = Server.MapPath("~/File/" + id);
-            if (!System.IO.File.Exists(file)) return Json(new MasterCode { Result = false , Message = "file not found." });
+            if (!System.IO.File.Exists(file)) return Json(new MasterCode { Result = false, Message = "file not found." });
             if (promotionid == null || string.IsNullOrEmpty(promotionid)) return Json(new MasterCode { Result = false, Message = "file not found." });
-            
+
             var excel = new ExcelQueryFactory(file);
             var list = from c in excel.Worksheet<ItemCode>()
                        where c.Code != null
@@ -102,38 +147,31 @@ namespace Awecent.Back.Serial.Controllers
             string name = ClaimName();
             string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            MasterCode master = context.CreateLotItemCode(new MasterCode { PromotionID = Convert.ToInt64(promotionid) ,CreateBy = name , CodeAmount = total  });
+            MasterCode master = context.CreateLotItemCode(new MasterCode { PromotionID = Convert.ToInt64(promotionid), CreateBy = name, CodeAmount = total });
             if (master == null) return Json(new MasterCode { Result = false, Message = "can not create lot." });
             StringBuilder sb = new StringBuilder();
 
             foreach (ItemCode item in list)
             {
                 sb.AppendFormat("INSERT INTO `gameitemcode`(`iPromotionID`,`iLotID`,`vCode`,`cIsUse`,`dtCreateUser`,`dtCreateDate`) "
-                    +"VALUES('{0}','{1}','{2}','N','{3}','{4}');"
+                    + "VALUES('{0}','{1}','{2}','N','{3}','{4}');"
                     , promotionid, master.Lot, item.Code, name, date);
             }
 
             string sql = sb.ToString();
-            master =  context.InsertExecute(sql);
-            if(master.Result){
+            master = context.InsertExecute(sql);
+            if (master.Result)
+            {
                 master.Result = context.UpdateStatusToProgress(promotionid);
                 if (!master.Result) master.Message = "Update status fail.";
             }
             return Json(master);
         }
 
-        public ActionResult Generate(string id)
-        {
-            if (id == null) return RedirectToAction("Index", "Master"); 
-            ViewBag.PromotionID = id;
-            return View();
-        }
-
-        #region json function
-
         [HttpPost]
         [Authorize]
-        public JsonResult SaveGenerate(OutputTempMaster model) {
+        public JsonResult SaveGenerate(OutputTempMaster model)
+        {
             if (model == null || model.Key == null) return Json(new MasterCode { Result = false, Message = "Can not reference code in temp table." });
             model.GenereateBy = ClaimName();
             MasterCode master = context.SaveTemptoTable(model);
@@ -144,7 +182,7 @@ namespace Awecent.Back.Serial.Controllers
         [Authorize]
         public JsonResult GenerateToTemp(InputTempMaster model)
         {
-            if (!ModelState.IsValid) return Json(new MasterCode { Result = false , Message = "Model state is valid" });
+            if (!ModelState.IsValid) return Json(new MasterCode { Result = false, Message = "Model state is valid" });
             model.GenereateBy = ClaimName();
             OutputTempMaster output = context.GenerateCodeToTempAndValidateion(model);
             return Json(output);
@@ -190,7 +228,7 @@ namespace Awecent.Back.Serial.Controllers
             return Json(master);
         }
 
-      
+
         [HttpGet]
         public JsonResult ChangeStatus(string id)
         {
@@ -205,7 +243,7 @@ namespace Awecent.Back.Serial.Controllers
         {
             if (id == null) return Json(new MasterCode { Result = false, Message = "Model state valid fail." });
             MasterCode master = context.DeleteMasterCode(new MasterCode { PromotionID = Convert.ToInt64(id), CreateUser = ClaimName() });
-            return Json(master , JsonRequestBehavior.AllowGet);
+            return Json(master, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
