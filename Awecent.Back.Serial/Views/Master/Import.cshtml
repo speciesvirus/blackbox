@@ -46,6 +46,18 @@
                 <div class="form-inline">
                     <div class="form-group"><strong>Total record :</strong> @(ViewBag.Total == null ? 0 : ViewBag.Total)</div>&nbsp;|&nbsp;
                     <div class="form-group"><strong>Total valid :</strong> @(ViewBag.TotalValid == null ? 0 : ViewBag.TotalValid)</div>
+                    <div class="row">
+                        <ul>
+                            @if (ViewBag.Validlist != null)
+                            {
+                                foreach (string item in ViewBag.Validlist)
+                                {
+                                    <li>@item</li>
+                                }
+                            }
+                        </ul>
+
+                    </div>
                     <input type="hidden" name="filename" id="filename" value="@ViewBag.FileName" required />
                     <input type="hidden" name="promotionid" id="promotionid" value="@ViewBag.PromotionID" required />
                     @if (ViewBag.TotalValid != null && ViewBag.TotalValid == 0)

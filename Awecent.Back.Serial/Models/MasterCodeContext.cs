@@ -529,6 +529,59 @@ namespace Awecent.Back.Serial.Models
             }
         }
 
+        public ItemCodeList ExportItemCode(ItemCode model) {
+            //awe_exportItemCode
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_exportItemCode", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_LotID", model.LotID));
+                    cmd.Parameters.Add(new MySqlParameter("_PromotionID", model.PromotionID));
+                    cmd.Parameters.Add(new MySqlParameter("_ExportUser", model.CreateBy));
+
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
+                    if (code == 200){
+                        ItemCodeList list = new ItemCodeList();
+                        list.Result = true;
+                        list.Message = cmd.Parameters["_ReturnMsg"].Value.ToString();
+
+                        var q = dt.AsEnumerable().Select(x => new ItemCode()
+                        {
+                            PromotionID = Convert.ToInt64(x["iPromotionID"] == null ? "0" : x["iPromotionID"].ToString()),
+                            LotID = Convert.ToInt64(x["iLotID"].ToString()),
+                            Code = x["vCode"].ToString(),
+                            IsUsed = x["cIsUse"].ToString(),
+                            FacebookID = x["userID"].ToString(),
+                            TimeUse = x["dtUsedDate"].ToString(),
+                            TimeCreate = x["dtCreateDate"].ToString(),
+                            CreateBy = x["dtCreateUser"].ToString()
+
+                        }).ToList();
+                        list.Data = q;
+                        return list;
+                    }
+                    else
+                        return new ItemCodeList { Result = false, Message = cmd.Parameters["_ReturnMsg"].Value.ToString() };
+
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "ExportItemCode" });
+                    return new ItemCodeList { Result = false, Message = ex.Message };
+                }
+
+            }
+            return null;
+        }
+
         public bool UpdateStatusToProgress(string PromotionID)
         {
             //awe_updateStatusToInProcess

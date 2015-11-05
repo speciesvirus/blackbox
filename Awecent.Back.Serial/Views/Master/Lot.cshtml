@@ -76,6 +76,9 @@
                         <td>{{ item.TimeCreate  | date:'yyyy-MM-dd HH:mm:ss' }}</td>
                         <td>{{ item.CreateBy  }}</td>
                     </tr>
+                    <tr>
+                        <td colspan="7"><button class="btn btn-info" ng-click="Export()">Export</button></td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -124,6 +127,7 @@
             $scope.showItemCode = function (index) {
                 var lot = $scope.table[index];
                 console.log(lot);
+                $scope.input.LotID = lot.ID;
                 $scope.itemcode.LotID = lot.ID;
                 $scope.itemcode.Number = lot.Number;
                 $scope.getItemCode();
@@ -153,6 +157,10 @@
                 var longMili = parseFloat(milisec);
                 var myDate = new Date(longMili);
                 return myDate;
+            }
+
+            $scope.Export = function () {
+                //window.open('@Url.Action("Export", "Master")/' + $scope.input.LotID + '/' + $scope.input.PromotionID, '_blank');
             }
 
 

@@ -1,4 +1,5 @@
 ﻿using Awecent.Back.Serial.Models;
+using ClosedXML.Excel;
 using LinqToExcel;
 using Newtonsoft.Json;
 using System;
@@ -91,11 +92,13 @@ namespace Awecent.Back.Serial.Controllers
                            select c;
 
                 int valid = 0;
+                List<string> validlist = new List<string>();
                 foreach (ItemCode item in list)
                 {
                     if (item.Code.Length != degit)
                     {
                         valid++;
+                        validlist.Add("" + item.Code);
                     }
                 }
 
@@ -104,6 +107,7 @@ namespace Awecent.Back.Serial.Controllers
                 ViewBag.TempData = list;
                 ViewBag.Total = total;
                 ViewBag.TotalValid = valid;
+                ViewBag.Validlist = validlist;
                 ViewBag.FileName = excelFile.FileName;
                 ViewBag.Degit = degit;
                 return View();
@@ -113,6 +117,43 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
+
+        [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
+        public ActionResult Export(string id, string name)
+        {
+            ItemCode model = new ItemCode { PromotionID = Convert.ToInt64(name), LotID = Convert.ToInt64(id) };
+            model.CreateBy = ClaimName();
+            ItemCodeList list = context.ExportItemCode(model);
+
+            var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("itemcode");
+            for (int i = 0; i < list.Data.Count; i++)
+            {
+                ItemCode item = list.Data.ElementAt(i);
+                worksheet.Cell(i, 1).SetValue(item.Code);
+                worksheet.Cell(i, 2).SetValue(item.IsUsed);
+                worksheet.Cell(i, 3).SetValue(item.TimeCreate);
+            }
+
+            string filename = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "-" + id + "" + name;
+  
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", string.Format("attachment;filename=\"{0}.xlsx\"", filename));
+
+            // Flush the workbook to the Response.OutputStream
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                workbook.SaveAs(memoryStream);
+                memoryStream.WriteTo(Response.OutputStream);
+                memoryStream.Close();
+            }
+
+            Response.End();
+
+            return View();
+        }
 
         #region json function
 
