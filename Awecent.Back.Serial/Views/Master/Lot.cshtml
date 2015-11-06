@@ -50,8 +50,8 @@
 
 
 
-    <div class="panel panel-default">
-        <div class="panel-heading">Item Code</div>
+    <div class="panel panel-default" ng-show="ui.showCode">
+        <div class="panel-heading">Item Code <button class="btn btn-default" style="float:right" ng-click="Export()">Export</button></div>
         <div class="panel-body">
 
             <table class="table table-bordered">
@@ -77,7 +77,7 @@
                         <td>{{ item.CreateBy  }}</td>
                     </tr>
                     <tr>
-                        <td colspan="7"><button class="btn btn-info" ng-click="Export()">Export</button></td>
+                        @*<td colspan="7"></td>*@
                     </tr>
                 </tbody>
             </table>
@@ -92,50 +92,56 @@
 
 @section Scripts{
     <script type="text/javascript">
-        angular.module('MyApp', ['ui.bootstrap']).controller('LotItemCodeController', ['$scope', '$http', function ($scope, $http) {
+    angular.module('MyApp', ['ui.bootstrap']).controller('LotItemCodeController', ['$scope', '$http', function ($scope, $http) {
 
-            $scope.input = {};
-            $scope.input.PromotionID = '@ViewBag.PromotionID';
-            $scope.input.Page = 1;
-            $scope.input.PageSize = 10;
-            $scope.input.Total = 0;
-            $scope.table = [];
+        $scope.input = {};
+        $scope.input.PromotionID = '@ViewBag.PromotionID';
+        $scope.input.Page = 1;
+        $scope.input.PageSize = 10;
+        $scope.input.Total = 0;
+        $scope.table = [];
 
-            $scope.itemcode = {};
-            $scope.itemcode.Page = 1;
-            $scope.itemcode.PageSize = 10;
-            $scope.itemcode.Total = 0;
-            $scope.itemcodelist = [];
+        $scope.ui = {};
+        $scope.ui.showCode = false;
+        $scope.ui.showButton = true;
 
-            $scope.init = function () {
-                $('#spinner').toggle(true);
-                $http.post('@Url.Action("GetLotList", "Master")', $scope.input)
-                    .success(function (d) {
-                        $('#spinner').toggle(false);
-                        if (d.Result) {
-                            $scope.table = d.Data;
-                            $scope.input.Total = d.Total;
-                            notifySuccess('total record (' + d.Total + ')');
-                        }
-                    }).error(function (e) {
-                        $('#spinner').toggle(false);
-                        console.log(e);
-                        notifyError('500 server error.');
-                    });
-            }
+        $scope.itemcode = {};
+        $scope.itemcode.Page = 1;
+        $scope.itemcode.PageSize = 10;
+        $scope.itemcode.Total = 0;
+        $scope.itemcodelist = [];
 
-            $scope.showItemCode = function (index) {
-                var lot = $scope.table[index];
-                console.log(lot);
-                $scope.input.LotID = lot.ID;
-                $scope.itemcode.LotID = lot.ID;
-                $scope.itemcode.Number = lot.Number;
-                $scope.getItemCode();
-            }
+        $scope.init = function () {
+            $('#spinner').toggle(true);
+            $http.post('@Url.Action("GetLotList", "Master")', $scope.input)
+                .success(function (d) {
+                    $('#spinner').toggle(false);
+                    if (d.Result) {
+                        $scope.table = d.Data;
+                        $scope.input.Total = d.Total;
+                        notifySuccess('total record (' + d.Total + ')');
+                      
+                    }
+                }).error(function (e) {
+                    $('#spinner').toggle(false);
+                    console.log(e);
+                    notifyError('500 server error.');
+                });
+        }
 
-            $scope.getItemCode = function () {
-                $('#spinner').toggle(true);
-                $http.post('@Url.Action("GetItemCodeList","Master")', $scope.itemcode)
+        $scope.showItemCode = function (index) {
+            var lot = $scope.table[index];
+            console.log(lot);
+            $scope.input.LotID = lot.ID;
+            $scope.itemcode.LotID = lot.ID;
+            $scope.itemcode.Number = lot.Number;
+            $scope.getItemCode();
+            $scope.ui.showCode = true;
+        }
+
+        $scope.getItemCode = function () {
+            $('#spinner').toggle(true);
+            $http.post('@Url.Action("GetItemCodeList","Master")', $scope.itemcode)
                     .success(function (d) {
                         $('#spinner').toggle(false);
                         if (d.Result) {
@@ -150,7 +156,8 @@
                     });
             }
 
-            $scope.convertDate = function (strDate) {
+        $scope.convertDate = function (strDate) {
+            //console.log(strDate);
                 if (strDate == null) return;
                 if (strDate instanceof Date) return strDate;
                 var milisec = strDate.substring(6, strDate.length - 2);
@@ -160,11 +167,12 @@
             }
 
             $scope.Export = function () {
-                //window.open('@Url.Action("Export", "Master")/' + $scope.input.LotID + '/' + $scope.input.PromotionID, '_blank');
-            }
+                window.open('@Url.Action("ExportCode", "Master")/' + $scope.input.LotID + '/' + $scope.input.PromotionID, '_blank');
+                //window.open('@Url.Action("ExportCode", "Master")/' + $scope.input.LotID + '/' + $scope.input.PromotionID, '_blank');
+        }
 
 
-        }]);
+    }]);
 
     </script>
 }

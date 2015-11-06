@@ -120,7 +120,7 @@ namespace Awecent.Back.Serial.Controllers
 
         [Authorize]
         [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
-        public ActionResult Export(string id, string name)
+        public ActionResult ExportCode(string id, string name)
         {
             ItemCode model = new ItemCode { PromotionID = Convert.ToInt64(name), LotID = Convert.ToInt64(id) };
             model.CreateBy = ClaimName();
@@ -130,14 +130,14 @@ namespace Awecent.Back.Serial.Controllers
             var worksheet = workbook.Worksheets.Add("itemcode");
             for (int i = 0; i < list.Data.Count; i++)
             {
-                ItemCode item = list.Data.ElementAt(i);
-                worksheet.Cell(i, 1).SetValue(item.Code);
-                worksheet.Cell(i, 2).SetValue(item.IsUsed);
-                worksheet.Cell(i, 3).SetValue(item.TimeCreate);
+                ItemCode item = list.Data[i];
+                worksheet.Cell((i+1), 1).SetValue(item.Code);
+                worksheet.Cell((i + 1), 2).SetValue(item.IsUsed);
+                worksheet.Cell((i + 1), 3).SetValue(item.TimeCreate);
             }
 
             string filename = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "-" + id + "" + name;
-  
+
             Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             Response.AddHeader("content-disposition", string.Format("attachment;filename=\"{0}.xlsx\"", filename));

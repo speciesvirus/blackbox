@@ -84,6 +84,8 @@
 @section Scripts{
     <script type="text/javascript">
         angular.module('MyApp', ['ui.bootstrap']).controller('GenerateCodeController', ['$scope', '$http', function ($scope, $http) {
+
+            var form = $('#ValidateForm');
             $scope.input = {};
             $scope.input.PromotionID = "@ViewBag.PromotionID";
             $scope.input.ReturnAmount = 0;
@@ -113,6 +115,7 @@
 
             $scope.create = function () {
                 if ($scope.input.PromotionID == null || $scope.input.Degit == null) { return; }
+                if (!form.valid) return;
                 $('#spinner').toggle(true);
                 $http.post('@Url.Action("GenerateToTemp", "Master")', $scope.input)
                     .success(function (d) {
@@ -134,8 +137,16 @@
                         notifyError("Server error 500");
                         console.log(e);
                     });
-
             }
+
+            $(document).ready(function () {
+                form.validate({
+                    rules: {
+                        CodeAmount: { required: true, number: true },
+                        Degit: { required: true, number: true, min: 13 },
+                    },
+                });
+            });
         }]);
 
     </script>
