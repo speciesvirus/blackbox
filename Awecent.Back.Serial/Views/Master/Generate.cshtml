@@ -1,12 +1,15 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Generate";
 }
-
 
 <style>
     .row {
         margin: 5px 0;
+    }
+    .margin-left {
+        position:relative;
+        top:-10px;
+        margin-left : 20px;
     }
 </style>
 
@@ -21,21 +24,16 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <label>Serial Code Amount</label>
-                        <input type="text" class="form-control" ng-model="input.amount" name="amount" placeholder="1000" />
+                        <input type="text" class="form-control" ng-model="input.CodeAmount" name="CodeAmount" placeholder="1000" />
                     </div>
                     <div class="col-sm-3">
                         <label>Degit</label>
-                        <input type="text" ng-model="input.degit" class="form-control" name="degit" placeholder="11" />
+                        <input type="text" ng-model="input.Degit" class="form-control" name="Degit" placeholder="11" />
                     </div>
 
                     <div class="col-sm-3">
                         <label>PromotionID</label>
                         <input type="text" class="form-control" ng-model="input.PromotionID" name="PromotionID" readonly />
-                    </div>
-
-                    <div class="col-sm-3">
-                        <label>Lot Number</label>
-                        <input type="text" class="form-control" ng-model="input.lotNumber" name="lotNumber" readonly/>
                     </div>
 
                 </div>
@@ -50,19 +48,106 @@
         </div>
 
 
-    </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Output</div>
+            <div class="panel-body">
+
+                <div class="form-inline">
+                    <div class="form-group"><strong>Generate Amount :</strong>  {{ input.ReturnAmount || number }} </div>&nbsp;|&nbsp;
+                    <div class="form-group"><strong>Temp Code :</strong> {{ input.Key || number }} </div>
+                    <div class="form-group margin-left">
+                        <button class="btn btn-success"
+                                type="button" ng-click="save()"
+                                ng-show="input.showSave"
+                                ng-disabled="input.showSavedisable"
+                                style="margin-top:23px;">
+                            Save
+                        </button>
+                        <button class="btn btn-danger"
+                                type="button" ng-click="delete()"
+                                ng-show="input.showDelete"
+                                style="margin-top:23px;">
+                            Delete
+                        </button>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+
+        </div>
 
 </form>
 
 @section Scripts{
     <script type="text/javascript">
         angular.module('MyApp', ['ui.bootstrap']).controller('GenerateCodeController', ['$scope', '$http', function ($scope, $http) {
+
+            var form = $('#ValidateForm');
             $scope.input = {};
             $scope.input.PromotionID = "@ViewBag.PromotionID";
+            $scope.input.ReturnAmount = 0;
+            $scope.input.Key = "";
+            $scope.input.showSave = false;
+            $scope.input.showSavedisable = false;
+            $scope.input.showDelete = false;
 
+            $scope.save = function () {
+                if ($scope.input.Key == null || $scope.input.Key == "") return;
+                $('#spinner').toggle(true);
+                $http.post('@Url.Action("SaveGenerate","Master")', $scope.input)
+                    .success(function (d) {
+                        $('#spinner').toggle(false);
+                        if (d.Result) {
+                            $scope.input.showSavedisable = true;
+                            notifySuccess("Save item code success.");
+                        } else {
+                            notifyError(d.Message);
+                        }
+                    }).error(function (e) {
+                        $('#spinner').toggle(false);
+                        notifyError("Server error 500");
+                        console.log(e);
+                    });
+            }
+
+            $scope.create = function () {
+                if ($scope.input.PromotionID == null || $scope.input.Degit == null) { return; }
+                if (!form.valid()) return;
+                $('#spinner').toggle(true);
+                $http.post('@Url.Action("GenerateToTemp", "Master")', $scope.input)
+                    .success(function (d) {
+                        $('#spinner').toggle(false);
+                        if (d.Result) {
+                            $scope.input.ReturnAmount = d.Amount;
+                            $scope.input.Key = d.Key;
+                            $scope.input.showSave = true;
+                            notifySuccess("Generate code is success.");
+                        } else {
+                            $scope.input.showDelete = true;
+                            $scope.input.ReturnAmount = d.Amount;
+                            $scope.input.Key = d.Key;
+                            notifyError("Generate code have error.");
+                        }
+
+                    }).error(function (e) {
+                        $('#spinner').toggle(false);
+                        notifyError("Server error 500");
+                        console.log(e);
+                    });
+            }
+
+            $(document).ready(function () {
+                form.validate({
+                    rules: {
+                        CodeAmount: { required: true, number: true },
+                        Degit: { required: true, number: true, min: 13 },
+                    },
+                });
+            });
         }]);
-    
+
     </script>
-
-
 }

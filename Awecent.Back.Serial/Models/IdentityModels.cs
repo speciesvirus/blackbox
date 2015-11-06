@@ -44,12 +44,20 @@ namespace Awecent.Back.Serial.Models
 
     }
 
-    public class Game{
-        public int GameId {get; set;}
-        public string GameName {get; set;}
+    public class ResultModel
+    {
+        public bool Result { get; set; }
+        public string Message { get; set; }
     }
 
-    public class ReportItemCodeInput {
+    public class Game
+    {
+        public int GameId { get; set; }
+        public string GameName { get; set; }
+    }
+
+    public class ReportItemCodeInput
+    {
         [Required]
         public int gameId { get; set; }
 
@@ -63,22 +71,26 @@ namespace Awecent.Back.Serial.Models
     }
 
 
-    public class ItemCode {
+    public class ItemCode
+    {
         public long PromotionID { get; set; }
-        public int LotID { get; set; }
+        public long LotID { get; set; }
         public string Code { get; set; }
         public string IsUsed { get; set; }
         public string FacebookID { get; set; }
         public string TimeUse { get; set; }
         public string TimeCreate { get; set; }
+        public string CreateBy { get; set; }
+
+        //page
+        public int PageSize { get; set; }
+        public int Page { get; set; }
     }
 
-    public class ItemCodeList {
-        public List<ItemCode> data {get; set;}
-        public int total { get; set; }
-        public bool result { get; set; }
-
-    
+    public class ItemCodeList : ResultModel
+    {
+        public List<ItemCode> Data { get; set; }
+        public int Total { get; set; }
     }
 
     public class LogModel
@@ -91,21 +103,23 @@ namespace Awecent.Back.Serial.Models
 
     }
 
-    public class PromotionsList {
-
+    public class PromotionsList
+    {
         public List<Promotion> data { get; set; }
         public int total { get; set; }
-        public bool result { get; set; } 
+        public bool result { get; set; }
     }
 
-    public class Promotion {
+    public class Promotion
+    {
         public int ID { get; set; }
         public string Name { get; set; }
-    
+
     }
 
 
-    public class MasterCode {
+    public class MasterCode
+    {
         [Required]
         public int? GameID { get; set; }
 
@@ -116,14 +130,14 @@ namespace Awecent.Back.Serial.Models
         public string Lot { get; set; }
         public string Code { get; set; }
         public string CreateBy { get; set; }
-        public string ItemID { get; set; }
+        public long? ItemID { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string Status { get; set; }
-        
+
         public string SerialType { get; set; }
-        
+
         public string GenerateType { get; set; }
         public string SerialPrefix { get; set; }
         public string URLShared { get; set; }
@@ -133,18 +147,57 @@ namespace Awecent.Back.Serial.Models
         public int PageSize { get; set; }
         public int Page { get; set; }
         public bool Result { get; set; }
-        public String Message { get; set; }
-        
-
-    }
-
-    public class MasterCodeList {
-        public int Total { get; set; }
-        public List<MasterCode> Data { get; set; }
-        public bool Result { get; set; }
         public string Message { get; set; }
 
+
+    }
+
+    public class MasterCodeList : ResultModel
+    {
+        public int Total { get; set; }
+        public List<MasterCode> Data { get; set; }
+    }
+
+    public class InputTempMaster
+    {
+        [Required]
+        public string PromotionID { get; set; }
+        [Required]
+        public string Degit { get; set; }
+        [Required]
+        public int CodeAmount { get; set; }
+
+        public string GenereateBy { get; set; }
+
     }
 
 
+    public class OutputTempMaster : ResultModel
+    {
+        public string Key { get; set; }
+        public int Amount { get; set; }
+        public string GenereateBy { get; set; }
+
+    }
+
+
+    public class Lot
+    {
+        public long ID { get; set; }
+        public long PromotionID { get; set; }
+        public int Number { get; set; }
+        public int Amount { get; set; }
+        public string SerialRemain { get; set; }
+        public string CreateUser { get; set; }
+        public DateTime? CreateDate { get; set; }
+
+        public int PageSize { get; set; }
+        public int Page { get; set; }
+    }
+
+    public class LotList : ResultModel
+    {
+        public IEnumerable<Lot> Data { get; set; }
+        public int Total { get; set; }
+    }
 }
