@@ -163,7 +163,6 @@ C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\log4net.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Newtonsoft.Json.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Helpers.xml
-C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Mvc.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Optimization.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Razor.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.WebPages.xml
@@ -171,7 +170,6 @@ C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.WebPages.Razor.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\EntityFramework.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\EntityFramework.SqlServer.xml
-C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Microsoft.AspNet.Identity.Core.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Microsoft.AspNet.Identity.Owin.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Microsoft.AspNet.Identity.EntityFramework.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Microsoft.Owin.xml
@@ -186,3 +184,11 @@ C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\obj\Debug\Awecent.Back.Serial.csprojResolveAssemblyReference.cache
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\obj\Debug\Awecent.Back.Serial.dll
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\obj\Debug\Awecent.Back.Serial.pdb
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Net.Http.Formatting.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Http.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Http.WebHost.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Net.Http.Formatting.xml
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Http.xml
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Http.WebHost.xml
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Mvc.xml
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Microsoft.AspNet.Identity.Core.xml

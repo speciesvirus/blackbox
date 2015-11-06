@@ -20,6 +20,25 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
+
+        public ActionResult Active()
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            // Get the claims values
+            var name = identity.Claims.Where(c => c.Type == "GameList")
+                               .Select(c => c.Value).SingleOrDefault();
+            List<Game> list = JsonConvert.DeserializeObject<List<Game>>(name);
+            ViewBag.Games = list;
+
+            return View();
+        }
+
+        public ActionResult Registration()
+        {
+            return View();
+        }
+
+
         [Authorize]
         public ActionResult ItemCode()
         {
@@ -45,6 +64,8 @@ namespace Awecent.Back.Serial.Controllers
             PromotionsList list = context.GetPromotions(id);
             return Json(list , JsonRequestBehavior.AllowGet);
         }
+
+
     }
 
 }
