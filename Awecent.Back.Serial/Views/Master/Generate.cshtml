@@ -115,7 +115,7 @@
 
             $scope.create = function () {
                 if ($scope.input.PromotionID == null || $scope.input.Degit == null) { return; }
-                if (!form.valid) return;
+                if (!form.valid()) return;
                 $('#spinner').toggle(true);
                 $http.post('@Url.Action("GenerateToTemp", "Master")', $scope.input)
                     .success(function (d) {
