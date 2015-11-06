@@ -65,7 +65,7 @@
                         <small>admin</small>
                         <ul class="nav nav-sidebar admin">
                             <li><a href="@Url.Action("Index","Master")">Master Code</a></li>
-                            <li><a href="@Url.Action("Index","Member")">Member Code</a></li>
+                            <li><a href="@Url.Action("Index","Member")">Member</a></li>
                             
                         </ul>
                     </text>
@@ -77,6 +77,12 @@
                         <small>report</small>
                         <ul class="nav nav-sidebar admin">
                             <li><a href="@Url.Action("ItemCode","Report")">Report ItemCode</a></li>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Product"))
+                            {
+                                <li><a href="@Url.Action("Active","Report")">Active Users</a></li>
+                                <li><a href="@Url.Action("Registration", "Report")">User Registration</a></li>
+                            }
+
                         </ul>
                     </text>
                 }

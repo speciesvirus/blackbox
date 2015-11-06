@@ -25,9 +25,25 @@ namespace Awecent.Back.Serial
                       "~/Scripts/notify.js",
                       "~/Scripts/respond.js"));
 
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/Spiner.css"));
+
+
+
+            bundles.Add(new ScriptBundle("~/bundles/report").Include(
+                      "~/Scripts/highcharts-custom.js",
+                      "~/Scripts/moment.js",
+                      "~/Scripts/bootstrap-datetimepicker.min.js",
+                      "~/Scripts/bootstrap-datepicker.min.js",
+                      "~/Scripts/chosen.jquery.min.js"));
+
+            bundles.Add(new StyleBundle("~/Content/report").Include(
+                      "~/Content/bootstrap-datepicker.min.css",
+                      "~/Content/bootstrap-datetimepicker.min.css",
+                      "~/Content/bootstrap-chosen.css"));
+
         }
     }
 }

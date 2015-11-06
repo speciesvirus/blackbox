@@ -20,7 +20,8 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
-
+        [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
         public ActionResult Active()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -33,8 +34,19 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
+        [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
         public ActionResult Registration()
         {
+
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            // Get the claims values
+            var name = identity.Claims.Where(c => c.Type == "GameList")
+                               .Select(c => c.Value).SingleOrDefault();
+            List<Game> list = JsonConvert.DeserializeObject<List<Game>>(name);
+            ViewBag.Games = list;
+
+
             return View();
         }
 

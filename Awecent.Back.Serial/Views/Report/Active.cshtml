@@ -3,13 +3,9 @@
     ViewBag.Title = "Active";
 }
 
-<script src="~/Scripts/highcharts-custom.js"></script>
-<script src="~/Scripts/moment.js"></script>
-<script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
-<link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/report")
+@Styles.Render("~/Content/report")
 
-<script src="~/Scripts/chosen.jquery.min.js"></script>
-<link href="~/Content/bootstrap-chosen.css" rel="stylesheet" />
 <style>
     .input-group-addon, .input-group-btn {
         width: inherit;
@@ -139,23 +135,6 @@
 
 
     $(function () {
-
-
-
-
-
-
-
-
-        //if (!sessionStorage.getItem('timezone')) {
-        //    var tz = jstz.determine() || 'UTC';
-        //    sessionStorage.setItem('timezone', tz.name());
-        //}
-        //var currTz = sessionStorage.getItem('timezone');
-
-        //var momentTime = moment("2015-11-05T05:00:00Z");
-        //var tzTime = momentTime.tz(currTz);
-        //var formattedTime = tzTime.format('h:mm A');
 
 
 
