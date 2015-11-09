@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Moment.Timezone.js</id>
+    <version>0.4.0</version>
+    <authors>Tim Wood</authors>
+    <owners>Tim Wood</owners>
+    <licenseUrl>https://raw.github.com/timrwood/moment/master/LICENSE</licenseUrl>
+    <projectUrl>http://momentjs.com/timezone/</projectUrl>
+    <iconUrl>http://pbs.twimg.com/profile_images/482670411402858496/Xrtdc94q_normal.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Parse and display moments in any timezone.</description>
+    <releaseNotes>- Updated data to IANA TZDB 2015b.
+      - Updated data to IANA TZDB 2015c.
+      - Updated data to IANA TZDB 2015d.
+      - Updated zone getter to allow lazy unpacking to improve initial page load times.
+      - Added a package.json jspm:main entry point.
+      - Added composer.json.
+      - Added an error message when trying to load moment-timezone twice.</releaseNotes>
+    <tags>JavaScript date time timezone browser node.js</tags>
+    <dependencies>
+      <dependency id="Moment.js" version="2.6.0" />
+    </dependencies>
+  </metadata>
+</package>
