@@ -34,6 +34,18 @@ namespace Awecent.Back.Serial.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, result, Configuration.Formatters.JsonFormatter);
                 
         }
+
+
+        [Route("register/user")]
+        [HttpPost]
+        public HttpResponseMessage userRegister(ReportActiveUser model)
+        {
+
+            var result = context.GetRegisterUser(model);
+
+            return Request.CreateResponse(HttpStatusCode.OK, result, Configuration.Formatters.JsonFormatter);
+
+        }
          
     }
 }

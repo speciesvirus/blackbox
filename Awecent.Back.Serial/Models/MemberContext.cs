@@ -65,5 +65,72 @@ namespace Awecent.Back.Serial.Models
                 }
             }
         }
+
+
+        public ReportActiveUser GetRegisterUser(ReportActiveUser model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ReportConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_registerUserNew", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_gameID", model.gameID));
+                    cmd.Parameters.Add(new MySqlParameter("_dateStart", model.timeStart));
+                    cmd.Parameters.Add(new MySqlParameter("_dateEnd", model.timeEnd));
+                    //cmd.Parameters.Add(new MySqlParameter("_page", model._page));
+                    //cmd.Parameters.Add(new MySqlParameter("_pageSize", model._pageSize));
+
+
+                    cmd.Parameters.Add(new MySqlParameter("_sumCountActive", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_sumCountRegister", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value);
+                    int count = dt.Rows.Count;
+
+                    ReportActiveUser list = new ReportActiveUser();
+                    list._sumCountActive = Convert.ToInt32(cmd.Parameters["_sumCountActive"].Value);
+                    list._sumCountRegister = Convert.ToInt32(cmd.Parameters["_sumCountRegister"].Value);
+
+                    if (code == 200)
+                    {
+
+                        var q = dt.AsEnumerable().Select(row => new ActiveUserList()
+                        {
+                            gameID = row["_ReturnId"] == null ? 0 : Convert.ToInt32(row["_ReturnId"]),
+                            countActive = row["_ReturnActiveTotal"] == null ? 0 : int.Parse(row["_ReturnActiveTotal"].ToString()),
+                            countRegister = row["_ReturnRegisterTotal"] == null ? 0 : int.Parse(row["_ReturnRegisterTotal"].ToString()),
+                            //curTime = row.Field<DateTime?>("Date_Active").Value
+                            curTime = (DateTime?)(row["_ReturnDate"] == DBNull.Value ? new DateTime?() : Convert.ToDateTime(row["_ReturnDate"])),
+                        }).ToList();
+                        list.result = true;
+                        list.data = q;
+                        return list;
+                    }
+                    else
+                    {
+                        list.result = false;
+                        list.message = "0 rows";
+                        return list;
+                    }
+                    //Convert.ToInt32(cmd.Parameters["_rows"].Value.ToString());
+
+
+                }
+                catch (Exception ex)
+                {
+                    return new ReportActiveUser { message = ex.Message, result = false };
+                }
+            }
+        }
+
+
+
     }
 }

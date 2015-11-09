@@ -1,31 +1,118 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+<style>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    .section-dashboard {
+        margin-bottom: 2em;
+    }
+    .rad-page-title {
+        margin-bottom: 20px;
+        text-shadow: 1px 4px 6px #c6c6c6, 0 0 0 #000, 1px 2px 1px #c6c6c6;
+    }
+        .rad-page-title span {
+            font-size: 22px;
+            font-weight: 500;
+            display: block;
+        }
+
+    .rad-info-box {
+        float: left;
+        width: 200px;
+        margin: 1em;
+        margin-bottom: 16px;
+        box-shadow: 1px 1px 2px 0 #CCCCCC;
+        padding: 20px;
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        background: white !important;
+    }
+
+    .rad-txt-success {
+        color: #23AE89;
+    }
+    .rad-info-box .value, .rad-info-box .heading {
+        display: block;
+        position: relative;
+        color: #515d6e;
+        text-align: center;
+        z-index: 10;
+    }
+    .rad-info-box .heading {
+        font-size: 1.2em;
+        font-weight: 300;
+
+    }
+
+    .rad-info-box .value, .rad-info-box .heading {
+        display: block;
+        position: relative;
+        color: #515d6e;
+        text-align: center;
+        z-index: 10;
+    }
+    .rad-info-box .value {
+        font-size: 2.1em;
+        font-weight: 600;
+        margin-top: 5px;
+    }
+
+
+
+
+</style>
+<div class="row section-dashboard">
+    <header class="rad-page-title">
+        <span>Dashboard</span>
+        <small class="md-txt">Administration</small>
+    </header>
+    <a href="@Url.Action("Index", "Master")">
+        <div class="rad-info-box rad-txt-success">
+            <span class="heading">Master Code</span>
+            @*<span class="value"><span>4949</span></span>*@
+        </div>
+    </a>
+
+ 
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+    <div class="row section-dashboard">
+    <header class="rad-page-title">
+        <small class="md-txt">Report</small>
+    </header>
+
+@if (User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
+{
+            <a href="@Url.Action("ItemCode", "Report")">
+            <div class="rad-info-box rad-txt-success">
+                <span class="heading">Item Code</span>
+            </div>
+        </a>
+
+                    if (User.IsInRole("Administrator") || User.IsInRole("Product"))
+                {
+                        
+                                <a href="@Url.Action("Registration", "Report")">
+            <div class="rad-info-box rad-txt-success">
+                <span class="heading">Register User</span>
+            </div>
+        </a>
+    
+        <a href="@Url.Action("Active", "Report")">
+            <div class="rad-info-box rad-txt-success">
+                <span class="heading">Active Users / Hour</span>
+            </div>
+        </a>
+
+
+                }
+                
+
+
+
+}
+
+
+
+
+
 </div>

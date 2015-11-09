@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Registration";
 }
 
@@ -30,49 +29,51 @@
     }
 </style>
 
-<div class="container mg-2">
+<div class="mg-2">
     <h2>User Registrations</h2>
     <div class="bs-example" data-example-id="form-group-height-sizes">
         <form class="form-horizontal">
 
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label" for="formGroupInputSmall">Game</label>
-                <div class="col-sm-10">
-                    <select id="gameID" ng-model="input.gameId" ng-change="findPromotion()" class="form-control" name="gameID">
-                        @*<option value="0">Please select game</option>*@
-                        @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
-                        {
-                            <option value="@game.GameId">@game.GameName</option>
-                        }
-                    </select>
+            <div class="panel panel-default">
+                <div class="panel-heading">Filter</div>
+                <div class="panel-body">
 
-                </div>
-            </div>
-            @*<div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label" for="formGroupInputSmall">Small label</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="text" id="formGroupInputSmall" placeholder="Small input">
-                    </div>
-                </div>*@
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label" for="formGroupInputSmall">Date & Time</label>
-                <div class="col-sm-10">
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label" for="formGroupInputSmall">Game</label>
+                        <div class="col-sm-10">
+                            <select id="gameID" ng-model="input.gameId" ng-change="findPromotion()" class="form-control" name="gameID">
+                                @*<option value="0">Please select game</option>*@
+                                @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
+                                {
+                                    <option value="@game.GameId">@game.GameName</option>
+                                }
+                            </select>
 
-                    <div class="input-daterange input-group" id="datepicker">
-                        <input type="text" class="input-sm form-control" name="start" />
-                        <span class="input-group-addon">to</span>
-                        <input type="text" class="input-sm form-control" name="end" />
+                        </div>
                     </div>
 
-                </div>
-            </div>
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label" for="formGroupInputSmall">Date & Time</label>
+                        <div class="col-sm-10">
 
-            <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label" for="formGroupInputSmall"></label>
-                <div class="col-sm-10">
-                    <button class="btn btn-info" type="button" ng-click="search()">Search</button>
-                </div>
+                            <div class="input-daterange input-group" id="datepicker">
+                                <input type="text" class="input-sm form-control" id="start" name="start" />
+                                <span class="input-group-addon">to</span>
+                                <input type="text" class="input-sm form-control" id="end" name="end" />
+                            </div>
 
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label" for="formGroupInputSmall"></label>
+                        <div class="col-sm-10">
+                            <button class="btn btn-info" type="button" ng-click="search()">Search</button>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
 
         </form>
@@ -99,191 +100,232 @@
 <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 
-@*<script type="text/javascript">
+<script type="text/javascript">
+
+    //chart: {
+    //        zoomType: 'xy'
+    //},
+    //title: {
+    //        text: 'Combination chart'
+    //},
+    //xAxis: {
+    //        categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
+    //},
+    //labels: {
+    //        items: [{
+    //            html: 'Total fruit consumption',
+    //            style: {
+    //                left: '50px',
+    //                top: '18px',
+    //                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+    //            }
+    //        }]
+    //},
+    //series: [{
+    //    type: 'column',
+    //    name: 'Jane',
+    //    data: [3, 2, 1, 3, 4]
+    //}, {
+    //    type: 'column',
+    //    name: 'John',
+    //    data: [2, 3, 5, 7, 6]
+    //}, {
+    //    type: 'column',
+    //    name: 'Joe',
+    //    data: [4, 3, 3, 9, 0]
+    //}, {
+    //    type: 'spline',
+    //    name: 'Average',
+    //    data: [3, 2.67, 3, 6.33, 3.33],
+    //    marker: {
+    //        lineWidth: 2,
+    //        lineColor: Highcharts.getOptions().colors[3],
+    //        fillColor: 'white'
+    //    }
+    //}, {
+    //    type: 'pie',
+    //    name: 'Total consumption',
+    //    data: [{
+    //        name: 'Jane',
+    //        y: 13,
+    //        color: Highcharts.getOptions().colors[0] // Jane's color
+    //    }, {
+    //        name: 'John',
+    //        y: 23,
+    //        color: Highcharts.getOptions().colors[1] // John's color
+    //    }, {
+    //        name: 'Joe',
+    //        y: 19,
+    //        color: Highcharts.getOptions().colors[2] // Joe's color
+    //    }],
+    //    center: [100, 80],
+    //    size: 100,
+    //    showInLegend: false,
+    //    dataLabels: {
+    //        enabled: false
+    //    }
+    //}]
 
     $(function () {
 
-        var colors = Highcharts.getOptions().colors,
-            categories = ['User', 'Firefox', 'Chrome', 'Safari', 'Opera'],
-            data = [{
-                y: 200,
-                color: colors[0],
-                drilldown: {
-                    name: 'User',
-                    categories: ['Old', 'New'],
-                    data: [120, 80],
-                    color: colors[0]
-                }
-            }, {
-                y: 100,
-                color: colors[1],
-                drilldown: {
-                    name: 'Firefox versions',
-                    categories: ['Firefox v31', 'Firefox v32', 'Firefox v33'],
-                    data: [20, 50, 30],
-                    color: colors[1]
-                }
-            }],
-            browserData = [],
-            versionsData = [],
-            i,
-            j,
-            dataLen = data.length,
-            drillDataLen,
-            brightness;
 
-
-        // Build the data arrays
-        for (i = 0; i < dataLen; i += 1) {
-
-            // add browser data
-            browserData.push({
-                name: categories[i],
-                y: data[i].y,
-                color: data[i].color
-            });
-
-            // add version data
-            drillDataLen = data[i].drilldown.data.length;
-            for (j = 0; j < drillDataLen; j += 1) {
-                brightness = 0.2 - (j / drillDataLen) / 5;
-                versionsData.push({
-                    name: data[i].drilldown.categories[j],
-                    y: data[i].drilldown.data[j],
-                    color: Highcharts.Color(data[i].color).brighten(brightness).get()
-                });
-            }
-        }
-
-        // Create the chart
-        $('#chart').highcharts({
-            chart: {
-                type: 'pie'
-            },
-            title: {
-                text: 'Browser market share, January, 2015 to May, 2015'
-            },
-            subtitle: {
-                text: 'Source: <a href="http://netmarketshare.com/">netmarketshare.com</a>'
-            },
-            yAxis: {
-                title: {
-                    text: 'Total percent market share'
-                }
-            },
-            plotOptions: {
-                pie: {
-                    shadow: false,
-                    center: ['50%', '50%']
-                }
-            },
-            tooltip: {
-                valueSuffix: ' person'
-            },
-            series: [{
-                name: 'Browsers',
-                data: browserData,
-                size: '60%',
-                dataLabels: {
-                    formatter: function () {
-                        return this.y > 5 ? this.point.name : null;
-                    },
-                    color: '#ffffff',
-                    distance: -30
-                }
-            }, {
-                name: 'Versions',
-                data: versionsData,
-                size: '80%',
-                innerSize: '60%',
-                dataLabels: {
-                    formatter: function () {
-                        // display only if larger than 1
-                        return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + ' person' : null;
-                    }
-                }
-            }]
-        });
-    });
-
-    $(function () {
-
-       
 
         $(".btn-info").click(function () {
 
-            var str = $("#datetimepicker6").find("input").val(),
-                res = str.split("-"),
-                $getDate = res[0],
-                $getTime = res[1],
-                resDate = $getDate.split("/"),
-                $startDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
+            //var str = $("#datetimepicker6").find("input").val(),
+            //    res = str.split("-"),
+            //    $getDate = res[0],
+            //    $getTime = res[1],
+            //    resDate = $getDate.split("/"),
+            //    $startDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
 
-            var str = $("#datetimepicker7").find("input").val(),
-                res = str.split("-"),
-                $getDate = res[0],
-                $getTime = res[1],
-                resDate = $getDate.split("/"),
-                $endDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
+            //var str = $("#datetimepicker7").find("input").val(),
+            //    res = str.split("-"),
+            //    $getDate = res[0],
+            //    $getTime = res[1],
+            //    resDate = $getDate.split("/"),
+            //    $endDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
 
             //alert($("#gameID").chosen().val());
+            if (!$('#start').val().trim()) {
 
+                alert("ข้อมูลวันที่ไม่ถูกต้อง");
 
+                return false;
+            }
+            
+
+            var resDate = $('#start').val().split("/"),
+            $start = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0],
+            resDate = $('#end').val().split("/"),
+            $end = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0];
+
+            $('#spinner').toggle(true);
             $.ajax({
                 type: 'POST',
                 async: true,
-                url: '/api/report/active/user/',
+                url: '/api/report/register/user/',
                 data: {
-                    gameID: '' + $("#gameID").chosen().val(),//+$("#gameID").chosen().val()
-                    timeStart: $startDate,
-                    timeEnd: $endDate
+                    gameID: $("#gameID").val(),//+$("#gameID").chosen().val()
+                    timeStart: $start,
+                    timeEnd: $end
                 },
                 dataType: 'json',
                 success: function (Json) {
+                    console.log('get :', Json);
+                    if (Json.data === null) {
+                        alert('ไม่พบข้อมูล');
+                        $('#spinner').toggle(false);
+                        return false;
+                    }
 
                     var options = chartOption();
-                    //aaa
+
                     jx = new Array(Json.data);
+                    //console.log('get :', jx[0]);
+
                     var JsonLenght = (jx[0].length - 1),
-                        $data = "";
+                        $daa = "";
 
 
                     ja = new Array();
-                    $.each(jx[0], function ($jsonKey, $jsonData) {
-                        var $name = '',
-                            $oneTime = true;
-                        //console.log($jsonData);
-                        $.each($jsonData.data, function (key, value) {
 
-                            $name = value.gameID;
-                            var $vas = key + 1;
-                            ja[key] = value.count;//{ x: $vas, y: value.count }
+                    var $name = '',
+                        $oneTime = true;
 
-                            //set line X (category)
-                            var d = new Date(value.curTime);
-                            var e = formatDate(d);
-                            if ($oneTime) { options.xAxis.categories.push(e); }
+                    $active = new Array();
+                    $register = new Array();
+                    var $intJa = 0;
+                    $.each(jx[0], function (key, value) {
 
-                        });
-                        $oneTime = false;
+                        $name = value.gameID;
+                        $active[key] = value.countActive;
+                        $register[key] = value.countRegister;
+                        //ja[key] = value.count;//{ x: $vas, y: value.count }
+
+                        //set line X (category)
+                        var d = new Date(value.curTime);
+                        var e = formatDate(d);
+                        if ($oneTime) { options.xAxis.categories.push(e); }
+
+
+                        //$oneTime = false;
                         $data = JSON.stringify(ja);
 
+                        console.log('get :', value);
                         // name of value
-                        options.series.push({
-                            name: $name != '' ? $("select#gameID option[value=" + $name + "]").html() : 'null',
-                            data: $.parseJSON($data)
-                        });
+
 
                     });//end each
 
-                    //var chart = new Highcharts.Chart(options);
+
+                    $data = JSON.stringify($active);
+                    options.series.push({
+                        type: 'column',
+                        name: 'Active',
+                        data: $.parseJSON($data)
+                    });
+
+                    $data = JSON.stringify($register);
+                    options.series.push({
+                        type: 'column',
+                        name: 'Register',
+                        data: $.parseJSON($data)
+                    });
 
 
 
-                   
+                    $avg = new Array();
+                    $.each($active, function (key, value) {
+                        $avg[key] = (value + $register[key]) / 2;
+                    });
+                    $data = JSON.stringify($avg);
+                    options.series.push({
+                        type: 'spline',
+                        name: 'Average',
+                        data: $.parseJSON($data),
+                        marker: {
+                            lineWidth: 2,
+                            lineColor: Highcharts.getOptions().colors[3],
+                            fillColor: 'white'
+                        }
+                    });
 
 
-                },
+                    options.series.push({
+                        type: 'pie',
+                        name: 'Total Users',
+                        center: [60, 80],
+                        size: 100,
+                        showInLegend: false,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y}'
+                        },
+                        data: [{
+                            name: 'Active',
+                            y: Json._sumCountActive,
+                            color: Highcharts.getOptions().colors[0] // Jane's color
+                        }, {
+                            name: 'Register',
+                            y: Json._sumCountRegister,
+                            color: Highcharts.getOptions().colors[1] // John's color
+                        }]
+                    });
+
+
+
+                    var chart = new Highcharts.Chart(options);
+
+
+
+
+
+
+                    $('#spinner').toggle(false);
+
+
+                }//success
 
             });
 
@@ -304,21 +346,12 @@
         var options = {
             chart: {
                 renderTo: 'chart',
-                type: 'line'
+                zoomType: 'xy'
             },
             title: {
-                text: 'Active User'
-            },
-            subtitle: {
-                text: 'Source: Game'
+                text: 'Active & Registration Chart'
             },
             xAxis: {
-                //allowDecimals: false,
-                //labels: {
-                //    formatter: function () {
-                //        return this.value;
-                //    }
-                //}
                 categories: []
             },
             yAxis: {
@@ -327,35 +360,29 @@
                 },
                 labels: {
                     formatter: function () {
-                        return this.value + '  person';
+                        return this.value;
                     }
                 }
             },
-            tooltip: {
-                pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
-            },
-
-            plotOptions: {
-                area: {
-                    pointStart: 0,
-                    marker: {
-                        enabled: false,
-                        symbol: 'circle',
-                        radius: 2,
-                        states: {
-                            hover: {
-                                enabled: true
-                            }
-                        }
+            labels: {
+                items: [{
+                    html: 'Total Users',
+                    style: {
+                        left: '50px',
+                        top: '18px',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
                     }
-                },
-                line: {
-                    dataLabels: {
-                        enabled: true
-                    },
-                    enableMouseTracking: false
-                }
+                }]
             },
+            //plotOptions: {
+            //    series: {
+            //        borderWidth: 0,
+            //        dataLabels: {
+            //            enabled: true,
+            //            format: '{point.y}'
+            //        }
+            //    }
+            //},
             series: []
         };
 
@@ -381,12 +408,12 @@
         //hours = hours ? hours : 12;
         //minutes = minutes < 10 ? '0' + minutes : minutes;
         //var strTime = hours + ':' + minutes + ' ' + ampm;
-        return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " - " + date.getHours() + ":00";
+        return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
     }
 
 
 
 
 
-</script>*@
+</script>
 

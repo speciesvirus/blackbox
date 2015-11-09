@@ -13,24 +13,36 @@ namespace Awecent.Back.Serial.Models
         public List<ReportActiveUser> data { get; set; }
     }
 
-    //m
     public class ReportActiveUser
     {
         public string gameID { get; set; }
         public DateTime? timeStart { get; set; }
         public DateTime? timeEnd { get; set; }
+
         //return result
+        public int _page { get; set; }
+        public int _pageSize { get; set; }
         public bool result { get; set; }
         public string message { get; set; }
         public List<ActiveUserList> data { get; set; }
+
+        // registration
+        public int _sumCountActive { get; set; }
+        public int _sumCountRegister { get; set; }
     }
-    //1
+
     public class ActiveUserList
     {
         public int gameID { get; set; }
         public int count { get; set; }
         public DateTime? curTime { get; set; }
+
+        // registration
+        public int countActive { get; set; }
+        public int countRegister { get; set; }
     }
+
+
 
     
    
