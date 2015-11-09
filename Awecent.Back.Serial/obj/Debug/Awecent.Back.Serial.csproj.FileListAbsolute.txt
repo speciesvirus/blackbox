@@ -192,3 +192,10 @@ C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Http.WebHost.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\System.Web.Mvc.xml
 C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Microsoft.AspNet.Identity.Core.xml
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\ClosedXML.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\DocumentFormat.OpenXml.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Spire.Common.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Spire.License.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Spire.Pdf.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\Spire.XLS.dll
+C:\Users\MIS02\Documents\Visual Studio 2013\Projects\backbox\Awecent.Back.Serial\bin\ClosedXML.xml
