@@ -1,0 +1,2 @@
+{"Data":{"PromotionID":"43","Degit":"12","CodeAmount":200,"GenereateBy":"jirayut.kha@awecent.com"},"DateTime":"2558-11-10 09:03:43.972","Function":"GenerateCodeToTemp","Exception":"Data too long for column 'v_itemCode' at row 1","Return":null},
+{"Data":{"PromotionID":"43","Degit":"12","CodeAmount":200,"GenereateBy":"jirayut.kha@awecent.com"},"DateTime":"2558-11-10 09:07:47.322","Function":"GenerateCodeToTemp","Exception":"Data too long for column 'v_itemCode' at row 1","Return":null},

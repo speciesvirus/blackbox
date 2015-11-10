@@ -433,6 +433,7 @@ namespace Awecent.Back.Serial.Models
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
                     int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
+                    string messge = cmd.Parameters["_ReturnMsg"].Value.ToString();
                     if (code == 200)
                     {
                         return new OutputTempMaster
