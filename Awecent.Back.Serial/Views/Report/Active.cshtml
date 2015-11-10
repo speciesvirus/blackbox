@@ -156,19 +156,12 @@
 
         $(".btn-info").click(function () {
 
+
             var str = $("#datetimepicker6").find("input").val(),
-                res = str.split("-"),
-                $getDate = res[0],
-                $getTime = res[1],
-                resDate = $getDate.split("/"),
-                $startDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
+                $startDate = _returnDate(str);
 
             var str = $("#datetimepicker7").find("input").val(),
-                res = str.split("-"),
-                $getDate = res[0],
-                $getTime = res[1],
-                resDate = $getDate.split("/"),
-                $endDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
+                $endDate = _returnDate(str);
 
 
             if ($("#gameID").chosen().val() === null) {
@@ -204,7 +197,7 @@
                     $.each(jx[0], function ($jsonKey, $jsonData) {
                         var $name = '',
                             $oneTime = true;
-                        console.log($jsonData);
+                        //console.log($jsonData);
                         $.each($jsonData.data, function (key, value) {
 
                             $name = value.gameID;
@@ -338,7 +331,17 @@
     }
 
 
+    function _returnDate($data) {
 
+        var res = $data.split("-"),
+        $getDate = res[0],
+        $getTime = res[1],
+        resDate = $getDate.split("/"),
+        $curDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
+
+        return $curDate;
+
+    }
 
 
 </script>
