@@ -204,7 +204,7 @@
                     $.each(jx[0], function ($jsonKey, $jsonData) {
                         var $name = '',
                             $oneTime = true;
-                        //console.log($jsonData);
+                        console.log($jsonData);
                         $.each($jsonData.data, function (key, value) {
 
                             $name = value.gameID;
@@ -334,7 +334,7 @@
         //hours = hours ? hours : 12;
         //minutes = minutes < 10 ? '0' + minutes : minutes;
         //var strTime = hours + ':' + minutes + ' ' + ampm;
-        return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " - " + date.getHours() + ":00";
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " - " + hours + ":00";
     }
 
 
