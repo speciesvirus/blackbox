@@ -129,7 +129,7 @@
                             $scope.input.showDelete = true;
                             $scope.input.ReturnAmount = d.Amount;
                             $scope.input.Key = d.Key;
-                            notifyError("Generate code have error.");
+                            notifyError(d.Message);
                         }
 
                     }).error(function (e) {
