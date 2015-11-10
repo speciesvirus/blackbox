@@ -251,6 +251,7 @@ namespace Awecent.Back.Serial.Controllers
                 return Json(model);
             }
             model.CreateUser = ClaimName();
+            model.SerialPrefix = model.SerialPrefix != null ? model.SerialPrefix.ToLower().ToString() : null; 
             MasterCode master = context.CreateMasterCode(model);
             return Json(master);
         }
