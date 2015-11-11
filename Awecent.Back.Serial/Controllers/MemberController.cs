@@ -16,7 +16,6 @@ namespace Awecent.Back.Serial.Controllers
         [Authorize]
         public ActionResult Index()
         {
-
             return View();
         }
     }

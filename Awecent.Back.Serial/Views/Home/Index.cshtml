@@ -2,14 +2,15 @@
     ViewBag.Title = "Home Page";
 }
 <style>
-
     .section-dashboard {
         margin-bottom: 2em;
     }
+
     .rad-page-title {
         margin-bottom: 20px;
         text-shadow: 1px 4px 6px #c6c6c6, 0 0 0 #000, 1px 2px 1px #c6c6c6;
     }
+
         .rad-page-title span {
             font-size: 22px;
             font-weight: 500;
@@ -30,6 +31,7 @@
     .rad-txt-success {
         color: #23AE89;
     }
+
     .rad-info-box .value, .rad-info-box .heading {
         display: block;
         position: relative;
@@ -37,10 +39,10 @@
         text-align: center;
         z-index: 10;
     }
+
     .rad-info-box .heading {
         font-size: 1.2em;
         font-weight: 300;
-
     }
 
     .rad-info-box .value, .rad-info-box .heading {
@@ -50,53 +52,55 @@
         text-align: center;
         z-index: 10;
     }
+
     .rad-info-box .value {
         font-size: 2.1em;
         font-weight: 600;
         margin-top: 5px;
     }
-
-
-
-
 </style>
-<div class="row section-dashboard">
-    <header class="rad-page-title">
-        <span>Dashboard</span>
-        <small class="md-txt">Administration</small>
-    </header>
-    <a href="@Url.Action("Index", "Master")">
-        <div class="rad-info-box rad-txt-success">
-            <span class="heading">Master Code</span>
-            @*<span class="value"><span>4949</span></span>*@
-        </div>
-    </a>
-
- 
-</div>
-
+@if (User.IsInRole("Administrator") || User.IsInRole("Product"))
+{
     <div class="row section-dashboard">
+
+        <header class="rad-page-title">
+            <span>Dashboard</span>
+            <small class="md-txt">Administration</small>
+        </header>
+
+
+        <a href="@Url.Action("Index", "Master")">
+            <div class="rad-info-box rad-txt-success">
+                <span class="heading">Master Code</span>
+            </div>
+        </a>
+
+
+    </div>
+
+}
+
+<div class="row section-dashboard">
     <header class="rad-page-title">
         <small class="md-txt">Report</small>
     </header>
 
-@if (User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
-{
-            <a href="@Url.Action("ItemCode", "Report")">
+    @if (User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
+    {
+        <a href="@Url.Action("ItemCode", "Report")">
             <div class="rad-info-box rad-txt-success">
                 <span class="heading">Item Code</span>
             </div>
         </a>
 
-                    if (User.IsInRole("Administrator") || User.IsInRole("Product"))
-                {
-                        
-                                <a href="@Url.Action("Registration", "Report")">
+
+
+        <a href="@Url.Action("Registration", "Report")">
             <div class="rad-info-box rad-txt-success">
                 <span class="heading">Register User</span>
             </div>
         </a>
-    
+
         <a href="@Url.Action("Active", "Report")">
             <div class="rad-info-box rad-txt-success">
                 <span class="heading">Active Users / Hour</span>
@@ -104,15 +108,7 @@
         </a>
 
 
-                }
-                
-
-
-
-}
-
-
-
+    }
 
 
 </div>

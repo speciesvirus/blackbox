@@ -13,12 +13,12 @@
     <script src="~/Scripts/angular.min.js"></script>
     <script src="~/Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
-   
+
     <link href="~/Content/Site.css" rel="stylesheet" />
 
 </head>
 <body>
-   
+
     <style>
         .navbar.navbar-inverse.navbar-fixed-top {
             position: relative;
@@ -31,24 +31,25 @@
 
         body {
             color: #777;
-
         }
 
         .wrapper {
             display: flex;
             min-height: 100%;
         }
+
         .main {
             flex: 1;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
             background-color: #fff;
         }
 
-        .nav.nav-menu {
+        .nav {
             width: 230px;
             background: #4a6a8a;
         }
-            .nav.nav-menu.active {
+
+            .nav.active {
                 width: 0;
             }
 
@@ -62,11 +63,6 @@
             color: #eee;
             cursor: pointer;
             transition: .2s all;
-        }
-        .link.little {
-
-            padding-left: 40px;
- 
         }
 
             .link:before {
@@ -89,7 +85,7 @@
             height: 40px;
             line-height: 40px;
             margin: 10px 0;
-            padding: 0 20px;
+            padding: 0 22px;
             text-transform: uppercase;
             color: #7f9dbb;
             background: #43607d;
@@ -104,28 +100,30 @@
             font-weight: 300;
             margin-top: -30px;*/
         }
+
         .nav-menu a {
             color: #fff;
             text-decoration: none;
         }
+
         .nav-menu p {
             color: #fff;
             margin: 10px 0;
         }
 
 
-/* menu */
+        /* menu */
         .main-menu {
             /* width: 40px; */
             /* height: 50px; */
             position: absolute;
             top: 1em;
             padding-left: 1em;
-
             z-index: 999;
             /* margin-left: -20px; */
             /* margin-top: -25px; */
         }
+
             .main-menu:hover {
                 cursor: pointer;
             }
@@ -175,7 +173,6 @@
             margin: 0 0 5px;
             background: #000;
         }
-
     </style>
     <section class="mod model-10 loading" id="spinner">
         <div class="spinner"></div>
@@ -190,17 +187,17 @@
 
 
             <div class='title'>Navigation</div>
-
             <a href="@Url.Action("Index","Home")">
                 <div class='link'>
                     Dashboard
                 </div>
             </a>
-            
 
-            <div class='title'>Admin</div>
+
+            
             @if (User.IsInRole("Administrator") || User.IsInRole("Product"))
             {
+                <div class='title'>Admin</div>
                 <a href="@Url.Action("Index", "Master")">
                     <div class='link'>
                         Master Code
@@ -213,31 +210,27 @@
             @if (User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
             {
 
-            <div class='title'>Report</div>
-             <a href="@Url.Action("ItemCode", "Report")">
-                <div class='link'>
-                    Item Code
-                </div>
-             </a>
-                
-                if (User.IsInRole("Administrator") || User.IsInRole("Product"))
-                {
+                <div class='title'>Report</div>
+                <a href="@Url.Action("ItemCode", "Report")">
+                    <div class='link'>
+                        Item Code
+                    </div>
+                </a>
 
-                     <a href="@Url.Action("Registration", "Report")">
-                        <div class='link'>
-                            Register & Active User 
-                        </div>
-                     </a>
 
-                
-                     <a href="@Url.Action("Active", "Report")">
-                        <div class='link'>
-                            Active Users / Hour
-                        </div>
-                     </a>
-                }
+                <a href="@Url.Action("Registration", "Report")">
+                    <div class='link'>
+                        Register & Active User 
+                    </div>
+                </a>
+                <a href="@Url.Action("Active", "Report")">
+                    <div class='link'>
+                        Active Users / Hour
+                    </div>
+                </a>
+
             }
-            
+
         </div>
 
 
@@ -266,51 +259,51 @@
 
 
     @*<nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed"
+                            data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="javascript:menu()"><span class="glyphicon glyphicon-align-justify"></span></a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#"></a></li>
+                        <li></li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+
+
         <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed"
-                        data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="javascript:menu()"><span class="glyphicon glyphicon-align-justify"></span></a>
+            <div class="row" style="margin-left:0;margin-right:0;">
+                <div id="left" class="col-sm-3 col-md-2 sidebar">
+                    <small>main</small>
+                    <ul class="nav nav-sidebar admin">
+                        <li></li>
+                    </ul>
+
+
+
+                </div>
+                <div id="main" class="col-sm-9  main">
+                    <section class="mod loading model-10">
+                        <div class="spinner"></div>
+                    </section>
+
+
+
+                </div>
             </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"></a></li>
-                    <li></li>
-                </ul>
 
-            </div>
-        </div>
-    </nav>
-
-
-
-    <div class="container-fluid">
-        <div class="row" style="margin-left:0;margin-right:0;">
-            <div id="left" class="col-sm-3 col-md-2 sidebar">
-                <small>main</small>
-                <ul class="nav nav-sidebar admin">
-                    <li></li>
-                </ul>
-
-
-
-            </div>
-            <div id="main" class="col-sm-9  main">
-                <section class="mod loading model-10">
-                    <div class="spinner"></div>
-                </section>
-
-                
-
-            </div>
-        </div>
-
-    </div>*@
+        </div>*@
 
 
     @RenderSection("scripts", required: false)
@@ -330,7 +323,7 @@
             });
         });
 
-   
+
 
         function menu() {
 
