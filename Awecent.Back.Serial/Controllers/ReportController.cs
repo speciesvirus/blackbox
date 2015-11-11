@@ -1,8 +1,10 @@
 ﻿using Awecent.Back.Serial.Models;
+using LinqToExcel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -49,6 +51,64 @@ namespace Awecent.Back.Serial.Controllers
 
             return View();
         }
+
+
+
+
+        [Authorize]
+        public ActionResult Import(HttpPostedFileBase excelFile, int? degit, string id)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.PromotionID = id;
+                return View();
+            }
+
+            if (excelFile != null && (excelFile.FileName.EndsWith("xls") || excelFile.FileName.EndsWith("xlsx")))
+            {
+                var folder = AppDomain.CurrentDomain.BaseDirectory + "File";
+
+                string file = Server.MapPath("~/File/" + excelFile.FileName);
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                if (System.IO.File.Exists(file))
+                {
+                    System.IO.File.Delete(file);
+                }
+                excelFile.SaveAs(file);
+
+                var excel = new ExcelQueryFactory(file);
+                var list = from c in excel.Worksheet<ItemCode>()
+                           where c.Code != null
+                           select c;
+
+                int valid = 0;
+                List<string> validlist = new List<string>();
+                foreach (ItemCode item in list)
+                {
+                    if (item.Code.Length != degit)
+                    {
+                        valid++;
+                        validlist.Add("" + item.Code);
+                    }
+                }
+
+                int total = list.ToList().Count;
+                ViewBag.PromotionID = id;
+                ViewBag.TempData = list;
+                ViewBag.Total = total;
+                ViewBag.TotalValid = valid;
+                ViewBag.Validlist = validlist;
+                ViewBag.FileName = excelFile.FileName;
+                ViewBag.Degit = degit;
+                return View();
+
+            }
+            ViewBag.PromotionID = id;
+            return View();
+        }
+
+
+
 
 
         [Authorize]

@@ -104,8 +104,15 @@ namespace Awecent.Back.Serial.Models
                         var q = dt.AsEnumerable().Select(row => new ActiveUserList()
                         {
                             gameID = row["_ReturnId"] == null ? 0 : Convert.ToInt32(row["_ReturnId"]),
-                            countActive = row["_ReturnActiveTotal"] == null ? 0 : int.Parse(row["_ReturnActiveTotal"].ToString()),
-                            countRegister = row["_ReturnRegisterTotal"] == null ? 0 : int.Parse(row["_ReturnRegisterTotal"].ToString()),
+
+                            countActiveFacebook = row["_ReturnActiveFacebook"] == null ? 0 : int.Parse(row["_ReturnActiveFacebook"].ToString()),
+                            countActiveGuest = row["_ReturnActiveGuest"] == null ? 0 : int.Parse(row["_ReturnActiveGuest"].ToString()),
+                            countActiveTotal = row["_ReturnActiveTotal"] == null ? 0 : int.Parse(row["_ReturnActiveTotal"].ToString()),
+
+                            countRegisterFacebook = row["_ReturnRegisterFacebook"] == null ? 0 : int.Parse(row["_ReturnRegisterFacebook"].ToString()),
+                            countRegisterGuest = row["_ReturnRegisterGuest"] == null ? 0 : int.Parse(row["_ReturnRegisterGuest"].ToString()),
+                            countRegisterTotal = row["_ReturnRegisterTotal"] == null ? 0 : int.Parse(row["_ReturnRegisterTotal"].ToString()),
+
                             //curTime = row.Field<DateTime?>("Date_Active").Value
                             curTime = (DateTime?)(row["_ReturnDate"] == DBNull.Value ? new DateTime?() : Convert.ToDateTime(row["_ReturnDate"])),
                         }).ToList();

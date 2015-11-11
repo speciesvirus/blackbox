@@ -38,6 +38,14 @@ namespace Awecent.Back.Serial.Models
         public DateTime? curTime { get; set; }
 
         // registration
+        public int countRegisterFacebook { get; set; }
+        public int countRegisterGuest { get; set; }
+        public int countRegisterTotal { get; set; }
+
+        public int countActiveFacebook { get; set; }
+        public int countActiveGuest { get; set; }
+        public int countActiveTotal { get; set; }
+
         public int countActive { get; set; }
         public int countRegister { get; set; }
     }
