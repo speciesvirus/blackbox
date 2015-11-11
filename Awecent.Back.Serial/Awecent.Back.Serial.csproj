@@ -501,6 +501,8 @@
     <Content Include="Views\Member\Index.cshtml" />
     <Content Include="Views\Report\Active.cshtml" />
     <Content Include="Views\Report\Registration.cshtml" />
+    <Content Include="Views\Master\Lot.cshtml" />
+    <Content Include="Views\Master\Export.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
