@@ -21,7 +21,7 @@ namespace Awecent.Back.Serial.Controllers
         }
 
         [Authorize]
-        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter")]
         public ActionResult Active()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -35,7 +35,7 @@ namespace Awecent.Back.Serial.Controllers
         }
 
         [Authorize]
-        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter")]
         public ActionResult Registration()
         {
 
