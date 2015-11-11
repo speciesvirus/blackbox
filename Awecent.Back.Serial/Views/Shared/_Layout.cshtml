@@ -44,11 +44,11 @@
             background-color: #fff;
         }
 
-        .nav {
+        .nav.nav-menu {
             width: 230px;
             background: #4a6a8a;
         }
-            .nav.active {
+            .nav.nav-menu.active {
                 width: 0;
             }
 
@@ -62,6 +62,11 @@
             color: #eee;
             cursor: pointer;
             transition: .2s all;
+        }
+        .link.little {
+
+            padding-left: 40px;
+ 
         }
 
             .link:before {
@@ -84,7 +89,7 @@
             height: 40px;
             line-height: 40px;
             margin: 10px 0;
-            padding: 0 22px;
+            padding: 0 20px;
             text-transform: uppercase;
             color: #7f9dbb;
             background: #43607d;
@@ -220,9 +225,11 @@
 
                      <a href="@Url.Action("Registration", "Report")">
                         <div class='link'>
-                            Register User 
+                            Register & Active User 
                         </div>
                      </a>
+
+                
                      <a href="@Url.Action("Active", "Report")">
                         <div class='link'>
                             Active Users / Hour

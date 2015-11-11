@@ -27,11 +27,37 @@
         border-radius: 3px;
         width: 500px;
     }
+
+
+
+
+
+    .bs-example {
+        position: relative;
+        padding: 20px 15px 15px;
+    }
+
+    .bs-example {
+        margin-right: 0;
+        margin-left: 0;
+        background-color: #fff;
+    }
+
+    .bs-example-tabs .nav-tabs {
+        margin-bottom: 15px;
+    }
+
+    .tab-content > .tab-pane {
+        width: 100%;
+    }
 </style>
 
 <div class="mg-2">
     <h2>User Registrations</h2>
+
+
     <div class="bs-example" data-example-id="form-group-height-sizes">
+
         <form class="form-horizontal">
 
             <div class="panel panel-default">
@@ -68,7 +94,7 @@
                     <div class="form-group form-group-sm">
                         <label class="col-sm-2 control-label" for="formGroupInputSmall"></label>
                         <div class="col-sm-10">
-                            <button class="btn btn-info" type="button" ng-click="search()">Search</button>
+                            <button class="btn btn-info chart-submit-1" type="button" ng-click="search()">Search</button>
                         </div>
 
                     </div>
@@ -78,6 +104,80 @@
 
         </form>
     </div>
+
+
+
+    <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+        <ul id="myTabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="false">Active & Register</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="true">Total</a>
+            </li>
+            @*<li role="presentation" class="dropdown">
+                    <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown" aria-controls="myTabDrop1-contents" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="myTabDrop1" id="myTabDrop1-contents">
+                        <li class=""><a href="#dropdown1" role="tab" id="dropdown1-tab" data-toggle="tab" aria-controls="dropdown1" aria-expanded="false">aa</a></li>
+                        <li class=""><a href="#dropdown2" role="tab" id="dropdown2-tab" data-toggle="tab" aria-controls="dropdown2" aria-expanded="false">aa</a></li>
+                    </ul>
+                </li>*@
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+
+
+
+
+                <div id="chart2" style=" height: 400px; margin: 0 auto"></div>
+
+                <table class="table table-striped table-chart2">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Facebook Active</th>
+                            <th>Facebook Register</th>
+                            <th>Guest Active</th>
+                            <th>Guest Register</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+            </div>
+            @* end tap 1 *@
+
+
+            <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+
+
+
+                <div id="chart" style="height: 400px; margin: 0 auto"></div>
+
+                <table class="table table-striped table-chart">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Active</th>
+                            <th>Register</th>
+
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+
+            </div>
+            @*<div role="tabpanel" class="tab-pane fade" id="dropdown1" aria-labelledby="dropdown1-tab">
+                    <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="dropdown2" aria-labelledby="dropdown2-tab">
+                    <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan, sartorial keffiyeh echo park vegan.</p>
+                </div>*@
+        </div>
+    </div>
+
+
 
 
 
@@ -93,11 +193,12 @@
             toggleActive: true
         });
 
+
     });
 </script>
 
 
-<div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
 
 
 <script type="text/javascript">
@@ -167,10 +268,21 @@
     //}]
 
     $(function () {
+        var $option, $option2;
+        $("#home-tab").click(function () {
+            setTimeout(function () {
+                var chart = new Highcharts.Chart($option2);
+            }, 180);
 
+        });
+        $("#profile-tab").click(function () {
+            setTimeout(function () {
+                var chart = new Highcharts.Chart($option);
+            }, 180);
 
+        });
 
-        $(".btn-info").click(function () {
+        $(".chart-submit-1").click(function () {
 
             //var str = $("#datetimepicker6").find("input").val(),
             //    res = str.split("-"),
@@ -193,7 +305,7 @@
 
                 return false;
             }
-            
+
 
             var resDate = $('#start').val().split("/"),
             $start = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0],
@@ -219,41 +331,56 @@
                         return false;
                     }
 
-                    var options = chartOption();
+                    var options = chartOption(),
+                        options2 = chartOption2();
 
                     jx = new Array(Json.data);
                     //console.log('get :', jx[0]);
 
-                    var JsonLenght = (jx[0].length - 1),
-                        $daa = "";
 
+                    var $name = '';
 
-                    ja = new Array();
+                    $activeFacebook = new Array();
+                    $activeGuest = new Array();
 
-                    var $name = '',
-                        $oneTime = true;
+                    $registerFacebook = new Array();
+                    $registerGuest = new Array();
 
                     $active = new Array();
                     $register = new Array();
-                    var $intJa = 0;
+
+                    var $html = "", $html2 = "";
                     $.each(jx[0], function (key, value) {
 
                         $name = value.gameID;
-                        $active[key] = value.countActive;
-                        $register[key] = value.countRegister;
+                        $active[key] = value.countActiveTotal;
+                        $register[key] = value.countRegisterTotal;
                         //ja[key] = value.count;//{ x: $vas, y: value.count }
 
                         //set line X (category)
                         var d = new Date(value.curTime);
                         var e = formatDate(d);
-                        if ($oneTime) { options.xAxis.categories.push(e); }
+                        options.xAxis.categories.push(e);
+
+                        $html += "<tr><td>" + e + "</td><td>" + value.countActiveTotal + "</td><td>" + value.countRegisterTotal + "</td></tr>";
+                        $(".table-chart tbody").html($html);
 
 
-                        //$oneTime = false;
-                        $data = JSON.stringify(ja);
+                        ////// chart2 ///////
 
-                        console.log('get :', value);
-                        // name of value
+                        $activeFacebook[key] = value.countActiveFacebook;
+                        $activeGuest[key] = value.countActiveGuest;
+                        $registerFacebook[key] = value.countRegisterFacebook;
+                        $registerGuest[key] = value.countRegisterGuest;
+                        //ja[key] = value.count;//{ x: $vas, y: value.count }
+
+                        //set line X (category)
+                        var d = new Date(value.curTime);
+                        var e = formatDate(d);
+                        options2.xAxis.categories.push(e);
+
+                        $html2 += "<tr><td>" + e + "</td><td>" + value.countActiveFacebook + "</td><td>" + value.countRegisterFacebook + "</td><td>" + value.countActiveGuest + "</td><td>" + value.countRegisterGuest + "</td></tr>";
+                        $(".table-chart2 tbody").html($html2);
 
 
                     });//end each
@@ -314,13 +441,47 @@
                     });
 
 
-
+                    $option = options;
                     var chart = new Highcharts.Chart(options);
 
 
 
 
 
+
+                    //////////////////////////////// chart2 /////////////////////////////////////
+
+
+                    $data = JSON.stringify($activeFacebook);
+                    options2.series.push({
+                        name: 'Active at Fcebook',
+                        data: $.parseJSON($data)
+                    });
+
+                    $data = JSON.stringify($activeGuest);
+                    options2.series.push({
+                        name: 'Active at Guest',
+                        data: $.parseJSON($data)
+                    });
+
+                    $data = JSON.stringify($registerFacebook);
+                    options2.series.push({
+                        name: 'Register at Fcebook',
+                        data: $.parseJSON($data)
+                    });
+
+                    $data = JSON.stringify($registerGuest);
+                    options2.series.push({
+                        name: 'Register at Guest',
+                        data: $.parseJSON($data)
+                    });
+
+                    $option2 = options2;
+                    var chart = new Highcharts.Chart(options2);
+
+
+                    
+                    
 
                     $('#spinner').toggle(false);
 
@@ -335,6 +496,86 @@
 
 
 
+        $(".chart-submit-2").click(function () {
+
+            if (!$('#start2').val().trim()) {
+
+                alert("ข้อมูลวันที่ไม่ถูกต้อง");
+
+                return false;
+            }
+
+
+            var resDate = $('#start2').val().split("/"),
+            $start = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0],
+            resDate = $('#end2').val().split("/"),
+            $end = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0];
+
+            $('#spinner').toggle(true);
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '/api/report/register/user/',
+                data: {
+                    gameID: $("#gameID2").val(),//+$("#gameID").chosen().val()
+                    timeStart: $start,
+                    timeEnd: $end
+                },
+                dataType: 'json',
+                success: function (Json) {
+
+                    console.log('get :', Json);
+                    if (Json.data === null) {
+                        alert('ไม่พบข้อมูล');
+                        $('#spinner').toggle(false);
+                        return false;
+                    }
+
+                    var options = chartOption2();
+
+                    jx = new Array(Json.data);
+                    //console.log('get :', jx[0]);
+
+                    var $name = '';
+
+                    $activeFacebook = new Array();
+                    $activeGuest = new Array();
+
+                    $registerFacebook = new Array();
+                    $registerGuest = new Array();
+
+                    $.each(jx[0], function (key, value) {
+
+                        $name = value.gameID;
+                        $activeFacebook[key] = value.countActiveFacebook;
+                        $activeGuest[key] = value.countActiveGuest;
+                        $registerFacebook[key] = value.countRegisterFacebook;
+                        $registerGuest[key] = value.countRegisterGuest;
+                        //ja[key] = value.count;//{ x: $vas, y: value.count }
+
+                        //set line X (category)
+                        var d = new Date(value.curTime);
+                        var e = formatDate(d);
+                        options.xAxis.categories.push(e);
+
+                        // name of value
+
+
+                    });//end each
+
+
+
+
+
+                    $('#spinner').toggle(false);
+
+
+                }//success
+
+            });
+
+
+        });
 
 
     });
@@ -411,6 +652,78 @@
         return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
     }
 
+
+
+
+    function chartOption2() {
+
+
+        var options = {
+            chart: {
+                type: 'column',
+                renderTo: 'chart2',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Total Active & Registration Chart'
+            },
+            xAxis: {
+                categories: []
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Rainfall (mm)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                },
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y}'
+                    }
+                }
+            },
+            labels: {
+                items: [{
+                    html: 'Total Users',
+                    style: {
+                        left: '50px',
+                        top: '18px',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                    }
+                }]
+            },
+            //plotOptions: {
+            //    series: {
+            //        borderWidth: 0,
+            //        dataLabels: {
+            //            enabled: true,
+            //            format: '{point.y}'
+            //        }
+            //    }
+            //},
+            series: []
+        };
+
+
+        return options;
+
+
+    }
 
 
 
