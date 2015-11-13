@@ -178,7 +178,7 @@ namespace Awecent.Back.Serial.Controllers
         {
             string file = Server.MapPath("~/File/" + id);
             if (!System.IO.File.Exists(file)) return Json(new MasterCode { Result = false, Message = "file not found." });
-            if (promotionid == null || string.IsNullOrEmpty(promotionid)) return Json(new MasterCode { Result = false, Message = "file not found." });
+            if (promotionid == null || string.IsNullOrEmpty(promotionid)) return Json(new MasterCode { Result = false, Message = "PromotionId not found." });
 
             var excel = new ExcelQueryFactory(file);
             var list = from c in excel.Worksheet<ItemCode>()
