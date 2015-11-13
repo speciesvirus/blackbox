@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-sm-4">
                         <label>Item Code Prefix</label>
-                        <input type="text" class="form-control" ng-disabled="prefix || input.Status > 1"
+                        <input type="text" class="form-control" ng-disabled="prefix || input.Status > 1 || input.GenerateType == 2"
                                ng-model=" input.SerialPrefix" name="SerialPrefix" placeholder="3 character" maxlength="3" />
                     </div>
                 </div>
