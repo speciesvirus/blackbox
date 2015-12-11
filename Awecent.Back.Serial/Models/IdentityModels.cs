@@ -177,6 +177,10 @@ namespace Awecent.Back.Serial.Models
         public string Key { get; set; }
         public int Amount { get; set; }
         public string GenereateBy { get; set; }
+        //page
+        public int PageSize { get; set; }
+        public int Page { get; set; }
+        public int Total { get; set; }
 
     }
 

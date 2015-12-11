@@ -410,6 +410,46 @@ namespace Awecent.Back.Serial.Models
             }
         }
 
+
+        public ItemCodeList GetItemCodeListTemp(OutputTempMaster model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("GameItemCodeTempGetList", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_Key", model.Key));
+                    cmd.Parameters.Add(new MySqlParameter("_Page", model.Page));
+                    cmd.Parameters.Add(new MySqlParameter("_PageSize", model.PageSize));
+
+                    cmd.Parameters.Add(new MySqlParameter("_rows", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int row = Convert.ToInt32(cmd.Parameters["_rows"].Value.ToString());
+                    if (row <= 0) return new ItemCodeList { Result = false, Message = "0 record." };
+                    ItemCodeList list = new ItemCodeList();
+                    list.Result = true;
+                    list.Total = row;
+                    var q = dt.AsEnumerable().Select(x => new ItemCode()
+                    {
+                        PromotionID = Convert.ToInt64(x["iPromotionID"] == null ? "0" : x["iPromotionID"].ToString()),
+                        //LotID = Convert.ToInt64(x["iLotID"].ToString()),
+                        Code = x["itemCode"].ToString()
+                    }).ToList();
+                    list.Data = q;
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "GetItemCodeListTemp" });
+                    return new ItemCodeList { Result = false, Message = ex.Message };
+                }
+
+            }
+        }
+
         public OutputTempMaster GenerateCodeToTempAndValidateion(InputTempMaster model)
         {
             //awe_storeGenItemCodeToTemp
@@ -428,7 +468,7 @@ namespace Awecent.Back.Serial.Models
                     cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
                     cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
                     cmd.Parameters.Add(new MySqlParameter("_ReturnFileName", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
-
+                    cmd.CommandTimeout = (60 * 10);
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
