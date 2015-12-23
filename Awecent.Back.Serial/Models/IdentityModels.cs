@@ -50,10 +50,15 @@ namespace Awecent.Back.Serial.Models
         public string Message { get; set; }
     }
 
+
     public class Game
     {
         public int GameId { get; set; }
         public string GameName { get; set; }
+
+        //public int ServerId { get; set; }
+        //public string ServerName { get; set; }
+        
     }
 
     public class ReportItemCodeInput

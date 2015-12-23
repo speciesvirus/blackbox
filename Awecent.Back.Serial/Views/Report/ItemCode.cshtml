@@ -144,14 +144,17 @@
             }
 
             $scope.search = function () {
+                
+                $scope.input.pageSize = parseInt($scope.input.pageSize);
                 console.log("click", $scope.input);
-               
+
                 if ($scope.input.endDate < $scope.input.startDate) { alert('Please select EndDate > StartDate'); return; }
                 if (!$("#ValidateForm").valid()) return;
                 $('#spinner').toggle(true);
+                
                 $http.post('@Url.Action("GetRecord","Report")', $scope.input)
                     .success(function (d) {
-                        console.log(d);
+                        console.log('aaa',d);
                         $('#spinner').toggle(false);
                         if (d.Result) {
                             $scope.itemCodes = d.Data;

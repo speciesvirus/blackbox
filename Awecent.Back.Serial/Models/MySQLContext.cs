@@ -142,6 +142,7 @@ namespace Awecent.Back.Serial.Models
                         GameName = row["GameName"].ToString()
                     }).ToList();
 
+
                     user.UserGameList = q;
 
                     return user;

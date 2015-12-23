@@ -51,6 +51,8 @@ namespace Awecent.Back.Serial.Controllers
             UserandRole user = context.ValidateAccount(model.Email , model.Password);
             new LogFile().Writer(new LogModel { Data = user , Function = "SignAuthenticationManager" , Exception = "user return" });
             if (user == null) return false;
+            //get server list
+            //UserandRole server = context.ValidateAccountServer(model.Email, model.Password);
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
  
             var claims = new List<Claim>();
@@ -60,6 +62,7 @@ namespace Awecent.Back.Serial.Controllers
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
             claims.Add(new Claim(ClaimTypes.Email, user.UserName));
             claims.Add(new Claim("GameList", JsonConvert.SerializeObject(user.UserGameList)));
+            //claims.Add(new Claim("ServerList", JsonConvert.SerializeObject(server.UserGameList)));
             var id = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
 
             

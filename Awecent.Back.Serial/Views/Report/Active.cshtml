@@ -6,6 +6,8 @@
 @Scripts.Render("~/bundles/report")
 @Styles.Render("~/Content/report")
 
+@Scripts.Render("~/bundles/amcharts")
+@Styles.Render("~/Content/amcharts")
 <style>
     .input-group-addon, .input-group-btn {
         width: inherit;
@@ -27,9 +29,32 @@
         border-radius: 3px;
         width: 500px;
     }
+
+
+
+    .amChartsDataSetSelector {
+        font-size: 12px;
+        font-family: verdana,helvetica,arial,sans-serif;
+    }
+
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+        /*background: #3f3f4f !important;
+        background-color: #FFFFFF;*/
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.2);
+    }
+
+    .amcharts-stock-div * {
+        -webkit-box-sizing: initial;
+        -moz-box-sizing: initial;
+        box-sizing: initial;
+    }
 </style>
 
-<div class="mg-2">
+<div class="mg-2" ng-app="" ng-controller="">
     <h2>Active Users</h2>
     <div class="bs-example" data-example-id="form-group-height-sizes">
         <form class="form-horizontal">
@@ -120,12 +145,14 @@
 
     </div>
 
+    <div id="chartdiv"></div>
 
+    <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 </div>
 
 
-<div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
 
 <script type="text/javascript">
     $(function () {
@@ -159,9 +186,6 @@
 
     });
 </script>
-
-
-
 
 
 <script type="text/javascript">
@@ -320,12 +344,7 @@
             series: []
         };
 
-
-
-
-
         return options;
-
 
     }
 
@@ -363,4 +382,257 @@
 
 
 </script>
+
+
+<script type="text/javascript">
+
+    $(function () {
+
+
+
+
+        var chartConfig = {
+            "type": "serial",
+            "marginRight": 80,
+            "autoMarginOffset": 20,
+            "dataProvider": [],
+            "valueAxes": [{
+                "gridColor": "#aaa",
+                "id": "v1",
+                "title": "Graph",
+                "position": "left",
+                "autoGridCount": false,
+            }, {
+                "gridColor": "#aaa",
+                "id": "v1",
+                "title": "Graph",
+                "position": "right",
+                "autoGridCount": false,
+            }
+            ],
+            //"gridAboveGraphs": true,
+            //"startDuration": 1,
+            "graphs": [],
+            "chartCursor": {
+                "cursorAlpha": 0,
+                //"zoomable": false,
+                //"pan": true,
+                "valueLineEnabled": true,
+                "valueLineBalloonEnabled": true,
+                "valueLineAlpha": 0.2,
+                "categoryBalloonColor": "#000000",
+                "cursorColor": "#000000",
+                "categoryBalloonDateFormat": "JJ:NN, DD MMMM YYYY",
+                "cursorPosition": "mouse"
+            },
+            "categoryField": "title",
+
+            "categoryAxis": {
+                "gridPosition": "start",
+                "axisAlpha": 0,
+                "fillAlpha": 0.05,
+                "fillColor": "#000000",
+                "gridAlpha": 0,
+                //"position": "top"
+                "minPeriod": "mm",
+                "parseDates": true,
+                //"parseDates": true,
+                "axisColor": "#DADADA",
+                "dashLength": 1,
+                "minorGridEnabled": true,
+            },
+            "balloon": {
+                "borderThickness": 1,
+                "shadowAlpha": 0
+            },
+            "legend": {
+                "useGraphSettings": true,
+                "position": "top"
+            },
+            "chartScrollbar": {
+                "graph": "g0",
+                "oppositeAxis": false,
+                "offset": 30,
+                "scrollbarHeight": 40,
+                "backgroundAlpha": 0,
+                "selectedBackgroundAlpha": 0.1,
+                "selectedBackgroundColor": "#888888",
+                "graphFillAlpha": 0,
+                "graphLineAlpha": 0.5,
+                "selectedGraphFillAlpha": 0,
+                "selectedGraphLineAlpha": 1,
+                "autoGridCount": true,
+                "color": "#AAAAAA",
+                "selectedGraphLineColor": "#888888",
+                "selectedGraphLineAlpha": 1
+            },
+            "export": {
+                "enabled": true,
+                //"position": "bottom-right"
+            }
+
+
+        };
+
+
+
+        //chartConfig.dataProvider.push({
+        //    title: "sample 2",
+        //    italy: 2,
+        //    germany: 3,
+        //    uk: 1
+        //});
+
+
+
+
+        // end chart
+
+
+
+        $(".btn-info").click(function () {
+
+
+            var str = $("#datetimepicker6").find("input").val(),
+                $startDate = _returnDate(str);
+
+            var str = $("#datetimepicker7").find("input").val(),
+                $endDate = _returnDate(str);
+
+
+            if ($("#gameID").chosen().val() === null) {
+
+                alert("Choose a game!");
+
+                return false;
+            }
+
+
+            $('#spinner').toggle(true);
+
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '/api/report/active/user/',
+                data: {
+                    gameID: '' + $("#gameID").chosen().val(),//+$("#gameID").chosen().val()
+                    timeStart: $startDate,
+                    timeEnd: $endDate
+                },
+                dataType: 'json',
+                success: function (Json) {
+
+                    var options = chartOption();
+                    //aaa
+                    jx = new Array(Json.data);
+                    var JsonLenght = (jx[0].length - 1),
+                        $data = "";
+
+
+                    ja = new Array();
+                    $.each(jx[0], function ($jsonKey, $jsonData) {
+                        var $name = '',
+                            $oneTime = true;
+                        console.log($jsonData);
+                        $.each($jsonData.data, function (key, value) {
+                            
+                            $name = value.gameID;
+                            var d = new Date(value.curTime);
+                            var e = new Date(d - 1000 * 3600 * 7);
+
+
+                            chartConfig.dataProvider.push({
+                                title: e,
+                                active: value.count,
+                                active2: value.count,
+                            });
+
+
+
+                        });
+
+
+
+                        chartConfig.graphs.push({
+                            "id": "g" + $jsonKey,
+                            "balloonText": "Visits : <b style='font-size: 130%'>[[value]]</b>",
+                            "bullet": "round",
+                            //"hidden": true,
+                            "title": $name != '' ? $("select#gameID option[value=" + $name + "]").html() : 'null',
+                            "valueField": "active",
+                            "fillAlphas": 0,
+
+                            "bulletBorderAlpha": 1,
+                            "bulletColor": "#FFFFFF",
+                            "bulletSize": 7,
+                            "lineThickness": 2,
+                            "useLineColorForBulletBorder": true,
+
+
+                            "hideBulletsCount": 50,
+                            "useLineColorForBulletBorder": true,
+
+                            "labelText": "[[value]]",
+                            "type": "smoothedLine",
+                            //"type": "column",
+
+                        });
+
+
+
+                    });//end each
+
+                    
+                    // make the chart
+                    var chart = AmCharts.makeChart("chartdiv", chartConfig);
+
+                    //zoomChart();
+                    //function zoomChart() {
+                    //    chart.zoomToIndexes(chartData.length - 250, chartData.length - 100);
+                    //}
+
+                    $('#spinner').toggle(false);
+
+    
+
+                    
+
+                },
+
+            });
+
+
+        });
+
+
+
+        function formatDate($date) {
+
+            var d = new Date($date);
+            var offset = (new Date().getTimezoneOffset() / 60) * -1;
+            var date = new Date(d.getTime() - 1000 * 3600 * 7);
+
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+
+            //var ampm = hours >= 12 ? 'pm' : 'am';
+            //hours = hours % 12;
+            //hours = hours ? hours : 12;
+            //minutes = minutes < 10 ? '0' + minutes : minutes;
+            //var strTime = hours + ':' + minutes + ' ' + ampm;
+            return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " - " + hours + ":00";
+        }
+
+
+
+
+    });
+
+
+
+
+
+
+</script>
+
 

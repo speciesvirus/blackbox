@@ -5,6 +5,8 @@
 @Scripts.Render("~/bundles/report")
 @Styles.Render("~/Content/report")
 
+@Scripts.Render("~/bundles/amcharts")
+@Styles.Render("~/Content/amcharts")
 
 <style>
     .input-group-addon, .input-group-btn {
@@ -50,6 +52,8 @@
     .tab-content > .tab-pane {
         width: 100%;
     }
+
+
 </style>
 
 <div class="mg-2">
@@ -127,7 +131,7 @@
             <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
 
 
-
+                
 
                 <div id="chart2" style=" height: 400px; margin: 0 auto"></div>
 
@@ -203,72 +207,11 @@
 
 <script type="text/javascript">
 
-    //chart: {
-    //        zoomType: 'xy'
-    //},
-    //title: {
-    //        text: 'Combination chart'
-    //},
-    //xAxis: {
-    //        categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
-    //},
-    //labels: {
-    //        items: [{
-    //            html: 'Total fruit consumption',
-    //            style: {
-    //                left: '50px',
-    //                top: '18px',
-    //                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-    //            }
-    //        }]
-    //},
-    //series: [{
-    //    type: 'column',
-    //    name: 'Jane',
-    //    data: [3, 2, 1, 3, 4]
-    //}, {
-    //    type: 'column',
-    //    name: 'John',
-    //    data: [2, 3, 5, 7, 6]
-    //}, {
-    //    type: 'column',
-    //    name: 'Joe',
-    //    data: [4, 3, 3, 9, 0]
-    //}, {
-    //    type: 'spline',
-    //    name: 'Average',
-    //    data: [3, 2.67, 3, 6.33, 3.33],
-    //    marker: {
-    //        lineWidth: 2,
-    //        lineColor: Highcharts.getOptions().colors[3],
-    //        fillColor: 'white'
-    //    }
-    //}, {
-    //    type: 'pie',
-    //    name: 'Total consumption',
-    //    data: [{
-    //        name: 'Jane',
-    //        y: 13,
-    //        color: Highcharts.getOptions().colors[0] // Jane's color
-    //    }, {
-    //        name: 'John',
-    //        y: 23,
-    //        color: Highcharts.getOptions().colors[1] // John's color
-    //    }, {
-    //        name: 'Joe',
-    //        y: 19,
-    //        color: Highcharts.getOptions().colors[2] // Joe's color
-    //    }],
-    //    center: [100, 80],
-    //    size: 100,
-    //    showInLegend: false,
-    //    dataLabels: {
-    //        enabled: false
-    //    }
-    //}]
 
     $(function () {
+
         var $option, $option2;
+
         $("#home-tab").click(function () {
             setTimeout(function () {
                 var chart = new Highcharts.Chart($option2);
@@ -279,26 +222,11 @@
             setTimeout(function () {
                 var chart = new Highcharts.Chart($option);
             }, 180);
-
         });
+
 
         $(".chart-submit-1").click(function () {
 
-            //var str = $("#datetimepicker6").find("input").val(),
-            //    res = str.split("-"),
-            //    $getDate = res[0],
-            //    $getTime = res[1],
-            //    resDate = $getDate.split("/"),
-            //    $startDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
-
-            //var str = $("#datetimepicker7").find("input").val(),
-            //    res = str.split("-"),
-            //    $getDate = res[0],
-            //    $getTime = res[1],
-            //    resDate = $getDate.split("/"),
-            //    $endDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
-
-            //alert($("#gameID").chosen().val());
             if (!$('#start').val().trim()) {
 
                 alert("ข้อมูลวันที่ไม่ถูกต้อง");
@@ -480,90 +408,6 @@
                     var chart = new Highcharts.Chart(options2);
 
 
-                    
-                    
-
-                    $('#spinner').toggle(false);
-
-
-                }//success
-
-            });
-
-
-        });
-
-
-
-
-        $(".chart-submit-2").click(function () {
-
-            if (!$('#start2').val().trim()) {
-
-                alert("ข้อมูลวันที่ไม่ถูกต้อง");
-
-                return false;
-            }
-
-
-            var resDate = $('#start2').val().split("/"),
-            $start = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0],
-            resDate = $('#end2').val().split("/"),
-            $end = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0];
-
-            $('#spinner').toggle(true);
-            $.ajax({
-                type: 'POST',
-                async: true,
-                url: '/api/report/register/user/',
-                data: {
-                    gameID: $("#gameID2").val(),//+$("#gameID").chosen().val()
-                    timeStart: $start,
-                    timeEnd: $end
-                },
-                dataType: 'json',
-                success: function (Json) {
-
-                    console.log('get :', Json);
-                    if (Json.data === null) {
-                        alert('ไม่พบข้อมูล');
-                        $('#spinner').toggle(false);
-                        return false;
-                    }
-
-                    var options = chartOption2();
-
-                    jx = new Array(Json.data);
-                    //console.log('get :', jx[0]);
-
-                    var $name = '';
-
-                    $activeFacebook = new Array();
-                    $activeGuest = new Array();
-
-                    $registerFacebook = new Array();
-                    $registerGuest = new Array();
-
-                    $.each(jx[0], function (key, value) {
-
-                        $name = value.gameID;
-                        $activeFacebook[key] = value.countActiveFacebook;
-                        $activeGuest[key] = value.countActiveGuest;
-                        $registerFacebook[key] = value.countRegisterFacebook;
-                        $registerGuest[key] = value.countRegisterGuest;
-                        //ja[key] = value.count;//{ x: $vas, y: value.count }
-
-                        //set line X (category)
-                        var d = new Date(value.curTime);
-                        var e = formatDate(d);
-                        options.xAxis.categories.push(e);
-
-                        // name of value
-
-
-                    });//end each
-
-
 
 
 
@@ -576,12 +420,31 @@
 
 
         });
-
 
     });
 
 
+    function formatDate($date) {
 
+        var d = new Date($date);
+        var offset = (new Date().getTimezoneOffset() / 60) * -1;
+        var date = new Date(d.getTime() - 1000 * 3600 * 7);
+
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+
+        //var ampm = hours >= 12 ? 'pm' : 'am';
+        //hours = hours % 12;
+        //hours = hours ? hours : 12;
+        //minutes = minutes < 10 ? '0' + minutes : minutes;
+        //var strTime = hours + ':' + minutes + ' ' + ampm;
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    }
+
+
+
+
+    // height chart active&register
     function chartOption() {
 
         var options = {
@@ -633,28 +496,7 @@
 
     }
 
-
-
-    function formatDate($date) {
-
-        var d = new Date($date);
-        var offset = (new Date().getTimezoneOffset() / 60) * -1;
-        var date = new Date(d.getTime() - 1000 * 3600 * 7);
-
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-
-        //var ampm = hours >= 12 ? 'pm' : 'am';
-        //hours = hours % 12;
-        //hours = hours ? hours : 12;
-        //minutes = minutes < 10 ? '0' + minutes : minutes;
-        //var strTime = hours + ':' + minutes + ' ' + ampm;
-        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-    }
-
-
-
-
+    // height chart total
     function chartOption2() {
 
 

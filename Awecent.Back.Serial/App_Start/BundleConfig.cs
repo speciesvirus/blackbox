@@ -44,6 +44,23 @@ namespace Awecent.Back.Serial
                       "~/Content/bootstrap-datetimepicker.min.css",
                       "~/Content/bootstrap-chosen.css"));
 
+
+
+            bundles.Add(new ScriptBundle("~/bundles/amcharts").Include(
+                      "~/Scripts/amcharts/amcharts.js",
+                      "~/Scripts/amcharts/serial.js",
+                      "~/Scripts/amcharts/themes/light.js",
+                      "~/Scripts/amcharts/themes/dark.js",
+                      "~/Scripts/amcharts/amstock.js",
+
+                      "~/Scripts/amcharts/plugins/export/export.js",
+                      "~/Scripts/amcharts/plugins/responsive/responsive.js"));
+
+            bundles.Add(new StyleBundle("~/Content/amcharts").Include(
+                      "~/Scripts/amcharts/plugins/export/export.css"
+                        ));
+
+
         }
     }
 }
