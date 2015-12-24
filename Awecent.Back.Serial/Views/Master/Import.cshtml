@@ -19,18 +19,21 @@
         <div class="panel-body">
 
             <div class="form-inline ">
+
+                <div class="form-group margin-left">
+                    <label>PromotionID</label>
+                    <input type="text" name="PromotionID" class="form-control" style="width:80px;margin:0 10px;" value="@ViewBag.PromotionID" readonly />
+                </div>
+
                 <div class="form-group">
                     <label>File</label>
-                    <input type="file" name="excelFile" class="form-control" required />
+                    <input type="file" name="excelFile" class="form-control" accept=".xls" required />
                 </div>
                 <div class="form-group margin-left">
                     <label>Degit</label>
                     <input type="text" name="degit" class="form-control" value="@ViewBag.Degit" required placeholder="11" maxlength="2"/>
                 </div>
-                <div class="form-group margin-left">
-                    <label>PromotionID</label>
-                    <input type="text" name="PromotionID" class="form-control" value="@ViewBag.PromotionID" readonly />
-                </div>
+                
                 <button type="submit" class="btn btn-info" form="Upload">submit</button>
             </div>
 
@@ -96,7 +99,7 @@
                 {
                     <tr>
                         <td>@i</td>
-                        <td>@item.PromotionID</td>
+                        <td>@ViewBag.PromotionID</td>
                         <td>@item.Code</td>
                         <td>Temp</td>
                     </tr>

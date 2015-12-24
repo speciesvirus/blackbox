@@ -10,6 +10,8 @@ namespace Awecent.Back.Serial.Models
     public class LogFile
     {
 
+        string location = System.Web.Configuration.WebConfigurationManager.AppSettings["LocationFile"].ToString();
+
         public void WriterError(LogModel model)
         {
             string datefolder = DateTime.Now.ToString("yyyy-MM");
@@ -18,11 +20,13 @@ namespace Awecent.Back.Serial.Models
             model.DateTime = datetime;
             try
             {
-                var folder = AppDomain.CurrentDomain.BaseDirectory + "Log";
+                var folder = location + "LogError";
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-                var path = AppDomain.CurrentDomain.BaseDirectory + "Log\\" + datefolder;
+
+                var path = location + "LogError\\" + datefolder;
                 if (!Directory.Exists(path))  Directory.CreateDirectory(path);
-                var filename = path + "\\Error-" + datename + ".txt";
+
+                var filename = path + "\\" + datename + ".txt";
                 var sw = new System.IO.StreamWriter(filename, true);
                 string strinput = JsonConvert.SerializeObject(model);
                 sw.WriteLine(strinput+",");
@@ -41,10 +45,12 @@ namespace Awecent.Back.Serial.Models
             model.DateTime = datetime;
             try
             {
-                var folder = AppDomain.CurrentDomain.BaseDirectory + "Log";
+                var folder = location + "Log";
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-                var path = AppDomain.CurrentDomain.BaseDirectory + "Log\\" + datefolder;
+
+                var path = location + "Log\\" + datefolder;
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
                 var filename = path + "\\" + datename + ".txt";
                 var sw = new System.IO.StreamWriter(filename, true);
                 string strinput = JsonConvert.SerializeObject(model);

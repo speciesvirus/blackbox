@@ -178,7 +178,7 @@ namespace Awecent.Back.Serial.Controllers
         {
             string file = Server.MapPath("~/File/" + id);
             if (!System.IO.File.Exists(file)) return Json(new MasterCode { Result = false, Message = "file not found." });
-            if (promotionid == null || string.IsNullOrEmpty(promotionid)) return Json(new MasterCode { Result = false, Message = "file not found." });
+            if (promotionid == null || string.IsNullOrEmpty(promotionid)) return Json(new MasterCode { Result = false, Message = "PromotionId not found." });
 
             var excel = new ExcelQueryFactory(file);
             var list = from c in excel.Worksheet<ItemCode>()
@@ -211,10 +211,26 @@ namespace Awecent.Back.Serial.Controllers
 
         [HttpPost]
         [Authorize]
+        public JsonResult GetItemCodeTemp(OutputTempMaster model) {
+            ItemCodeList list = context.GetItemCodeListTemp(model);
+            return Json(list);
+        }
+
+        [HttpPost]
+        [Authorize]
         public JsonResult SaveGenerate(OutputTempMaster model)
         {
             if (model == null || model.Key == null) return Json(new MasterCode { Result = false, Message = "Can not reference code in temp table." });
             model.GenereateBy = ClaimName();
+            try
+            {
+                string[] arrstr = model.GenereateBy.Split('@');
+                model.GenereateBy = arrstr[0];
+            }
+            catch (Exception ex)
+            {
+
+            }
             MasterCode master = context.SaveTemptoTable(model);
             return Json(master);
         }
@@ -225,6 +241,14 @@ namespace Awecent.Back.Serial.Controllers
         {
             if (!ModelState.IsValid) return Json(new MasterCode { Result = false, Message = "Model state is valid" });
             model.GenereateBy = ClaimName();
+            try
+            {
+                string[] arrstr = model.GenereateBy.Split('@');
+                model.GenereateBy = arrstr[0];
+            }
+            catch (Exception ex) { 
+                
+            }
             OutputTempMaster output = context.GenerateCodeToTempAndValidateion(model);
             return Json(output);
         }
