@@ -408,7 +408,7 @@
         //hours = hours ? hours : 12;
         //minutes = minutes < 10 ? '0' + minutes : minutes;
         //var strTime = hours + ':' + minutes + ' ' + ampm;
-        return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
     }
 
 

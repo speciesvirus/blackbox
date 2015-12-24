@@ -26,7 +26,10 @@ namespace Awecent.Back.Serial.Controllers
             result.data = new List<ReportActiveUser>();
             foreach (var element in words)
             {
-                model.gameID = element;
+                string[] server = element.Split('-');
+                model.gameID = server[0];
+                model.serverID = server[1];
+
                 result.data.Add(context.GetActiveUser(model));
             }
 

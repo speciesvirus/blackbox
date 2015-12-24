@@ -33,6 +33,12 @@ namespace Awecent.Back.Serial.Controllers
             List<Game> list = JsonConvert.DeserializeObject<List<Game>>(name);
             ViewBag.Games = list;
 
+            var server = identity.Claims.Where(c => c.Type == "ServerList")
+                   .Select(c => c.Value).SingleOrDefault();
+            List<Game> ServerList = JsonConvert.DeserializeObject<List<Game>>(server);
+            ViewBag.Server = ServerList;
+            ViewBag.ServerName = "";
+
             return View();
         }
 

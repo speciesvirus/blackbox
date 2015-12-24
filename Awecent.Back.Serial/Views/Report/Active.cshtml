@@ -68,9 +68,22 @@
                         <div class="col-sm-10">
 
                             <select id="gameID" data-placeholder="Choose a Gams..." class="chosen-select" multiple tabindex="5">
-                                @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
+
+                                @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Server)
                                 {
-                                    <option value="@game.GameId">@game.GameName</option>
+                                    if (ViewBag.ServerName != game.GameId)
+                                    {
+                                        ViewBag.ServerName = game.GameId;
+                                        <optgroup label="@game.GameName">
+                                            @foreach (Awecent.Back.Serial.Models.Game server in ViewBag.Server)
+                                            {
+                                                if (game.GameId == server.GameId) {
+                                                <option value="@server.GameId-@server.ServerId">@server.GameName - @server.ServerName</option>  
+                                                }  
+                                            }
+                                        </optgroup>
+                                    }
+
                                 }
                             </select>
 
@@ -145,7 +158,7 @@
 
     </div>
 
-    <div id="chartdiv"></div>
+    @*<div id="chartdiv"></div>*@
 
     <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
@@ -238,11 +251,13 @@
                     ja = new Array();
                     $.each(jx[0], function ($jsonKey, $jsonData) {
                         var $name = '',
+                            $server = '',
                             $oneTime = true;
                         //console.log($jsonData);
                         $.each($jsonData.data, function (key, value) {
 
                             $name = value.gameID;
+                            $server = value.serverID
                             var $vas = key + 1;
                             ja[key] = value.count;//{ x: $vas, y: value.count }
 
@@ -257,7 +272,7 @@
 
                         // name of value
                         options.series.push({
-                            name: $name != '' ? $("select#gameID option[value=" + $name + "]").html() : 'null',
+                            name: $name != '' ? $("select#gameID option[value=" + $name + "-" + $server + "]").html() : 'null',
                             data: $.parseJSON($data)
                         });
 
@@ -384,7 +399,20 @@
 </script>
 
 
-<script type="text/javascript">
+@*<script type="text/javascript">
+
+    function _returnDate($data) {
+
+        var res = $data.split("-"),
+        $getDate = res[0],
+        $getTime = res[1],
+        resDate = $getDate.split("/"),
+        $curDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
+
+        return $curDate;
+
+    }
+
 
     $(function () {
 
@@ -402,13 +430,14 @@
                 "title": "Graph",
                 "position": "left",
                 "autoGridCount": false,
-            }, {
-                "gridColor": "#aaa",
-                "id": "v1",
-                "title": "Graph",
-                "position": "right",
-                "autoGridCount": false,
             }
+            //, {
+            //    "gridColor": "#aaa",
+            //    "id": "v1",
+            //    "title": "Graph",
+            //    "position": "right",
+            //    "autoGridCount": false,
+            //}
             ],
             //"gridAboveGraphs": true,
             //"startDuration": 1,
@@ -522,31 +551,40 @@
                 dataType: 'json',
                 success: function (Json) {
 
-                    var options = chartOption();
-                    //aaa
                     jx = new Array(Json.data);
-                    var JsonLenght = (jx[0].length - 1),
-                        $data = "";
 
 
                     ja = new Array();
                     $.each(jx[0], function ($jsonKey, $jsonData) {
                         var $name = '',
+                            $server = '',
                             $oneTime = true;
                         console.log($jsonData);
                         $.each($jsonData.data, function (key, value) {
                             
                             $name = value.gameID;
+                            $server = value.serverID
                             var d = new Date(value.curTime);
                             var e = new Date(d - 1000 * 3600 * 7);
 
 
-                            chartConfig.dataProvider.push({
-                                title: e,
-                                active: value.count,
-                                active2: value.count,
-                            });
+                            //chartConfig.dataProvider.push({
+                            //    title: e,
+                            //    active1: value.count
+                            //});
+                            dataObject = new Array();
 
+                            // create object which contains all these items:
+                            dataObject[key] = {
+                                title: e,
+                                active1: value.count
+                            };
+                            var adasd = {
+                                title: e,
+                                active1: value.count
+                            };
+                            // add object to chartData array
+                            chartConfig.dataProvider.push(adasd);
 
 
                         });
@@ -558,8 +596,8 @@
                             "balloonText": "Visits : <b style='font-size: 130%'>[[value]]</b>",
                             "bullet": "round",
                             //"hidden": true,
-                            "title": $name != '' ? $("select#gameID option[value=" + $name + "]").html() : 'null',
-                            "valueField": "active",
+                            "title": $name != '' ? $("select#gameID option[value=" + $name + "-" + $server + "]").html() : 'null',
+                            "valueField": "active" + $jsonKey,
                             "fillAlphas": 0,
 
                             "bulletBorderAlpha": 1,
@@ -568,8 +606,7 @@
                             "lineThickness": 2,
                             "useLineColorForBulletBorder": true,
 
-
-                            "hideBulletsCount": 50,
+                            "hideBulletsCount": 200,
                             "useLineColorForBulletBorder": true,
 
                             "labelText": "[[value]]",
@@ -577,7 +614,6 @@
                             //"type": "column",
 
                         });
-
 
 
                     });//end each
@@ -633,6 +669,6 @@
 
 
 
-</script>
+</script>*@
 
 

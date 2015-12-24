@@ -138,7 +138,7 @@ namespace Awecent.Back.Serial.Models
 
                     var q = dt.AsEnumerable().Select(row => new Game()
                     {
-                        GameId = (int)row["GameId"],
+                        GameId = row["GameId"].ToString(),
                         GameName = row["GameName"].ToString()
                     }).ToList();
 
@@ -150,6 +150,58 @@ namespace Awecent.Back.Serial.Models
                 catch (Exception ex)
                 {
                     new LogFile().WriterError(new LogModel { Data = new LoginViewModel { Email = email, Password = encrypassword } , Exception = ex.Message , Function = "ValidateAccount" });
+                    return null;
+                    //hendle exception
+                }
+            }
+
+        }
+
+
+        public UserandRole ValidateAccountServer(string email, string password)
+        {
+            var encrypassword = Encryption.HMACSHA256(password);
+            new LogFile().Writer(new LogModel { Data = new LoginViewModel { Email = email, Password = encrypassword }, Function = "ValidateAccount" });
+
+            using (MySqlConnection con = new MySqlConnection(BackOfficeConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("ValidateAccountAndGetRoleNameAndServer", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_Email", email));
+                    cmd.Parameters.Add(new MySqlParameter("_Password", encrypassword));
+                    cmd.Parameters.Add(new MySqlParameter("_UserId", MySqlDbType.Int64) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_Role", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    UserandRole user = new UserandRole();
+                    string strId = cmd.Parameters["_UserId"].Value.ToString();
+                    if (string.IsNullOrEmpty(strId)) { return null; }
+                    user.UserId = Convert.ToInt32(cmd.Parameters["_UserId"].Value.ToString());
+                    user.UserName = email;
+                    user.UserRole = cmd.Parameters["_Role"].Value.ToString();
+
+                    new LogFile().Writer(new LogModel { Data = user, Function = "ValidateAccount" });
+
+                    var q = dt.AsEnumerable().Select(row => new Game()
+                    {
+                        GameId = row["GameId"].ToString(),
+                        GameName = row["GameName"].ToString(),
+                        ServerId = (int)row["ServerId"],
+                        ServerName = row["ServerName"].ToString()
+                    }).ToList();
+
+
+                    user.UserGameList = q;
+
+                    return user;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = new LoginViewModel { Email = email, Password = encrypassword }, Exception = ex.Message, Function = "ValidateAccount" });
                     return null;
                     //hendle exception
                 }

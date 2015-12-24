@@ -24,6 +24,7 @@ namespace Awecent.Back.Serial.Models
                     cmd.Parameters.Add(new MySqlParameter("_gameID", model.gameID));
                     cmd.Parameters.Add(new MySqlParameter("_dateStart", model.timeStart));
                     cmd.Parameters.Add(new MySqlParameter("_dateEnd", model.timeEnd));
+                    cmd.Parameters.Add(new MySqlParameter("_serverID", model.serverID));
 
                     cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
                     cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
@@ -40,6 +41,7 @@ namespace Awecent.Back.Serial.Models
                         var q = dt.AsEnumerable().Select(row => new ActiveUserList()
                         {
                             gameID = row["_ReturnId"] == null ? 0 : Convert.ToInt32(row["_ReturnId"]),
+                            serverID = row["_ReturnServerId"] == null ? 0 : Convert.ToInt32(row["_ReturnServerId"]),
                             count = row["_ReturnCount"] == null ? 0 : int.Parse(row["_ReturnCount"].ToString()),
                             curTime = row.Field<DateTime?>("_ReturnDate").Value
                             //(DateTime?)(row["_ReturnDate"] == DBNull.Value ? new DateTime?() : Convert.ToDateTime(row["_ReturnDate"])),
@@ -76,6 +78,7 @@ namespace Awecent.Back.Serial.Models
                     MySqlCommand cmd = new MySqlCommand("awe_registerUserNew", con);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(new MySqlParameter("_gameID", model.gameID));
+                    cmd.Parameters.Add(new MySqlParameter("_serverID", model.serverID));
                     cmd.Parameters.Add(new MySqlParameter("_dateStart", model.timeStart));
                     cmd.Parameters.Add(new MySqlParameter("_dateEnd", model.timeEnd));
                     //cmd.Parameters.Add(new MySqlParameter("_page", model._page));

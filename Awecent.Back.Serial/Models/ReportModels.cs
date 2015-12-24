@@ -16,6 +16,7 @@ namespace Awecent.Back.Serial.Models
     public class ReportActiveUser
     {
         public string gameID { get; set; }
+        public string serverID { get; set; }
         public DateTime? timeStart { get; set; }
         public DateTime? timeEnd { get; set; }
 
@@ -34,6 +35,7 @@ namespace Awecent.Back.Serial.Models
     public class ActiveUserList
     {
         public int gameID { get; set; }
+        public int serverID { get; set; }
         public int count { get; set; }
         public DateTime? curTime { get; set; }
 
