@@ -16,6 +16,7 @@ namespace Awecent.Back.Serial.Controllers
     public class ReportController : Controller
     {
         private MySQLContext context = new MySQLContext();
+        private GashaponContext gashaponContext = new GashaponContext();
         // GET: Report
         public ActionResult Index()
         {
@@ -46,13 +47,12 @@ namespace Awecent.Back.Serial.Controllers
         [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter")]
         public ActionResult Registration()
         {
-
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
-            // Get the claims values
-            var name = identity.Claims.Where(c => c.Type == "GameList")
-                               .Select(c => c.Value).SingleOrDefault();
-            List<Game> list = JsonConvert.DeserializeObject<List<Game>>(name);
-            ViewBag.Games = list;
+            var server = identity.Claims.Where(c => c.Type == "ServerList")
+                   .Select(c => c.Value).SingleOrDefault();
+            List<Game> ServerList = JsonConvert.DeserializeObject<List<Game>>(server);
+            ViewBag.Server = ServerList;
+            ViewBag.ServerName = "";
 
 
             return View();
@@ -131,6 +131,26 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
+
+
+        [Authorize]
+        public ActionResult Gashapon()
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            // Get the claims values
+
+            var server = identity.Claims.Where(c => c.Type == "ServerList")
+                   .Select(c => c.Value).SingleOrDefault();
+            List<Game> ServerList = JsonConvert.DeserializeObject<List<Game>>(server);
+            ViewBag.Server = ServerList;
+            ViewBag.ServerName = "";
+
+            return View();
+        }
+
+
+
+
         [HttpPost]
         public JsonResult GetRecord(ReportItemCodeInput model) {
             var result = context.GetItemCode(model);
@@ -142,6 +162,14 @@ namespace Awecent.Back.Serial.Controllers
             PromotionsList list = context.GetPromotions(id);
             return Json(list , JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public JsonResult GetGPN(string id)
+        {
+            GashaponHeaderList list = gashaponContext.GetGashaponHeaderListDDL(new GashaponHeader { GameId = int.Parse(id) });
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
 
 
     }

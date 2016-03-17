@@ -43,8 +43,9 @@ namespace Awecent.Back.Serial.Models
                             gameID = row["_ReturnId"] == null ? 0 : Convert.ToInt32(row["_ReturnId"]),
                             serverID = row["_ReturnServerId"] == null ? 0 : Convert.ToInt32(row["_ReturnServerId"]),
                             count = row["_ReturnCount"] == null ? 0 : int.Parse(row["_ReturnCount"].ToString()),
-                            curTime = row.Field<DateTime?>("_ReturnDate").Value
-                            //(DateTime?)(row["_ReturnDate"] == DBNull.Value ? new DateTime?() : Convert.ToDateTime(row["_ReturnDate"])),
+                            //curTime = row.Field<DateTime?>("_ReturnDate").Value
+                            curTime = (DateTime?)(row["_ReturnDate"] == DBNull.Value ? new DateTime?() : Convert.ToDateTime(row["_ReturnDate"])),
+                            curTimeString = Convert.ToDateTime(row["_ReturnDate"]).ToString("dd_MM_yyyy HH:mm:ss"),
                             //row.Field<DateTime?>("_ReturnDate").Value
                         }).ToList();
                         list.result = true;
@@ -141,6 +142,113 @@ namespace Awecent.Back.Serial.Models
         }
 
 
+
+        public ReportUserList GetGashaponUser(ReportUser model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ReportConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_activeUserHour", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_gameID", model.gameID));
+                    cmd.Parameters.Add(new MySqlParameter("_serverID", model.serverID));
+                    cmd.Parameters.Add(new MySqlParameter("_promotionID", model.promotionID));
+                    cmd.Parameters.Add(new MySqlParameter("_dateStart", model.timeStart));
+                    cmd.Parameters.Add(new MySqlParameter("_dateEnd", model.timeEnd));
+
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value);
+                    int count = dt.Rows.Count;
+                    ReportUser list = new ReportUser();
+
+                    if (code == 200)
+                    {
+                        var q = dt.AsEnumerable().Select(row => new ReportUserList()
+                        {
+                            //gameID = row["_ReturnId"] == null ? 0 : Convert.ToInt32(row["_ReturnId"]),
+                            //serverID = row["_ReturnServerId"] == null ? 0 : Convert.ToInt32(row["_ReturnServerId"]),
+                            //count = row["_ReturnCount"] == null ? 0 : int.Parse(row["_ReturnCount"].ToString()),
+                            //curTime = row.Field<DateTime?>("_ReturnDate").Value
+                            //curTime = (DateTime?)(row["_ReturnDate"] == DBNull.Value ? new DateTime?() : Convert.ToDateTime(row["_ReturnDate"])),
+                            //curTimeString = Convert.ToDateTime(row["_ReturnDate"]).ToString("dd_MM_yyyy HH:mm:ss"),
+                            //row.Field<DateTime?>("_ReturnDate").Value
+                        }).ToList();
+                        return q.SingleOrDefault();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                    //Convert.ToInt32(cmd.Parameters["_rows"].Value.ToString());
+
+
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+        }
+
+
+
+        public ReportGashapon GetGashaponReport(ReportGashapon model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ReportConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_gashapon", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_gameID", model.gameID));
+                    cmd.Parameters.Add(new MySqlParameter("_serverID", model.serverID));
+                    cmd.Parameters.Add(new MySqlParameter("_promotionID", model.promotionID));
+                    cmd.Parameters.Add(new MySqlParameter("_dateStart", model.timeStart));
+                    cmd.Parameters.Add(new MySqlParameter("_dateEnd", model.timeEnd));
+
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value);
+                    int count = dt.Rows.Count;
+                    ReportGashapon list = new ReportGashapon();
+
+                    if (code == 200)
+                    {
+                        var q = dt.AsEnumerable().Select(row => new ReportGashaponList()
+                        {
+                            gashaponID = row["id"] == null ? 0 : Convert.ToInt32(row["id"]),
+                            name = row["gashaponName"].ToString(),
+                            count = row["_target"] == null ? 0 : int.Parse(row["_target"].ToString()),
+                            curTime = (DateTime?)(row["receiveDate"] == DBNull.Value ? new DateTime?() : Convert.ToDateTime(row["receiveDate"])),
+                            curTimeString = Convert.ToDateTime(row["receiveDate"]).ToString("dd_MM_yyyy"),
+                        }).ToList();
+                        //list.data = q.ToList();
+                        return new ReportGashapon { data = q.ToList() };
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                    //Convert.ToInt32(cmd.Parameters["_rows"].Value.ToString());
+
+
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+        }
 
     }
 }

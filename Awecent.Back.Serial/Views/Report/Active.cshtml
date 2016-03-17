@@ -54,7 +54,7 @@
     }
 </style>
 
-<div class="mg-2" ng-app="" ng-controller="">
+<div class="mg-2">
     <h2>Active Users</h2>
     <div class="bs-example" data-example-id="form-group-height-sizes">
         <form class="form-horizontal">
@@ -187,7 +187,7 @@
         $('#datetimepicker7').datetimepicker({
             defaultDate: new Date(),
             format: 'DD/MM/YYYY - 23:59',
-            useCurrent: false //Important! See issue #1075
+            useCurrent: false
         });
 
         $("#datetimepicker6").on("dp.change", function (e) {
@@ -226,7 +226,7 @@
                 return false;
             }
 
-
+            
             $('#spinner').toggle(true);
 
             $.ajax({
@@ -249,27 +249,70 @@
 
 
                     ja = new Array();
+                    dateArr = new Array();
+                    var $oneTime = true,
+                        $loop = 0,
+                        $loopTime = true;
                     $.each(jx[0], function ($jsonKey, $jsonData) {
                         var $name = '',
-                            $server = '',
-                            $oneTime = true;
-                        //console.log($jsonData);
+                            $server = '';
+                            
+                        
                         $.each($jsonData.data, function (key, value) {
 
                             $name = value.gameID;
                             $server = value.serverID
                             var $vas = key + 1;
-                            ja[key] = value.count;//{ x: $vas, y: value.count }
+                            //ja[key] = value.count;//{ x: $vas, y: value.count }
 
                             //set line X (category)
-                            var d = new Date(value.curTime);
-                            var e = formatDate(d);
-                            if ($oneTime) { options.xAxis.categories.push(e); }
+                            var d = new Date(value.curTime+'+07:00');
+                            var e = formatDate(d);//value.curTimeString;
 
+                            if ($oneTime) {
+                                ja[key] = value.count;
+                                options.xAxis.categories.push(e); dateArr[key] = e;
+                            } else {
+
+                                //check date different 
+                                if (dateArr[key] != e) {
+                                    
+                                    if ($loopTime) {                         
+                                        $loopTime = false;
+                                        
+                                        // reset array
+                                        $.each(dateArr, function (ja_key, ja_value) {
+                                            ja[ja_key] = null;
+                                            
+                                        });
+                                        
+                                        // find range array
+                                        $.each(dateArr, function (ja_key, ja_value) {
+                                            if (ja_value == e) {
+                                                $loop = ja_key;
+                                                ja[ja_key] = value.count;
+                                            }
+                                        });
+                                        
+                                    } else {                                      
+                                        $.each(dateArr, function (ja_key, ja_value) {
+                                            if (ja_value == e) {
+                                                ja[ja_key] = value.count;
+                                            }
+                                        });
+                                    }                              
+
+                                } else {
+                                    ja[key] = value.count;
+                                }
+
+                            }// end check diif time
+
+                            
                         });
                         $oneTime = false;
                         $data = JSON.stringify(ja);
-
+                        //console.log('aaa :',$data);
                         // name of value
                         options.series.push({
                             name: $name != '' ? $("select#gameID option[value=" + $name + "-" + $server + "]").html() : 'null',
@@ -319,6 +362,11 @@
                 //        return this.value;
                 //    }
                 //}
+                type: 'datetime',
+                tickPixelInterval: 150,
+                dateTimeLabelFormats: {
+                    day: '%e of %b'
+                },
                 categories: []
             },
             yAxis: {
@@ -367,19 +415,23 @@
 
     function formatDate($date) {
 
-        var d = new Date($date);
-        var offset = (new Date().getTimezoneOffset() / 60) * -1;
-        var date = new Date(d.getTime() - 1000 * 3600 * 7);
+        //var d = new Date($date);
+        //var offset = new Date().getTimezoneOffset() / 60;
 
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
+        //var date = d.setUTCHours(0);
+
+        //var date = new Date(d.getTime() - 1000 * 3600 * 7);
+        
+        var hours = $date.getHours();
+        var minutes = $date.getMinutes();
 
         //var ampm = hours >= 12 ? 'pm' : 'am';
         //hours = hours % 12;
         //hours = hours ? hours : 12;
         //minutes = minutes < 10 ? '0' + minutes : minutes;
         //var strTime = hours + ':' + minutes + ' ' + ampm;
-        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " - " + hours + ":00";
+
+        return $date.getDate() + "/" + ($date.getMonth() + 1) + "/" + $date.getFullYear() + " - " + hours + ":00";
     }
 
 
@@ -579,6 +631,7 @@
                                 title: e,
                                 active1: value.count
                             };
+
                             var adasd = {
                                 title: e,
                                 active1: value.count
@@ -626,7 +679,7 @@
                     //function zoomChart() {
                     //    chart.zoomToIndexes(chartData.length - 250, chartData.length - 100);
                     //}
-
+                    console.log('aaa', JSON.stringify(dataObject));
                     $('#spinner').toggle(false);
 
     

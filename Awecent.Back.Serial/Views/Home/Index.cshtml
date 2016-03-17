@@ -106,9 +106,31 @@
                 <span class="heading">Active Users / Hour</span>
             </div>
         </a>
+        
+        
+        
+        <a href="@Url.Action("Gashapon", "Report")">
+            <div class="rad-info-box rad-txt-success">
+                <span class="heading">Gashapon Report</span>
+            </div>
+        </a>
 
-
+        
     }
 
 
 </div>
+
+
+<script type="text/javascript">
+
+    window.opener.postMessage('replace your location', '*');
+
+    // opener:
+    window.onmessage = function (e) {
+        if (e.data === 'replace your location') {
+            window.location.replace(...);
+        }
+    };
+
+</script>

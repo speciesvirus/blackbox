@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="EditItemGashapon" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{input.statusName}}{{input.Status}}</h4>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Item Id</label>
+                        <input type="text" class="form-control" ng-model="input.ItemId" name="ItemId" ng-disabled="input.Status > 1" />
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Item Name</label>
+                        <input type="text" class="form-control" ng-model="input.ItemName" name="ItemName" />
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Drop Rate</label>
+                        <input type="text" class="form-control" ng-model="input.DropRate" name="DropRate" />
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Limit Item</label>
+                        <input type="text" class="form-control" ng-model="input.LimitItem" name="LimitItem" />
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>Limit Item Per Day</label>
+                        <select class="form-control" name="LimitItemPer" ng-model="input.LimitItemPerId"
+                                ng-disabled="input.LimitItem == null"
+                                ng-options="item.LimitItemPerId as item.LimitItemPerName for item in LimitItemPerDay"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="saveOrUpdateItemGashapon()">{{input.statusName}}</button>
+            </div>
+        </div>
+    </div>
+</div>

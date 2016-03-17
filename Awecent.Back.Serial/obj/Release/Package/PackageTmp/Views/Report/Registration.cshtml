@@ -5,6 +5,8 @@
 @Scripts.Render("~/bundles/report")
 @Styles.Render("~/Content/report")
 
+@Scripts.Render("~/bundles/amcharts")
+@Styles.Render("~/Content/amcharts")
 
 <style>
     .input-group-addon, .input-group-btn {
@@ -27,11 +29,64 @@
         border-radius: 3px;
         width: 500px;
     }
+
+
+
+
+
+    .bs-example {
+        position: relative;
+        padding: 20px 15px 15px;
+    }
+
+    .bs-example {
+        margin-right: 0;
+        margin-left: 0;
+        background-color: #fff;
+    }
+
+    .bs-example-tabs .nav-tabs {
+        margin-bottom: 15px;
+    }
+
+    .tab-content > .tab-pane {
+        width: 100%;
+    }
+
+
+
+    .amChartsDataSetSelector {
+        font-size: 12px;
+        font-family: verdana,helvetica,arial,sans-serif;
+    }
+
+    #chartdiv, #chartdiv2 {
+        width: 100%;
+        height: 500px;
+        /*background: #3f3f4f !important;
+        background-color: #FFFFFF;*/
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.2);
+        margin-bottom: 30px;
+    }
+
+    .amcharts-stock-div * {
+        -webkit-box-sizing: initial;
+        -moz-box-sizing: initial;
+        box-sizing: initial;
+    }
+
+
+
 </style>
 
 <div class="mg-2">
     <h2>User Registrations</h2>
+
+
     <div class="bs-example" data-example-id="form-group-height-sizes">
+
         <form class="form-horizontal">
 
             <div class="panel panel-default">
@@ -43,9 +98,23 @@
                         <div class="col-sm-10">
                             <select id="gameID" ng-model="input.gameId" ng-change="findPromotion()" class="form-control" name="gameID">
                                 @*<option value="0">Please select game</option>*@
-                                @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
+
+                                @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Server)
                                 {
-                                    <option value="@game.GameId">@game.GameName</option>
+                                    if (ViewBag.ServerName != game.GameId)
+                                    {
+                                        ViewBag.ServerName = game.GameId;
+                                        <optgroup label="@game.GameName">
+                                            @foreach (Awecent.Back.Serial.Models.Game server in ViewBag.Server)
+                                            {
+                                                if (game.GameId == server.GameId)
+                                                {
+                                                    <option value="@server.GameId-@server.ServerId">@server.GameName - @server.ServerName</option>
+                                                }
+                                            }
+                                        </optgroup>
+                                    }
+
                                 }
                             </select>
 
@@ -68,7 +137,7 @@
                     <div class="form-group form-group-sm">
                         <label class="col-sm-2 control-label" for="formGroupInputSmall"></label>
                         <div class="col-sm-10">
-                            <button class="btn btn-info" type="button" ng-click="search()">Search</button>
+                            <button class="btn btn-info chart-submit-1" type="button" ng-click="search()">Search</button>
                         </div>
 
                     </div>
@@ -78,6 +147,80 @@
 
         </form>
     </div>
+
+
+
+    <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
+        <ul id="myTabs" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="false">Active & Register</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile" aria-expanded="true">Total</a>
+            </li>
+            @*<li role="presentation" class="dropdown">
+                    <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown" aria-controls="myTabDrop1-contents" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="myTabDrop1" id="myTabDrop1-contents">
+                        <li class=""><a href="#dropdown1" role="tab" id="dropdown1-tab" data-toggle="tab" aria-controls="dropdown1" aria-expanded="false">aa</a></li>
+                        <li class=""><a href="#dropdown2" role="tab" id="dropdown2-tab" data-toggle="tab" aria-controls="dropdown2" aria-expanded="false">aa</a></li>
+                    </ul>
+                </li>*@
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+
+
+                
+                <div id="chartdiv2"></div>
+                @*<div id="chart2" style=" height: 400px; margin: 0 auto"></div>*@
+
+                <table class="table table-striped table-chart2">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Facebook Active</th>
+                            <th>Facebook Register</th>
+                            <th>Guest Active</th>
+                            <th>Guest Register</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+            </div>
+            @* end tap 1 *@
+
+
+            <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+
+
+                <div id="chartdiv" class="amcharts-graph-dash"></div>
+                @*<div id="chart" style="height: 400px; margin: 0 auto"></div>*@
+
+                <table class="table table-striped table-chart">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Active</th>
+                            <th>Register</th>
+
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+
+            </div>
+            @*<div role="tabpanel" class="tab-pane fade" id="dropdown1" aria-labelledby="dropdown1-tab">
+                    <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="dropdown2" aria-labelledby="dropdown2-tab">
+                    <p>Trust fund seitan letterpress, keytar raw denim keffiyeh etsy art party before they sold out master cleanse gluten-free squid scenester freegan cosby sweater. Fanny pack portland seitan DIY, art party locavore wolf cliche high life echo park Austin. Cred vinyl keffiyeh DIY salvia PBR, banh mi before they sold out farm-to-table VHS viral locavore cosby sweater. Lomo wolf viral, mustache readymade thundercats keffiyeh craft beer marfa ethical. Wolf salvia freegan, sartorial keffiyeh echo park vegan.</p>
+                </div>*@
+        </div>
+    </div>
+
+
 
 
 
@@ -93,112 +236,270 @@
             toggleActive: true
         });
 
+
     });
 </script>
 
 
-<div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
 
 
 <script type="text/javascript">
 
-    //chart: {
-    //        zoomType: 'xy'
-    //},
-    //title: {
-    //        text: 'Combination chart'
-    //},
-    //xAxis: {
-    //        categories: ['Apples', 'Oranges', 'Pears', 'Bananas', 'Plums']
-    //},
-    //labels: {
-    //        items: [{
-    //            html: 'Total fruit consumption',
-    //            style: {
-    //                left: '50px',
-    //                top: '18px',
-    //                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-    //            }
-    //        }]
-    //},
-    //series: [{
-    //    type: 'column',
-    //    name: 'Jane',
-    //    data: [3, 2, 1, 3, 4]
-    //}, {
-    //    type: 'column',
-    //    name: 'John',
-    //    data: [2, 3, 5, 7, 6]
-    //}, {
-    //    type: 'column',
-    //    name: 'Joe',
-    //    data: [4, 3, 3, 9, 0]
-    //}, {
-    //    type: 'spline',
-    //    name: 'Average',
-    //    data: [3, 2.67, 3, 6.33, 3.33],
-    //    marker: {
-    //        lineWidth: 2,
-    //        lineColor: Highcharts.getOptions().colors[3],
-    //        fillColor: 'white'
-    //    }
-    //}, {
-    //    type: 'pie',
-    //    name: 'Total consumption',
-    //    data: [{
-    //        name: 'Jane',
-    //        y: 13,
-    //        color: Highcharts.getOptions().colors[0] // Jane's color
-    //    }, {
-    //        name: 'John',
-    //        y: 23,
-    //        color: Highcharts.getOptions().colors[1] // John's color
-    //    }, {
-    //        name: 'Joe',
-    //        y: 19,
-    //        color: Highcharts.getOptions().colors[2] // Joe's color
-    //    }],
-    //    center: [100, 80],
-    //    size: 100,
-    //    showInLegend: false,
-    //    dataLabels: {
-    //        enabled: false
-    //    }
-    //}]
 
     $(function () {
 
+        var $option, $option2;
+
+        $("#home-tab").click(function () {
+            setTimeout(function () {
+                var chart = new Highcharts.Chart($option2);
+            }, 180);
+
+        });
+        $("#profile-tab").click(function () {
+            setTimeout(function () {
+                var chart = new Highcharts.Chart($option);
+            }, 180);
+        });
 
 
-        $(".btn-info").click(function () {
+        $(".chart-submit-1").click(function () {
 
-            //var str = $("#datetimepicker6").find("input").val(),
-            //    res = str.split("-"),
-            //    $getDate = res[0],
-            //    $getTime = res[1],
-            //    resDate = $getDate.split("/"),
-            //    $startDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
-
-            //var str = $("#datetimepicker7").find("input").val(),
-            //    res = str.split("-"),
-            //    $getDate = res[0],
-            //    $getTime = res[1],
-            //    resDate = $getDate.split("/"),
-            //    $endDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
-
-            //alert($("#gameID").chosen().val());
             if (!$('#start').val().trim()) {
 
                 alert("ข้อมูลวันที่ไม่ถูกต้อง");
 
                 return false;
             }
-            
+
 
             var resDate = $('#start').val().split("/"),
             $start = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0],
             resDate = $('#end').val().split("/"),
             $end = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0];
+
+
+
+            var chartConfig = ("chartdiv", {
+                "type": "serial",
+                "addClassNames": true,
+                "theme": "light",
+
+                "balloon": {
+                    "adjustBorderColor": false,
+                    "horizontalPadding": 10,
+                    "verticalPadding": 8,
+                },
+
+                "dataProvider": [],
+                "valueAxes": [{
+                    "position": "left",
+                    "title": "Visitors"
+                }],
+                "startDuration": 1,
+                "graphs": [{
+                    "alphaField": "alpha",
+                    "balloonText": "",//"balloonText": "[[category]]: <b>[[value]]</b>",
+                    "fillAlphas": 1,
+                    "title": "active",
+                    "type": "column",
+                    "valueField": "active",
+                    "dashLengthField": "dashLengthColumn",
+                    "labelText": "[[value]]",
+                }, {
+                    "alphaField": "alpha",
+                    "balloonText": "",//"balloonText": "[[category]]: <b>[[value]]</b>",
+                    "fillAlphas": 1,
+                    "title": "register",
+                    "type": "column",
+                    "valueField": "register",
+                    "dashLengthField": "dashLengthColumn",
+                    "labelText": "[[value]]",
+                }, {
+                    "balloonText": "",//"balloonText": "[[category]]: <b>[[value]]</b>",
+                    "bullet": "round",
+                    "lineThickness": 3,
+                    "bulletSize": 7,
+                    "bulletBorderAlpha": 1,
+                    "bulletColor": "#FFFFFF",
+                    "lineColor": "#FF9900",
+                    "useLineColorForBulletBorder": true,
+                    "bulletBorderThickness": 3,
+                    "fillAlphas": 0,
+                    "lineAlpha": 1,
+                    "title": "average",
+                    "valueField": "average",
+                    "labelText": "[[value]]",
+                }],
+                "categoryField": "title",
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "tickLength": 0,
+
+                    "axisAlpha": 0,
+                    "fillAlpha": 0.05,
+                    "fillColor": "#000000",
+                    "gridAlpha": 0,
+                    //"position": "top"
+                    //"minPeriod": "mm",
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "dashLength": 1,
+                    "minorGridEnabled": true,
+                    //"labelRotation": 90
+                },
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    //"zoomable": false,
+                    //"pan": true,
+                    "valueLineEnabled": true,
+                    "valueLineBalloonEnabled": false,
+                    "valueLineAlpha": 0.2,
+                    "categoryBalloonColor": "#000000",
+                    "categoryBalloonEnabled": false,
+                    "cursorColor": "#000000",
+                    //"categoryBalloonDateFormat": "DD MMMM YYYY",//"JJ:NN, DD MMMM YYYY"
+                    "cursorPosition": "mouse"
+                },
+                "legend": {
+                    "useGraphSettings": true,
+                    "position": "top"
+                },
+                "export": {
+                    "enabled": true
+                }
+            });
+
+
+
+            var chartConfig2 = ("chartdiv2", {
+                "theme": "light",
+                "type": "serial",
+                "startDuration": 1,
+                "dataProvider": [],
+                "valueAxes": [{
+                    "position": "left",
+                    "title": "Visitors"
+                }],
+                "graphs": [
+                    {
+                        "balloonText": "",//"[[category]]: <b>[[value]]</b>",
+                    "fillColorsField": "color",
+                    "id": "AmGraph-1",
+                    "fillAlphas": 1,
+                    "lineAlpha": 0.1,
+                    "type": "column",
+                    "title": "facebook_active",
+                    "valueField": "facebook_active",
+                    "labelText": "[[value]]",
+                        "marginBottom": 20,
+                    }, {
+                        "balloonText": "",//"[[category]]: <b>[[value]]</b>",
+                        "fillColorsField": "color",
+                        "id": "AmGraph-2",
+                        "fillAlphas": 1,
+                        "lineAlpha": 0.1,
+                        "type": "column",
+                        "title": "guest_active",
+                        "valueField": "guest_active",
+                        "labelText": "[[value]]",
+                        "labelOffset": 10,
+                    }, {
+                        "balloonText": "",//"[[category]]: <b>[[value]]</b>",
+                        "fillColorsField": "color",
+                        "id": "AmGraph-3",
+                        "fillAlphas": 1,
+                        "lineAlpha": 0.1,
+                        "type": "column",
+                        "title": "facebook_register",
+                        "valueField": "facebook_register",
+                        "labelText": "[[value]]",
+                    }, {
+                        "balloonText": "",//"[[category]]: <b>[[value]]</b>",
+                        "fillColorsField": "color",
+                        "id": "AmGraph-4",
+                        "fillAlphas": 1,
+                        "lineAlpha": 0.8,
+                        "type": "column",
+                        "title": "guest_register",
+                        "valueField": "guest_register",
+                        "labelText": "[[value]]",
+                    }
+                ],
+                "marginBottom": 30,
+                "depth3D": 5,
+                "angle": 20,
+                //"chartCursor": {
+                //    "categoryBalloonEnabled": false,
+                //    "cursorAlpha": 0,
+                //    "zoomable": false
+                //},
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    //"zoomable": false,
+                    //"pan": true,
+                    "valueLineEnabled": true,
+                    "valueLineBalloonEnabled": false,
+                    "valueLineAlpha": 0.2,
+                    "categoryBalloonColor": "#000000",
+                    "categoryBalloonEnabled": false,
+                    "cursorColor": "#000000",
+                    //"categoryBalloonDateFormat": "DD MMMM YYYY",//"JJ:NN, DD MMMM YYYY"
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "title",
+                //"categoryAxis": {
+                //    "gridPosition": "start",
+                //    "labelRotation": 90
+                //},
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "fillAlpha": 0.05,
+                    "fillColor": "#000000",
+                    "gridAlpha": 0,
+                    //"position": "top"
+                    //"minPeriod": "mm",
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "dashLength": 1,
+                    "minorGridEnabled": true,
+                    //"labelRotation": 90
+                },
+                //"balloon": {
+                //    "borderThickness": 1,
+                //    "shadowAlpha": 0
+                //},
+                "legend": {
+                    "useGraphSettings": true,
+                    "position": "top"
+                },
+                "chartScrollbar": {
+                    "graph": "AmGraph-1",
+                    "oppositeAxis": false,
+                    "offset": 30,
+                    "scrollbarHeight": 40,
+                    "backgroundAlpha": 0,
+                    "selectedBackgroundAlpha": 0.1,
+                    "selectedBackgroundColor": "#888888",
+                    "graphFillAlpha": 0,
+                    "graphLineAlpha": 0.5,
+                    "selectedGraphFillAlpha": 0,
+                    "selectedGraphLineAlpha": 1,
+                    "autoGridCount": true,
+                    "color": "#AAAAAA",
+                    "selectedGraphLineColor": "#888888",
+                    "selectedGraphLineAlpha": 1
+                },
+
+                "export": {
+                    "enabled": true
+                }
+
+            });
+
 
             $('#spinner').toggle(true);
             $.ajax({
@@ -219,41 +520,82 @@
                         return false;
                     }
 
-                    var options = chartOption();
+                    var options = chartOption(),
+                        options2 = chartOption2();
 
                     jx = new Array(Json.data);
                     //console.log('get :', jx[0]);
 
-                    var JsonLenght = (jx[0].length - 1),
-                        $daa = "";
 
+                    var $name = '';
 
-                    ja = new Array();
+                    $activeFacebook = new Array();
+                    $activeGuest = new Array();
 
-                    var $name = '',
-                        $oneTime = true;
+                    $registerFacebook = new Array();
+                    $registerGuest = new Array();
 
                     $active = new Array();
                     $register = new Array();
-                    var $intJa = 0;
+
+                    var $html = "", $html2 = "";
                     $.each(jx[0], function (key, value) {
 
                         $name = value.gameID;
-                        $active[key] = value.countActive;
-                        $register[key] = value.countRegister;
+                        $active[key] = value.countActiveTotal;
+                        $register[key] = value.countRegisterTotal;
                         //ja[key] = value.count;//{ x: $vas, y: value.count }
+
+                        //amchart
+                        var d = new Date(value.curTime);
+                        var e = d;//new Date(d - 1000 * 3600 * 7);
+                        chartConfig.dataProvider.push({
+                            title: e,
+                            active: value.countActiveTotal,
+                            register: value.countRegisterTotal,
+                            average: (value.countActiveTotal + value.countRegisterTotal) / 2,
+                        });
+                        //end amchart
+
 
                         //set line X (category)
                         var d = new Date(value.curTime);
-                        var e = formatDate(d);
-                        if ($oneTime) { options.xAxis.categories.push(e); }
+                        var e = d; //formatDate(d);
+                        options.xAxis.categories.push(e);
+
+                        $html += "<tr><td>" + e + "</td><td>" + value.countActiveTotal + "</td><td>" + value.countRegisterTotal + "</td></tr>";
+                        $(".table-chart tbody").html($html);
 
 
-                        //$oneTime = false;
-                        $data = JSON.stringify(ja);
+                        ////// chart2 ///////
 
-                        console.log('get :', value);
-                        // name of value
+                        $activeFacebook[key] = value.countActiveFacebook;
+                        $activeGuest[key] = value.countActiveGuest;
+                        $registerFacebook[key] = value.countRegisterFacebook;
+                        $registerGuest[key] = value.countRegisterGuest;
+                        //ja[key] = value.count;//{ x: $vas, y: value.count }
+
+
+                        // amchart
+                        var d = new Date(value.curTime);
+                        var e = d;//new Date(d - 1000 * 3600 * 7);
+                        chartConfig2.dataProvider.push({
+                            title: e,
+                            facebook_active: value.countActiveFacebook,
+                            guest_active: value.countActiveGuest,
+                            facebook_register: value.countRegisterFacebook,
+                            guest_register: value.countRegisterGuest
+                        });
+                        // end amchart
+
+
+                        //set line X (category)
+                        var d = new Date(value.curTime);
+                        var e = d;//formatDate(d);
+                        options2.xAxis.categories.push(e);
+
+                        $html2 += "<tr><td>" + e + "</td><td>" + value.countActiveFacebook + "</td><td>" + value.countRegisterFacebook + "</td><td>" + value.countActiveGuest + "</td><td>" + value.countRegisterGuest + "</td></tr>";
+                        $(".table-chart2 tbody").html($html2);
 
 
                     });//end each
@@ -314,9 +656,44 @@
                     });
 
 
+                    //$option = options;
+                    //var chart = new Highcharts.Chart(options);
 
-                    var chart = new Highcharts.Chart(options);
+                    // make the amchart
+                    var chart = AmCharts.makeChart("chartdiv", chartConfig);
 
+
+
+
+                    //////////////////////////////// chart2 /////////////////////////////////////
+
+
+                    $data = JSON.stringify($activeFacebook);
+                    options2.series.push({
+                        name: 'Active at Fcebook',
+                        data: $.parseJSON($data)
+                    });
+
+                    $data = JSON.stringify($activeGuest);
+                    options2.series.push({
+                        name: 'Active at Guest',
+                        data: $.parseJSON($data)
+                    });
+
+                    $data = JSON.stringify($registerFacebook);
+                    options2.series.push({
+                        name: 'Register at Fcebook',
+                        data: $.parseJSON($data)
+                    });
+
+                    $data = JSON.stringify($registerGuest);
+                    options2.series.push({
+                        name: 'Register at Guest',
+                        data: $.parseJSON($data)
+                    });
+
+                    //$option2 = options2;
+                    //var chart = new Highcharts.Chart(options2);
 
 
 
@@ -325,6 +702,10 @@
                     $('#spinner').toggle(false);
 
 
+
+                    // make the amchart
+                    var chart2 = AmCharts.makeChart("chartdiv2", chartConfig2);
+
                 }//success
 
             });
@@ -332,15 +713,30 @@
 
         });
 
-
-
-
-
-
     });
 
 
+    function formatDate($date) {
 
+        var d = new Date($date);
+        var offset = (new Date().getTimezoneOffset() / 60) * -1;
+        var date = new Date(d.getTime() - 1000 * 3600 * 7);
+
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+
+        //var ampm = hours >= 12 ? 'pm' : 'am';
+        //hours = hours % 12;
+        //hours = hours ? hours : 12;
+        //minutes = minutes < 10 ? '0' + minutes : minutes;
+        //var strTime = hours + ':' + minutes + ' ' + ampm;
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    }
+
+
+
+
+    // height chart active&register
     function chartOption() {
 
         var options = {
@@ -392,25 +788,76 @@
 
     }
 
+    // height chart total
+    function chartOption2() {
 
 
-    function formatDate($date) {
+        var options = {
+            chart: {
+                type: 'column',
+                renderTo: 'chart2',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Total Active & Registration Chart'
+            },
+            xAxis: {
+                categories: []
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Rainfall (mm)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                },
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y}'
+                    }
+                }
+            },
+            labels: {
+                items: [{
+                    html: 'Total Users',
+                    style: {
+                        left: '50px',
+                        top: '18px',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                    }
+                }]
+            },
+            //plotOptions: {
+            //    series: {
+            //        borderWidth: 0,
+            //        dataLabels: {
+            //            enabled: true,
+            //            format: '{point.y}'
+            //        }
+            //    }
+            //},
+            series: []
+        };
 
-        var d = new Date($date);
-        var offset = (new Date().getTimezoneOffset() / 60) * -1;
-        var date = new Date(d.getTime() - 1000 * 3600 * 7);
 
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
+        return options;
 
-        //var ampm = hours >= 12 ? 'pm' : 'am';
-        //hours = hours % 12;
-        //hours = hours ? hours : 12;
-        //minutes = minutes < 10 ? '0' + minutes : minutes;
-        //var strTime = hours + ':' + minutes + ' ' + ampm;
-        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+
     }
-
 
 
 

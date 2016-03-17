@@ -10,8 +10,44 @@ namespace Awecent.Back.Serial.Models
 {
     public class MasterCodeContext
     {
+        string ContentConnection = WebConfigurationManager.ConnectionStrings["ContentConnection"].ToString();
         string BackOfficeConnection = WebConfigurationManager.ConnectionStrings["BackOfficeConnection"].ToString();
         string ItemConnection = WebConfigurationManager.ConnectionStrings["ItemConnection"].ToString();
+
+
+        public Game GetGameServer(string id)
+        {
+            using (MySqlConnection con = new MySqlConnection(ContentConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_gameServer", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_gameIDX", id));
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    Game list = new Game();
+                    var q = dt.AsEnumerable().Select(row => new Server()
+                    {
+                        ServerId = Convert.ToInt32(row["ServerIDX"].ToString()),
+                        ServerName = row["ServerName"].ToString()
+                    }).ToList();
+                    list.Server = q;
+                    if (q != null) list.result = true;
+                    else list.result = false;
+                    return list;
+
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Exception = ex.Message, Function = "GetPromotions" });
+                    return new Game { result = false };
+                }
+            }
+
+        }
+
 
         public MasterCodeList GetMasterCode(MasterCode model)
         {
@@ -103,7 +139,7 @@ namespace Awecent.Back.Serial.Models
                     //_StartDate,_EndDate,_ItemID,_CreateUser,_GenerateType,_PrefixCode,_ContentUrl
                     cmd.Parameters.Add(new MySqlParameter("_StartDate", model.StartDate.Value));
                     cmd.Parameters.Add(new MySqlParameter("_EndDate", model.EndDate.Value));
-                    cmd.Parameters.Add(new MySqlParameter("_ItemID", model.ItemID));
+                    //cmd.Parameters.Add(new MySqlParameter("_ItemID", model.ItemID));
                     cmd.Parameters.Add(new MySqlParameter("_CreateUser", model.CreateUser));
                     cmd.Parameters.Add(new MySqlParameter("_GenerateType", model.GenerateType));
                     cmd.Parameters.Add(new MySqlParameter("_PrefixCode", model.SerialPrefix));
@@ -146,6 +182,7 @@ namespace Awecent.Back.Serial.Models
                 {
                     MySqlCommand cmd = new MySqlCommand("awe_editMasterCode", con);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_ServerID", model.ServerID));
                     cmd.Parameters.Add(new MySqlParameter("_PromotionID", model.PromotionID));
                     cmd.Parameters.Add(new MySqlParameter("_PromotionName", model.PromotionName));
                     cmd.Parameters.Add(new MySqlParameter("_PromotionDetail", model.PromotionDescription));
@@ -153,7 +190,7 @@ namespace Awecent.Back.Serial.Models
                     //_StartDate,_EndDate,_ItemID,_CreateUser,_GenerateType,_PrefixCode
                     cmd.Parameters.Add(new MySqlParameter("_StartDate", model.StartDate.Value));
                     cmd.Parameters.Add(new MySqlParameter("_EndDate", model.EndDate.Value));
-                    cmd.Parameters.Add(new MySqlParameter("_ItemID", model.ItemID));
+                    //cmd.Parameters.Add(new MySqlParameter("_ItemID", model.ItemID));
                     cmd.Parameters.Add(new MySqlParameter("_UpdateUser", model.CreateUser));
                     cmd.Parameters.Add(new MySqlParameter("_GenerateType", model.GenerateType));
                     cmd.Parameters.Add(new MySqlParameter("_PrefixCode", model.SerialPrefix));
@@ -509,7 +546,7 @@ namespace Awecent.Back.Serial.Models
 
         }
 
-        public MasterCode SaveTemptoTable(OutputTempMaster model)
+        public MasterCode SaveTemptoTable(OutputTempMaster model,MasterCode masterModel)
         {
             //awe_storeCreateItemCodeFromTemp
             using (MySqlConnection con = new MySqlConnection(ItemConnection))
@@ -519,6 +556,8 @@ namespace Awecent.Back.Serial.Models
                     MySqlCommand cmd = new MySqlCommand("awe_storeCreateItemCodeFromTemp", con);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(new MySqlParameter("pi_fileName", model.Key));
+                    cmd.Parameters.Add(new MySqlParameter("serverId", masterModel.ServerID));
+                    cmd.Parameters.Add(new MySqlParameter("itemId", masterModel.ItemID));
                     cmd.Parameters.Add(new MySqlParameter("pi_CreateUser", model.GenereateBy));
 
                     cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
@@ -543,6 +582,90 @@ namespace Awecent.Back.Serial.Models
             }
 
         }
+
+
+    
+        public MasterCode GenerateCodeLot(MasterCode model)
+        {
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_storeGenerateItemLot", con);//awe_generateItemLot
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("_PromotionId", model.PromotionID));
+                    cmd.Parameters.Add(new MySqlParameter("_ServerId", model.ServerID));
+                    cmd.Parameters.Add(new MySqlParameter("_ItemId", model.ItemID));
+                    cmd.Parameters.Add(new MySqlParameter("_CodeAmount", model.CodeAmount));
+                    cmd.Parameters.Add(new MySqlParameter("_CreateUser", model.CreateBy));
+
+                    cmd.Parameters.Add(new MySqlParameter("_LotId", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+
+                    
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
+                    if (code == 200)
+                        return new MasterCode { Result = true, Message = cmd.Parameters["_ReturnMsg"].Value.ToString(), Lot = cmd.Parameters["_LotId"].Value.ToString() };
+                    else  
+                        return new MasterCode { Result = false, Message = cmd.Parameters["_ReturnMsg"].Value.ToString() };
+
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "awe_generateItemLot" });
+                    return new MasterCode { Result = false, Message = ex.Message };
+                }
+
+            }
+
+        }
+
+
+
+        //public MasterCode AutoGenerateCode(MasterCode model)
+        //{
+        //    using (MySqlConnection con = new MySqlConnection(ItemConnection))
+        //    {
+        //        try
+        //        {
+        //            MySqlCommand cmd = new MySqlCommand("awe_generateItemLot", con);
+        //            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        //            cmd.Parameters.Add(new MySqlParameter("_PromotionId", model.PromotionID));
+        //            cmd.Parameters.Add(new MySqlParameter("_ServerId", model.ServerID));
+        //            cmd.Parameters.Add(new MySqlParameter("_ItemId", model.ItemID));
+        //            cmd.Parameters.Add(new MySqlParameter("_CodeAmount", model.CodeAmount));
+        //            cmd.Parameters.Add(new MySqlParameter("_CreateUser", model.CreateBy));
+
+        //            cmd.Parameters.Add(new MySqlParameter("_LotId", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+        //            cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+        //            cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+
+
+        //            MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+        //            DataTable dt = new DataTable();
+        //            adapter.Fill(dt);
+        //            int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
+        //            if (code == 200)
+        //                return new MasterCode { Result = true, Message = cmd.Parameters["_ReturnMsg"].Value.ToString(), Lot = cmd.Parameters["_LotId"].Value.ToString() };
+        //            else
+        //                return new MasterCode { Result = false, Message = cmd.Parameters["_ReturnMsg"].Value.ToString() };
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "awe_generateItemLot" });
+        //            return new MasterCode { Result = false, Message = ex.Message };
+        //        }
+
+        //    }
+
+        //}
+
+        
 
         public MasterCode InsertExecute(string sql)
         {
@@ -650,5 +773,41 @@ namespace Awecent.Back.Serial.Models
             }
             return false;
         }
+
+
+
+        public int ValidateImportItemCode(string fileName)
+        {
+            using (MySqlConnection con = new MySqlConnection(ItemConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_storeValidateImportItemCode", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("pi_fileName", fileName));
+
+                    cmd.Parameters.Add(new MySqlParameter("_CountRow", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnCode", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnMsg", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    cmd.Parameters.Add(new MySqlParameter("_ReturnFileName", MySqlDbType.VarChar) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    string code2 = cmd.Parameters["_ReturnMsg"].Value.ToString();
+                    int code = Convert.ToInt32(cmd.Parameters["_ReturnCode"].Value.ToString());
+                    if (code == 200)
+                    return Convert.ToInt32(cmd.Parameters["_CountRow"].Value.ToString());
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Exception = ex.Message, Function = "awe_storeValidateImportItemCode" });
+                }
+
+            }
+            return 0;
+        }
+
+
+
     }
 }

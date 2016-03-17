@@ -43,12 +43,68 @@ namespace Awecent.Back.Serial.Controllers
         [HttpPost]
         public HttpResponseMessage userRegister(ReportActiveUser model)
         {
+            
+            string[] server = model.gameID.Split('-');
+            model.gameID = server[0];
+            model.serverID = server[1];
 
             var result = context.GetRegisterUser(model);
 
             return Request.CreateResponse(HttpStatusCode.OK, result, Configuration.Formatters.JsonFormatter);
 
         }
+
+
+        //[Route("gashapon/user")]
+        //[HttpPost]
+        //public HttpResponseMessage userGashapon(ReportUser model)
+        //{
+
+        //    ReportUserResult result = new ReportUserResult();
+        //    var promotionID = model.promotionID;
+        //    string[] words = promotionID.Split(',');
+            
+        //    foreach (var element in words)
+        //    {
+        //        model.promotionID = element;
+        //        model.data.Add(context.GetGashaponUser(model));
+        //    }
+
+        //    return Request.CreateResponse(HttpStatusCode.OK, model, Configuration.Formatters.JsonFormatter);
+
+        //}
+
+
+
+
+        [Route("gashapon/count")]
+        [HttpPost]
+        public HttpResponseMessage gashaponUesd(ReportGashapon model)
+        {
+
+            ReportGashaponResult reportResult = new ReportGashaponResult();
+            reportResult.data = new List<ReportGashapon>();
+
+            var promotionID = model.promotionID;
+            string[] words = promotionID.Split(',');
+
+            foreach (var element in words)
+            {
+                model.promotionID = element;
+                ReportGashapon result = context.GetGashaponReport(model);
+                result.gameID = model.gameID;
+                result.serverID = model.serverID;
+                result.promotionID = element;
+                reportResult.data.Add(result);
+                //model.data = reportResult.data;
+                //model.data.Add(context.GetGashaponReport(model));
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, reportResult, Configuration.Formatters.JsonFormatter);
+
+        }
+         
+
          
     }
 }

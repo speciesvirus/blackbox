@@ -49,10 +49,11 @@ namespace Awecent.Back.Serial.Controllers
 
         [Authorize]
         [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product")]
-        public ActionResult Generate(string id)
+        public ActionResult Generate(string id, string name)
         {
             if (id == null) return RedirectToAction("Index", "Master");
-            ViewBag.PromotionID = id;
+            ViewBag.GameID = id;
+            ViewBag.PromotionID = name;
             return View();
         }
 
@@ -65,12 +66,20 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
+        [HttpPost]
+        public JsonResult GetGameServer(string GameID)
+        {
+            Game list = context.GetGameServer(GameID);
+            return Json(list);
+        }
+
         [Authorize]
-        public ActionResult Import(HttpPostedFileBase excelFile, int? degit, string id)
+        public ActionResult Import(HttpPostedFileBase excelFile, int? degit, string id, string name)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.PromotionID = id;
+                ViewBag.GameID = id;
+                ViewBag.PromotionID = name;
                 return View();
             }
 
@@ -93,28 +102,58 @@ namespace Awecent.Back.Serial.Controllers
 
                 int valid = 0;
                 List<string> validlist = new List<string>();
+
+                string utc = ConvertToUnixTimestamp(DateTime.UtcNow).ToString();
+                string timestamp = name + "" + utc;
+                string createName = ClaimName();
+                string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                StringBuilder sb = new StringBuilder();
+
+                var countTemp = 1;
                 foreach (ItemCode item in list)
                 {
-                    if (item.Code.Length != degit)
-                    {
-                        valid++;
-                        validlist.Add("" + item.Code);
-                    }
+                    //if (item.Code.Length != degit)
+                    //{
+                    //    valid++;
+                    //    validlist.Add("" + item.Code);
+                    //}
+                    sb.AppendFormat("INSERT INTO `gameitemcode_temp`(`id`,`iPromotionID`,`digitCode`,`itemCode`,`statusProcess`,`fileName`,`dtCreateUser`,`dtCreateDate`) "
+                    + "VALUES('{0}','{1}','{2}','{3}','0',{4},'{5}','{6}');"
+                    , countTemp, name, degit, item.Code, timestamp, createName, date);
+
+                    countTemp++;
                 }
+                string sql = sb.ToString();
+                MasterCode master = context.InsertExecute(sql);
+                int countValid = context.ValidateImportItemCode(timestamp);
+                //if (master.Result)
+                //{
+                //    master.Result = context.UpdateStatusToProgress(name);
+                //    if (!master.Result) master.Message = "Update status fail.";
+                //}
 
                 int total = list.ToList().Count;
-                ViewBag.PromotionID = id;
+                ViewBag.GameID = id;
+                ViewBag.PromotionID = name;
                 ViewBag.TempData = list;
                 ViewBag.Total = total;
-                ViewBag.TotalValid = valid;
+                ViewBag.TotalValid = countValid;// valid;
                 ViewBag.Validlist = validlist;
                 ViewBag.FileName = excelFile.FileName;
                 ViewBag.Degit = degit;
+                ViewBag.key = timestamp;
                 return View();
 
             }
-            ViewBag.PromotionID = id;
+            ViewBag.GameID = id;
+            ViewBag.PromotionID = name;
             return View();
+        }
+        static double ConvertToUnixTimestamp(DateTime date)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            TimeSpan diff = date - origin;
+            return Math.Floor(diff.TotalSeconds);
         }
 
 
@@ -164,7 +203,7 @@ namespace Awecent.Back.Serial.Controllers
             return Json(list);
         }
 
-         [HttpPost]
+        [HttpPost]
         [Authorize]
         public JsonResult GetItemCodeList(ItemCode model)
         {
@@ -174,7 +213,7 @@ namespace Awecent.Back.Serial.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult SaveImport(string id, string promotionid)
+        public JsonResult SaveImport(string id, string promotionid, string serverid, string itemid, string key)
         {
             string file = Server.MapPath("~/File/" + id);
             if (!System.IO.File.Exists(file)) return Json(new MasterCode { Result = false, Message = "file not found." });
@@ -188,24 +227,30 @@ namespace Awecent.Back.Serial.Controllers
             string name = ClaimName();
             string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            MasterCode master = context.CreateLotItemCode(new MasterCode { PromotionID = Convert.ToInt64(promotionid), CreateBy = name, CodeAmount = total });
-            if (master == null) return Json(new MasterCode { Result = false, Message = "can not create lot." });
-            StringBuilder sb = new StringBuilder();
+            MasterCode master = context.SaveTemptoTable(new OutputTempMaster { Key = key, GenereateBy = name }, new MasterCode { ServerID = Convert.ToInt32(serverid), ItemID = Convert.ToInt32(itemid) });
+            if (master == null) return Json(new MasterCode { Result = false, Message = "Can't insert to temp." });
 
-            foreach (ItemCode item in list)
-            {
-                sb.AppendFormat("INSERT INTO `gameitemcode`(`iPromotionID`,`iLotID`,`vCode`,`cIsUse`,`dtCreateUser`,`dtCreateDate`) "
-                    + "VALUES('{0}','{1}','{2}','N','{3}','{4}');"
-                    , promotionid, master.Lot, item.Code, name, date);
-            }
+            //MasterCode master = context.GenerateCodeLot(new MasterCode { PromotionID = Convert.ToInt64(promotionid), ServerID = Convert.ToInt32(serverid), ItemID = Convert.ToInt32(itemid), CreateBy = name, CodeAmount = total });
+            // old by ker
+            //MasterCode master = context.CreateLotItemCode(new MasterCode { PromotionID = Convert.ToInt64(promotionid), CreateBy = name, CodeAmount = total });
+            //if (master == null) return Json(new MasterCode { Result = false, Message = "can not create lot." });
 
-            string sql = sb.ToString();
-            master = context.InsertExecute(sql);
-            if (master.Result)
-            {
-                master.Result = context.UpdateStatusToProgress(promotionid);
-                if (!master.Result) master.Message = "Update status fail.";
-            }
+            //StringBuilder sb = new StringBuilder();
+
+            //foreach (ItemCode item in list)
+            //{
+            //    sb.AppendFormat("INSERT INTO `gameitemcode`(`iPromotionID`,`iLotID`,`vCode`,`cIsUse`,`dtCreateUser`,`dtCreateDate`) "
+            //        + "VALUES('{0}','{1}','{2}','N','{3}','{4}');"
+            //        , promotionid, master.Lot, item.Code, name, date);
+            //}
+
+            //string sql = sb.ToString();
+            //master = context.InsertExecute(sql);
+            //if (master.Result)
+            //{
+            //    master.Result = context.UpdateStatusToProgress(promotionid);
+            //    if (!master.Result) master.Message = "Update status fail.";
+            //}
             return Json(master);
         }
 
@@ -218,7 +263,7 @@ namespace Awecent.Back.Serial.Controllers
 
         [HttpPost]
         [Authorize]
-        public JsonResult SaveGenerate(OutputTempMaster model)
+        public JsonResult SaveGenerate(OutputTempMaster model,MasterCode masterModel)
         {
             if (model == null || model.Key == null) return Json(new MasterCode { Result = false, Message = "Can not reference code in temp table." });
             model.GenereateBy = ClaimName();
@@ -231,7 +276,7 @@ namespace Awecent.Back.Serial.Controllers
             {
 
             }
-            MasterCode master = context.SaveTemptoTable(model);
+            MasterCode master = context.SaveTemptoTable(model, masterModel);
             return Json(master);
         }
 
@@ -252,6 +297,25 @@ namespace Awecent.Back.Serial.Controllers
             OutputTempMaster output = context.GenerateCodeToTempAndValidateion(model);
             return Json(output);
         }
+
+        [HttpPost]
+        [Authorize]
+        public JsonResult GenerateLot(MasterCode model)
+        {
+            model.CreateBy = ClaimName();
+            try
+            {
+                string[] arrstr = model.CreateBy.Split('@');
+                model.CreateBy = arrstr[0];
+            }
+            catch (Exception ex)
+            {
+
+            }
+            MasterCode list = context.GenerateCodeLot(model);
+            return Json(list);
+        }
+
 
         public JsonResult SearchMaster(MasterCode model)
         {

@@ -1,0 +1,803 @@
+﻿@{
+    ViewBag.Title = "Gashapon";
+}
+
+@Scripts.Render("~/bundles/report")
+@Styles.Render("~/Content/report")
+
+@Scripts.Render("~/bundles/amcharts")
+@Styles.Render("~/Content/amcharts")
+<style>
+    .input-group-addon, .input-group-btn {
+        width: inherit;
+    }
+
+    .float-left {
+        float: left;
+    }
+
+    .rg-2m:first-child {
+        margin-right: 1em;
+    }
+
+    .mg-2 {
+        margin-bottom: 2em;
+    }
+
+    .chosen-container-multi .chosen-choices {
+        border-radius: 3px;
+        width: 500px;
+    }
+
+
+
+    .amChartsDataSetSelector {
+        font-size: 12px;
+        font-family: verdana,helvetica,arial,sans-serif;
+    }
+
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+        /*background: #3f3f4f !important;
+        background-color: #FFFFFF;*/
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.2);
+    }
+
+    .amcharts-stock-div * {
+        -webkit-box-sizing: initial;
+        -moz-box-sizing: initial;
+        box-sizing: initial;
+    }
+
+    .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: 300px !important;
+    }
+</style>
+
+<link href="~/Scripts/bootstrap-select-1.9.4/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap-select-1.9.4/dist/js/bootstrap-select.min.js"></script>
+
+
+
+
+<div class="mg-2">
+    <h2>Active Users</h2>
+    <div class="bs-example" data-example-id="form-group-height-sizes">
+        <form class="form-horizontal">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Filter</div>
+                <div class="panel-body">
+
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label" for="formGroupInputSmall">Game</label>
+                        <div class="col-sm-10">
+
+                            <select id="gameID" data-placeholder="Choose a Gams..." class="form-control">
+
+                                @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Server)
+                                {
+                                    if (ViewBag.ServerName != game.GameId)
+                                    {
+                                        ViewBag.ServerName = game.GameId;
+                                        <optgroup label="@game.GameName">
+                                            @foreach (Awecent.Back.Serial.Models.Game server in ViewBag.Server)
+                                            {
+                                                if (game.GameId == server.GameId)
+                                                {
+                                                    <option value="@server.GameId-@server.ServerId">@server.GameName - @server.ServerName</option>
+                                                }
+                                            }
+                                        </optgroup>
+                                    }
+
+                                }
+                            </select>
+
+
+
+                        </div>
+                    </div>
+
+
+                    @*<div class="form-group form-group-sm">
+                            <label class="col-sm-2 control-label" for="formGroupInputSmall">Small label</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" id="formGroupInputSmall" placeholder="Small input">
+                            </div>
+                        </div>*@
+
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label" for="formGroupInputSmall">Promotion</label>
+                        <div class="col-sm-10">
+
+                            @*<select id="promotionId" data-placeholder="Choose a Promotion..." class="chosen-select" multiple tabindex="5">
+
+
+                            </select>*@
+
+                            <div class="aaaa">
+                                <select class="selectpicker" id="promotionId" multiple></select>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label" for="formGroupInputSmall">Date & Time</label>
+                        <div class="col-sm-10">
+
+                            <div class="float-left rg-2m">
+                                <div class='input-group date' id='datetimepicker6'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="float-left">
+                                <div class='input-group date' id='datetimepicker7'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-sm">
+                        <label class="col-sm-2 control-label" for="formGroupInputSmall"></label>
+                        <div class="col-sm-10">
+                            <button class="btn btn-info" type="button" ng-click="search()">Search</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+
+        </form>
+
+
+        @*<form action="@Url.Action("Import","Active")" method="post" enctype="multipart/form-data" name="Upload" id="Upload">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Upload</div>
+                    <div class="panel-body">
+                        <div class="form-inline ">
+                            <div class="form-group">
+                                <label>File</label>
+                                <input type="file" name="excelFile" class="form-control" required />
+                            </div>
+
+                            <button type="submit" class="btn btn-info" form="Upload">submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>*@
+
+    </div>
+
+    @*<div id="chartdiv"></div>*@
+
+    <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+
+
+        //var config = {
+        //    '.chosen-select': {},
+        //    '.chosen-select-deselect': { allow_single_deselect: true },
+        //    '.chosen-select-no-single': { disable_search_threshold: 10 },
+        //    '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' }
+        //}
+        //for (var selector in config) {
+        //    $(selector).chosen(config[selector]);
+        //}
+
+        $('#datetimepicker6').datetimepicker({
+            defaultDate: new Date(),
+            format: 'DD/MM/YYYY - 00:00'
+        });
+        $('#datetimepicker7').datetimepicker({
+            defaultDate: new Date(),
+            format: 'DD/MM/YYYY - 23:59',
+            useCurrent: false
+        });
+
+        $("#datetimepicker6").on("dp.change", function (e) {
+            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+        });
+        $("#datetimepicker7").on("dp.change", function (e) {
+            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+        });
+
+        'use strict';
+
+
+        selectGame();
+        $('#gameID').change(function () {
+            selectGame();
+        });
+
+        function selectGame() {
+
+            var str = $("#gameID").val(),
+                res = str.split("-");
+
+            $(".aaaa").html('<select class="selectpicker" id="promotionId" multiple></select>');
+            
+            $.get('@Url.Action("GetGPN", "Report")/' + res['0'], function (data, status) {
+                $.each(data.Data, function (key, value) {
+                    $("#promotionId").append('<option value="' + value.GashaponHdrId + '">' + value.GashaponName + '</option>');
+                });
+               
+                setTimeout(function () {
+                    $('#promotionId').selectpicker();
+                }, 50);
+            });
+
+
+        }
+
+    });
+</script>
+
+
+<script type="text/javascript">
+
+
+
+    $(function () {
+
+
+
+        $(".btn-info").click(function () {
+
+
+            var str = $("#datetimepicker6").find("input").val(),
+                $startDate = _returnDate(str);
+
+            var str = $("#datetimepicker7").find("input").val(),
+                $endDate = _returnDate(str);
+
+
+            if ($("#promotionId").val() === null) {
+
+                alert("Choose a game!");
+
+                return false;
+            }
+
+
+            $('#spinner').toggle(true);
+
+            var str = $("#gameID").val(),
+                res = str.split("-");
+
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '/api/report/gashapon/count/',
+                data: {
+                    gameID: res[0],
+                    serverID: res[1],
+                    promotionID: '' + $("#promotionId").val(),
+                    timeStart: $startDate,
+                    timeEnd: $endDate
+                },
+                dataType: 'json',
+                success: function (Json) {
+                    console.log('adad :',Json);
+                    var options = chartOption();
+                    //aaa
+                    jx = new Array(Json.data);
+                    var JsonLenght = (jx[0].length - 1),
+                        $data = "";
+
+
+                    ja = new Array();
+                    dateArr = new Array();
+                    var $oneTime = true,
+                        $loop = 0,
+                        $loopTime = true;
+                    $.each(jx[0], function ($jsonKey, $jsonData) {
+                        var $name = $jsonData.gameID,
+                            $server = $jsonData.serverID,
+                            $promotionID = $jsonData.promotionID;
+
+                        
+                        $.each($jsonData.data, function (key, value) {
+                            
+                            //$name = value.gameID;
+                            //$server = value.serverID;
+                            //$promotionID = value.promotionID;
+
+                            //set line X (category)
+                            var d = new Date(value.curTime);
+                            var e = value.curTimeString;
+                            if ($oneTime) {
+                                ja[key] = value.count;
+                                options.xAxis.categories.push(e); dateArr[key] = e;
+                            } else {
+                                
+                                //check date different
+                                if (dateArr[key] != e) {
+                                    
+                                    if ($loopTime) {
+                                        $loopTime = false;
+                                        
+                                        // reset array
+                                        //$.each(dateArr, function (ja_key, ja_value) {
+                                        //    ja[ja_key] = null;
+                                        //});
+
+                                        // find range array
+                                        $.each(dateArr, function (ja_key, ja_value) {
+                                            if (ja_value == e) {
+                                                $loop = ja_key;
+                                                ja[ja_key] = value.count;
+                                            }
+                                        });
+
+                                    } else {
+                                        
+                                        $.each(dateArr, function (ja_key, ja_value) {
+                                            if (ja_value == e) {
+                                                ja[ja_key] = value.count;
+                                            }
+                                        });
+                                    }
+
+                                } else {
+                                    console.log('bbb :', value);
+                                    ja[key] = value.count;
+                                }
+
+                            }// end check diif time
+
+
+                        });
+                        // reset array
+                        
+                        $loopTime = true;
+                        $oneTime = false;
+                        $data = JSON.stringify(ja);
+                        //console.log('aaa :',$data);
+                        // name of value
+                        options.series.push({
+                            name: $name != '' ? $(".aaaa select option[value=" + $promotionID + "]").html() : 'null',
+                            data: $.parseJSON($data)
+                        });
+
+                        // reset array
+                        $.each(dateArr, function (ja_key, ja_value) {
+                            ja[ja_key] = null;
+                        });
+
+                    });//end each
+
+                    var chart = new Highcharts.Chart(options);
+
+                    $('#spinner').toggle(false);
+
+                },
+
+            });
+
+
+        });
+
+
+
+
+
+
+    });
+
+
+
+    function chartOption() {
+
+        var options = {
+            chart: {
+                renderTo: 'chart',
+                type: 'line',
+                zoomType: 'x'
+            },
+            title: {
+                text: 'Active User'
+            },
+            //subtitle: {
+            //    text: 'Source: Game'
+            //},
+            xAxis: {
+                //allowDecimals: false,
+                //labels: {
+                //    formatter: function () {
+                //        return this.value;
+                //    }
+                //}
+                type: 'datetime',
+                tickPixelInterval: 150,
+                dateTimeLabelFormats: {
+                    day: '%e of %b'
+                },
+                categories: []
+            },
+            yAxis: {
+                title: {
+                    text: 'active to person'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+            },
+
+            plotOptions: {
+                area: {
+                    pointStart: 0,
+                    marker: {
+                        enabled: false,
+                        symbol: 'circle',
+                        radius: 2,
+                        states: {
+                            hover: {
+                                enabled: true
+                            }
+                        }
+                    }
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: []
+        };
+
+        return options;
+
+    }
+
+
+
+    function formatDate($date) {
+
+        var d = new Date($date);
+        var offset = new Date().getTimezoneOffset() / 60;
+
+        var date = d.setUTCHours(0);
+
+        //var date = new Date(d.getTime() - 1000 * 3600 * 7);
+        return $date;
+
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+
+        //var ampm = hours >= 12 ? 'pm' : 'am';
+        //hours = hours % 12;
+        //hours = hours ? hours : 12;
+        //minutes = minutes < 10 ? '0' + minutes : minutes;
+        //var strTime = hours + ':' + minutes + ' ' + ampm;
+
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " - " + hours + ":00";
+    }
+
+
+    function _returnDate($data) {
+
+        var res = $data.split("-"),
+        $getDate = res[0],
+        $getTime = res[1],
+        resDate = $getDate.split("/"),
+        $curDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
+
+        return $curDate;
+
+    }
+
+
+</script>
+
+
+@*<script type="text/javascript">
+
+        function _returnDate($data) {
+
+            var res = $data.split("-"),
+            $getDate = res[0],
+            $getTime = res[1],
+            resDate = $getDate.split("/"),
+            $curDate = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0] + "" + $getTime + ":00";
+
+            return $curDate;
+
+        }
+
+
+        $(function () {
+
+
+
+
+            var chartConfig = {
+                "type": "serial",
+                "marginRight": 80,
+                "autoMarginOffset": 20,
+                "dataProvider": [],
+                "valueAxes": [{
+                    "gridColor": "#aaa",
+                    "id": "v1",
+                    "title": "Graph",
+                    "position": "left",
+                    "autoGridCount": false,
+                }
+                //, {
+                //    "gridColor": "#aaa",
+                //    "id": "v1",
+                //    "title": "Graph",
+                //    "position": "right",
+                //    "autoGridCount": false,
+                //}
+                ],
+                //"gridAboveGraphs": true,
+                //"startDuration": 1,
+                "graphs": [],
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    //"zoomable": false,
+                    //"pan": true,
+                    "valueLineEnabled": true,
+                    "valueLineBalloonEnabled": true,
+                    "valueLineAlpha": 0.2,
+                    "categoryBalloonColor": "#000000",
+                    "cursorColor": "#000000",
+                    "categoryBalloonDateFormat": "JJ:NN, DD MMMM YYYY",
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "title",
+
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "fillAlpha": 0.05,
+                    "fillColor": "#000000",
+                    "gridAlpha": 0,
+                    //"position": "top"
+                    "minPeriod": "mm",
+                    "parseDates": true,
+                    //"parseDates": true,
+                    "axisColor": "#DADADA",
+                    "dashLength": 1,
+                    "minorGridEnabled": true,
+                },
+                "balloon": {
+                    "borderThickness": 1,
+                    "shadowAlpha": 0
+                },
+                "legend": {
+                    "useGraphSettings": true,
+                    "position": "top"
+                },
+                "chartScrollbar": {
+                    "graph": "g0",
+                    "oppositeAxis": false,
+                    "offset": 30,
+                    "scrollbarHeight": 40,
+                    "backgroundAlpha": 0,
+                    "selectedBackgroundAlpha": 0.1,
+                    "selectedBackgroundColor": "#888888",
+                    "graphFillAlpha": 0,
+                    "graphLineAlpha": 0.5,
+                    "selectedGraphFillAlpha": 0,
+                    "selectedGraphLineAlpha": 1,
+                    "autoGridCount": true,
+                    "color": "#AAAAAA",
+                    "selectedGraphLineColor": "#888888",
+                    "selectedGraphLineAlpha": 1
+                },
+                "export": {
+                    "enabled": true,
+                    //"position": "bottom-right"
+                }
+
+
+            };
+
+
+
+            //chartConfig.dataProvider.push({
+            //    title: "sample 2",
+            //    italy: 2,
+            //    germany: 3,
+            //    uk: 1
+            //});
+
+
+
+
+            // end chart
+
+
+
+            $(".btn-info").click(function () {
+
+
+                var str = $("#datetimepicker6").find("input").val(),
+                    $startDate = _returnDate(str);
+
+                var str = $("#datetimepicker7").find("input").val(),
+                    $endDate = _returnDate(str);
+
+
+                if ($("#gameID").chosen().val() === null) {
+
+                    alert("Choose a game!");
+
+                    return false;
+                }
+
+
+                $('#spinner').toggle(true);
+
+                $.ajax({
+                    type: 'POST',
+                    async: true,
+                    url: '/api/report/active/user/',
+                    data: {
+                        gameID: '' + $("#gameID").chosen().val(),//+$("#gameID").chosen().val()
+                        timeStart: $startDate,
+                        timeEnd: $endDate
+                    },
+                    dataType: 'json',
+                    success: function (Json) {
+
+                        jx = new Array(Json.data);
+
+
+                        ja = new Array();
+                        $.each(jx[0], function ($jsonKey, $jsonData) {
+                            var $name = '',
+                                $server = '',
+                                $oneTime = true;
+                            console.log($jsonData);
+                            $.each($jsonData.data, function (key, value) {
+
+                                $name = value.gameID;
+                                $server = value.serverID
+                                var d = new Date(value.curTime);
+                                var e = new Date(d - 1000 * 3600 * 7);
+
+
+                                //chartConfig.dataProvider.push({
+                                //    title: e,
+                                //    active1: value.count
+                                //});
+                                dataObject = new Array();
+
+                                // create object which contains all these items:
+                                dataObject[key] = {
+                                    title: e,
+                                    active1: value.count
+                                };
+
+                                var adasd = {
+                                    title: e,
+                                    active1: value.count
+                                };
+                                // add object to chartData array
+                                chartConfig.dataProvider.push(adasd);
+
+
+                            });
+
+
+
+                            chartConfig.graphs.push({
+                                "id": "g" + $jsonKey,
+                                "balloonText": "Visits : <b style='font-size: 130%'>[[value]]</b>",
+                                "bullet": "round",
+                                //"hidden": true,
+                                "title": $name != '' ? $("select#gameID option[value=" + $name + "-" + $server + "]").html() : 'null',
+                                "valueField": "active" + $jsonKey,
+                                "fillAlphas": 0,
+
+                                "bulletBorderAlpha": 1,
+                                "bulletColor": "#FFFFFF",
+                                "bulletSize": 7,
+                                "lineThickness": 2,
+                                "useLineColorForBulletBorder": true,
+
+                                "hideBulletsCount": 200,
+                                "useLineColorForBulletBorder": true,
+
+                                "labelText": "[[value]]",
+                                "type": "smoothedLine",
+                                //"type": "column",
+
+                            });
+
+
+                        });//end each
+
+
+                        // make the chart
+                        var chart = AmCharts.makeChart("chartdiv", chartConfig);
+
+                        //zoomChart();
+                        //function zoomChart() {
+                        //    chart.zoomToIndexes(chartData.length - 250, chartData.length - 100);
+                        //}
+                        console.log('aaa', JSON.stringify(dataObject));
+                        $('#spinner').toggle(false);
+
+
+
+
+
+                    },
+
+                });
+
+
+            });
+
+
+
+            function formatDate($date) {
+
+                var d = new Date($date);
+                var offset = (new Date().getTimezoneOffset() / 60) * -1;
+                var date = new Date(d.getTime() - 1000 * 3600 * 7);
+
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+
+                //var ampm = hours >= 12 ? 'pm' : 'am';
+                //hours = hours % 12;
+                //hours = hours ? hours : 12;
+                //minutes = minutes < 10 ? '0' + minutes : minutes;
+                //var strTime = hours + ':' + minutes + ' ' + ampm;
+                return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " - " + hours + ":00";
+            }
+
+
+
+
+        });
+
+
+
+
+
+
+    </script>*@
+
+

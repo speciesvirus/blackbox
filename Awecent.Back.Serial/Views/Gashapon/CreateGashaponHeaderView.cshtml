@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "CreateGashaponHeaderView";
+}
+<style>
+    .row {
+        margin: 5px 0;
+    }
+
+    .margin-left {
+        margin-left: 20px;
+    }
+    .input-group {
+        display: inherit;
+    }
+</style>
+<h2>Gashapon Game Setting</h2>
+<form ng-app="MyApp" name="GashaponForm" id="GashaponForm" ng-controller="CreateGashaponHeaderController">
+    <div class="row">
+        <a class="btn btn-sm btn-primary" href="@Url.Action("GashaponHeader", "Gashapon")">Back</a>
+    </div>
+    <div class="row" >
+        <div class="panel panel-default">
+            <div class="panel-heading">Create Gashapon Header Information</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Game Name</label>
+                        <select ng-model="input.GameId" ng-change="findPromotion()" class="form-control" name="GameId">
+
+                            @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
+                            {
+                                <option value="@game.GameId">@game.GameName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Gashapon Name</label>
+                        <input type="text" class="form-control" ng-model="input.GashaponName" name="GashaponName" />
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Return Type</label>
+                        <select ng-model="input.ReturnTypeId" class="form-control" name="ReturnType"
+                                ng-options="ser.ReturnTypeId as ser.ReturnTypeName for ser in ReturnType"></select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Visible Start Date</label>
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                                   ng-model="input.VisibleStartDate" is-open="status.openedVisibleStartDate" name="VisibleStartDate"
+                                   placeholder="YYYY-MM-DD"
+                                   datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openVisibleStartDate($event)">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>Visible End Date</label>
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                                   ng-model="input.VisibleEndDate" is-open="status.openedVisibleEndDate" name="VisibleEndDate"
+                                   min-date="input.VisibleStartDate" placeholder="YYYY-MM-DD"
+                                   datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openVisibleEndDate($event)">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>Start Date</label>
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                                   ng-model="input.StartDate" is-open="status.openedStartDate" name="StartDate"
+                                   placeholder="YYYY-MM-DD"
+                                   datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openStartDate($event)">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>End Date</label>
+                        <p class="input-group">
+                            <input type="text" class="form-control" uib-datepicker-popup="{{format}}"
+                                   ng-model="input.EndDate" is-open="status.openedEndDate" name="EndDate"
+                                   min-date="input.StartDate" placeholder="YYYY-MM-DD"
+                                   datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openEndDate($event)">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>Free play</label>
+                        <p class="input-group">
+                            <input type="text" class="form-control" ng-model="input.free" name="free" placeholder="Amount" />
+
+                        </p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>Point</label>
+                        <p class="input-group">
+                            <input type="text" class="form-control" ng-model="input.point" name="point" placeholder="Amount" />
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <a class="btn btn-sm btn-primary" href="javascript://" ng-click="CreateGashaponHeader()">Create</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+    <script type="text/javascript">
+    angular.module('MyApp', ['ui.bootstrap']).controller('CreateGashaponHeaderController', ['$scope', '$http', function ($scope, $http) {
+        var form = $('#GashaponForm');
+        $scope.input = {};
+        $scope.ReturnType = [{ ReturnTypeId: '1', ReturnTypeName: 'Item Code' }, { ReturnTypeId: '2', ReturnTypeName: 'Cell API' }];
+
+        $scope.status = {};
+        $scope.status.openedVisibleStartDate = false;
+        $scope.status.openedVisibleEndDate = false;
+
+        $scope.status.openedStartDate = false;
+        $scope.status.openedEndDate = false;
+
+        $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+        $scope.format = $scope.formats[1];
+
+        $scope.openVisibleStartDate = function ($even) {
+            $scope.status.openedVisibleStartDate = true;
+        }
+
+        $scope.openVisibleEndDate = function ($even) {
+            $scope.status.openedVisibleEndDate = true;
+        }
+
+        $scope.openStartDate = function ($even) {
+            $scope.status.openedStartDate = true;
+        }
+
+        $scope.openEndDate = function ($even) {
+            $scope.status.openedEndDate = true;
+        }
+
+        $scope.CreateGashaponHeader = function () {
+            console.log($scope.input);
+            if ($scope.input == null) return;
+            if (!form.valid()) return;
+            $('#spinner').toggle(true);
+            $http.post('@Url.Action("CreateGashaponHeader", "Gashapon")', $scope.input)
+                    .success(function (d) {
+                        console.log('return', d);
+                        if (d.Result) {
+                            alert(d.Message);
+                            window.location = '@Url.Action("GashaponHeader", "Gashapon")';
+                            notifySuccess(d.Message);
+                        } else notifyError(d.Message);
+
+                        $('#spinner').toggle(false);
+                    });
+            }
+
+            $(document).ready(function () {
+                $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+                    return arg != value;
+                }, "Please select some value.");
+
+                form.validate({
+                    rules: {
+                        GameId: { required: true, valueNotEquals: '? undefined:undefined ?' },
+                        GashaponName: { required: true },
+                        ReturnType: { required: true, valueNotEquals: '?' },
+                        VisibleStartDate: { required: true },
+                        VisibleEndDate: { required: true },
+                        StartData: { required: true },
+                        EndDate: { required: true },
+                    },
+                });
+            });
+        }]);
+    </script>

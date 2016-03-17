@@ -19,6 +19,8 @@ namespace Awecent.Back.Serial.Models
 
         #region report
 
+
+
         public PromotionsList GetPromotions(string id) {
             using (MySqlConnection con = new MySqlConnection(ItemConnection))
             {
@@ -62,6 +64,7 @@ namespace Awecent.Back.Serial.Models
                     cmd.Parameters.Add(new MySqlParameter("_StartDate", model.startDate.Value));
                     cmd.Parameters.Add(new MySqlParameter("_EndDate", model.endDate.Value));
                     cmd.Parameters.Add(new MySqlParameter("_PromotionID", model.promotionId));
+                    cmd.Parameters.Add(new MySqlParameter("_UID", model.UID));
                     //_PageSize , _Page , _row , _PromotionID
                     cmd.Parameters.Add(new MySqlParameter("_PageSize", model.pageSize));
                     cmd.Parameters.Add(new MySqlParameter("_Page", model.page));
@@ -78,6 +81,7 @@ namespace Awecent.Back.Serial.Models
                         LotID = Convert.ToInt64(row["iLotID"].ToString()),
                         Code = row["vCode"].ToString(),
                         IsUsed = row["cIsUse"].ToString(),
+                        UID = row["UID"].ToString(),
                         FacebookID = row["userID"].ToString(),
                         TimeUse = row["dtUsedDate"].ToString(),
                         TimeCreate = row["dtCreateDate"].ToString(),
@@ -208,6 +212,11 @@ namespace Awecent.Back.Serial.Models
             }
 
         }
+
+
+
+
+
 
         #endregion
     }

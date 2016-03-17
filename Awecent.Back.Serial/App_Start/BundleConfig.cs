@@ -57,6 +57,7 @@ namespace Awecent.Back.Serial
                       "~/Scripts/amcharts/plugins/responsive/responsive.js"));
 
             bundles.Add(new StyleBundle("~/Content/amcharts").Include(
+                      "~/Scripts/amcharts/style.css",
                       "~/Scripts/amcharts/plugins/export/export.css"
                         ));
 

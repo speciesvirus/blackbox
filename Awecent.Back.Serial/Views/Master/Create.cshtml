@@ -32,10 +32,6 @@
                                 ng-options="ser.id as ser.name for ser in serialtypes"></select>
                     </div>
 
-                    <div class="col-sm-4">
-                        <label>Item ID(In-Game)</label>
-                        <input type="text" class="form-control" ng-model="input.itemId" name="itemId" placeholder="99" />
-                    </div>
 
                 </div>
 
@@ -128,7 +124,7 @@
 
             $scope.input = {};
             $scope.serialtypes = [{ id: '1', name: 'Master Serial' }, { id: '2', name: 'Raw Serial' }];
-            $scope.generateTypes = [{ id: '1', name: 'Generate' }, { id: '2', name: 'Import' }];
+            $scope.generateTypes = [{ id: '1', name: 'Generate' }, { id: '2', name: 'Import' }, { id: '3', name: 'Auto Generate' }];
             $scope.status = {};
             //DATE TIME
             $scope.status.openedStart = false;

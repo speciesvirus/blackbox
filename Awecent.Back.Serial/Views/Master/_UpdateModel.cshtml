@@ -17,16 +17,20 @@
                         <label>Game Name</label>
                         <input type="text" class="form-control" ng-model="input.GameID" name="GameID" readonly />
                     </div>
+
+                    <div class="col-sm-4">
+                        <label>Game Server</label>
+                        <select ng-model="input.ServerID" class="form-control" name="ServerID" ng-disabled="input.Status > 1"
+                                ng-options="ser.ServerId as ser.ServerName for ser in server"></select>
+                    </div>
+
                     <div class="col-sm-4">
                         <label>Serial Type</label>
                         <select ng-model="input.SerialType" class="form-control" name="serialtype" ng-disabled="input.Status > 1"
                                 ng-options="ser.id as ser.name for ser in serialtypes"></select>
                     </div>
 
-                    <div class="col-sm-4">
-                        <label>Item ID(In-Game)</label>
-                        <input type="text" class="form-control" ng-model="input.ItemID" name="itemId" placeholder="99" ng-disabled="input.Status > 1" />
-                    </div>
+
 
                 </div>
 
@@ -94,8 +98,14 @@
                     </div>
                     <div class="col-sm-4">
                         <label>Item Code Prefix</label>
-                        <input type="text" class="form-control" ng-disabled="prefix || input.Status > 1 || input.GenerateType == 2"
-                               ng-model=" input.SerialPrefix" name="SerialPrefix" placeholder="3 character" maxlength="3" />
+                        <input type="text" class="form-control" ng-disabled="prefix || input.Status > 1 || input.GenerateType == 2 || input.GenerateType == 3"
+                               ng-model=" input.serialprefix" name="SerialPrefix" placeholder="3 character" maxlength="3" />
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label>Item ID(In-Game)</label>
+                        <input type="text" class="form-control" ng-model="input.ItemID" name="itemId" placeholder="" value="" />@* ng-disabled="input.Status > 1"  *@
+                        
                     </div>
                 </div>
 
@@ -105,6 +115,7 @@
             <div class="modal-footer">
                 <button type="button" ng-if="input.GenerateType == 1" class="btn btn-default" ng-disabled="input.Status==5" ng-click="generateCode()">Generate Code</button>
                 <button type="button" ng-if="input.GenerateType == 2" class="btn btn-default" ng-disabled="input.Status==5" ng-click="importCode()">Import Code</button>
+                <button type="button" ng-if="input.GenerateType == 3" class="btn btn-default" ng-disabled="input.Status==5" ng-click="autoGenerateCode()">Generate Lot</button>
                 <button type="button" class="btn btn-primary" ng-click="saveChange()">Save changes</button>
             </div>
         </div>

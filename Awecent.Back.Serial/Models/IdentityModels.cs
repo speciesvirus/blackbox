@@ -50,22 +50,27 @@ namespace Awecent.Back.Serial.Models
         public string Message { get; set; }
     }
 
-
     public class Game
     {
         public string GameId { get; set; }
         public string GameName { get; set; }
-
         public int ServerId { get; set; }
         public string ServerName { get; set; }
-        
+        public List<Server> Server { get; set; }
+
+        public bool result { get; set; }
+    }
+    public class Server
+    {
+        public int ServerId { get; set; }
+        public string ServerName { get; set; }
     }
 
     public class ReportItemCodeInput
     {
         [Required]
         public int gameId { get; set; }
-
+        public string UID { get; set; }
         public string promotionId { get; set; }
 
         public DateTime? startDate { get; set; }
@@ -83,6 +88,7 @@ namespace Awecent.Back.Serial.Models
         public string Code { get; set; }
         public string IsUsed { get; set; }
         public string FacebookID { get; set; }
+        public string UID { get; set; }
         public string TimeUse { get; set; }
         public string TimeCreate { get; set; }
         public string CreateBy { get; set; }
@@ -122,12 +128,74 @@ namespace Awecent.Back.Serial.Models
 
     }
 
+    public class GashaponHeaderList : ResultModel
+    {
+        public int Total { get; set; }
+        public List<GashaponHeader> Data { get; set; }
+    }
+
+    public class GashaponHeader
+    {
+        [Required]
+        public int? GameId { get; set; }
+        public string GameName { get; set; }
+        public int? GashaponHdrId { get; set; }
+        public string GashaponName { get; set; }
+        public DateTime? VisibleStartDate { get; set; }
+        public DateTime? VisibleEndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int free { get; set; }
+        public int point { get; set; }
+        public string StatusId { get; set; }
+        public string ReturnTypeId { get; set; }
+        public string CreateUser { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public string UpdateUser { get; set; }
+        public DateTime? UpdateDate { get; set; }
+
+        //page
+        public int PageSize { get; set; }
+        public int Page { get; set; }
+        public bool Result { get; set; }
+        public string Message { get; set; }
+    }
+
+    public class GashaponDetailList : ResultModel
+    {
+        public int Total { get; set; }
+        public List<GashaponDetail> Data { get; set; }
+    }
+
+    public class GashaponDetail
+    {
+        public int GashaponDtlId { get; set; }
+        public int GashaponHdrId { get; set; }
+        public int ItemId { get; set; }
+        public string ItemName { get; set; }
+        public decimal DropRate { get; set; }
+        public int? LimitItem {get; set; }
+        public string LimitItemPerId { get; set; }
+        public int RunningItem { get; set;}
+        public string CreateUser { get; set; }
+        public DateTime CreateDate { get; set; }
+        public string UpdateUser { get; set; }
+        public DateTime UpdateDate { get; set; }
+        public int free { get; set; }
+        public int point { get; set; }
+
+        //page
+        public int PageSize { get; set; }
+        public int Page { get; set; }
+        public bool Result { get; set; }
+        public string Message { get; set; }
+    }
 
     public class MasterCode
     {
         [Required]
         public int? GameID { get; set; }
-
+        public int? ServerID { get; set; }
         public long? PromotionID { get; set; }
 
         public string PromotionName { get; set; }

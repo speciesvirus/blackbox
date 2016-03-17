@@ -2,6 +2,21 @@
     ViewBag.Title = "ItemCode";
 }
 
+<style>
+    .label {
+        display: inline;
+        padding: .2em .6em .3em;
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 1;
+        color: #000;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25em;
+    }
+</style>
+
 <h2>Report ItemCode</h2>
 <form ng-app="MyApp" ng-controller="ReportItemCodeController" name="ValidateForm" id="ValidateForm">
     <div class="row" style="margin-left:0;margin-right:0;">
@@ -52,18 +67,23 @@
                         </span>
                     </p>
                 </div>
-                <div class="col-sm-2">
+                @*<div class="col-sm-2">
                     <label>NumberOfRecord</label>
                     <select class="form-control" ng-model="input.pageSize">
                         <option value="20">20</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
                     </select>
+                </div>*@
+
+                <div class="col-sm-3">
+                    <label>UID</label>
+                    <input type="text" ng-model="input.UID" class="form-control" name="UID" />
                 </div>
 
                 <div class="col-sm-2">
                     <label>&nbsp;</label>
-                    <button class="btn btn-info" type="button" ng-click="search()" style="margin-top:23px;">Search</button>
+                    <button class="btn btn-info" type="button" ng-click="reloadTable()" style="margin-top:23px;">Search</button>
                 </div>
             </div>
         </div>
@@ -71,13 +91,15 @@
         <div class="panel panel-default">
             <div class="panel-heading">Record</div>
             <div class="panel-body">
-                <table class="table table-bordered">
+
+                @*<table class="table table-bordered">
                     <thead>
                         <tr>
                             <td>#</td>
                             <td>Promotion</td>
                             <td>Lot</td>
                             <td>Code</td>
+                            <td>UID</td>
                             <td>Facebook User</td>
                             <td>Create at</td>
                             <td>Top-Up at</td>
@@ -89,26 +111,104 @@
                             <td>{{ item.PromotionID }}</td>
                             <td>{{ item.LotID }}</td>
                             <td>{{ item.Code }}</td>
+                            <td>{{ item.UID }}</td>
                             <td>{{ item.FacebookID }}</td>
                             <td>{{ item.TimeCreate }}</td>
                             <td>{{ item.TimeUse }}</td>
                         </tr>
                     </tbody>
-                </table>
+                </table>*@
 
-                <uib-pagination total-items="input.total" ng-model="input.page" max-size="20"
-                                ng-change="search()" items-per-page="input.pageSize"></uib-pagination>
+                @*<uib-pagination total-items="input.total" ng-model="input.page" max-size="20"
+                                ng-change="search()" items-per-page="input.pageSize"></uib-pagination>*@
+
+                @*ng-controller="ExampleController9"*@
+                
+                
+
+                @*md-row-select="options.rowSelection"*@
+                <md-table-container>
+                    <table md-table ng-model="selected" md-progress="promise">
+                        <thead md-head md-order="query.order" md-on-reorder="logOrder">
+                            <tr md-row>
+                                <th md-column md-order-by="PromotionID"><span>Promotion</span></th>
+                                <th md-column md-order-by="LotID"><span>Lot</span></th>
+                                <th md-column md-numeric md-order-by="Code" md-desc><span>Code</span></th>
+                                <th md-column md-numeric md-order-by="UID"><span>UID</span></th>
+                                <th md-column md-numeric md-order-by="FacebookID"><span>Facebook</span></th>
+                                <th md-column md-order-by="TimeCreate"><span>Create</span></th>
+                                <th md-column md-order-by="TimeUse"><span>Use</span></th>
+                                @*<th md-column md-order-by="comment">
+                                    <md-icon>comments</md-icon>
+                                    <span>Comments</span>
+                                </th>*@
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            @*ng-disabled="dessert.calories.value > 400"*@
+                            <tr md-row md-select="dessert" md-on-select="logItem" md-auto-select="options.autoSelect" ng-repeat="dessert in desserts.Data | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit">
+                                <td md-cell>{{dessert.PromotionID}}</td>
+                                @*<td md-cell>
+                <md-select ng-model="dessert.type" placeholder="Other">
+                    <md-option ng-value="type" ng-repeat="type in getTypes()">{{type}}</md-option>
+                </md-select>
+            </td>*@
+                                <td md-cell>{{dessert.LotID}}</td>
+                                <td md-cell>{{dessert.Code}}</td>
+                                <td md-cell>{{dessert.UID}}</td>
+                                <td md-cell>{{dessert.FacebookID}}</td>
+                                <td md-cell>{{dessert.TimeCreate}}</td>
+                                <td md-cell>{{dessert.TimeUse}}</td>
+                                @*<td md-cell ng-click="editComment($event, dessert)" ng-class="{'md-placeholder': !dessert.comment}">
+                {{dessert.comment || 'Add a comment'}}
+            </td>*@
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+
+                <md-table-pagination md-limit="query.limit" md-options="[5, 10, 20, 50, 100]" md-page="query.page" md-total="{{desserts.Total}}" md-page-select="options.pageSelector" md-boundary-links="options.boundaryLinks" md-on-paginate="logPagination"></md-table-pagination>
+
 
             </div>
         </div>
     </div>
 </form>
 
+@*<link href="~/Scripts/md-data-table/md-data-table-style.css" rel="stylesheet" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-aria.min.js"></script>
+<link href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css" rel="stylesheet" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+<script src="https://cdn.jsdelivr.net/angular-material-icons/0.6.0/angular-material-icons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+<script src="~/Scripts/md-data-table/md-data-table.js"></script>
+<script src="~/Scripts/md-data-table/md-data-table-templates.js"></script>*@
 
 @section Scripts{
+
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<link href="~/Scripts/md-data-table/angular-material.min.css" rel="stylesheet" />
+<link href="~/Scripts/md-data-table/md-data-table.css" rel="stylesheet" />
+
+<script src="~/Scripts/md-data-table/angular-animate.min.js"></script>
+<script src="~/Scripts/md-data-table/angular-aria.min.js"></script>
+
+<script src="~/Scripts/md-data-table/angular-material.min.js"></script>
+<script src="~/Scripts/md-data-table/md-data-table2.js"></script>
+
     <script type="text/javascript">
 
-        angular.module('MyApp', ['ui.bootstrap']).controller('ReportItemCodeController', ['$scope', '$http', function ($scope, $http) {
+
+
+        angular.module('MyApp', ['ui.bootstrap', 'ngMaterial', 'md.data.table'])
+        .controller('ReportItemCodeController', ['$scope', '$http', '$mdEditDialog', '$q', '$timeout', function ($scope, $http, $mdEditDialog, $q, $timeout) {
             $scope.input = {};
             $scope.input.page = 1;
             $scope.input.pageSize = 20;
@@ -118,7 +218,6 @@
             $scope.status.openedStart = false;
             $scope.status.openedEnd = false;
             $scope.itemCodes = [];
-
             $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
             $scope.format = $scope.formats[1];
 
@@ -144,44 +243,186 @@
             }
 
             $scope.search = function () {
+
+                $scope.input.pageSize = parseInt($scope.input.pageSize);
                 console.log("click", $scope.input);
-               
+
                 if ($scope.input.endDate < $scope.input.startDate) { alert('Please select EndDate > StartDate'); return; }
                 if (!$("#ValidateForm").valid()) return;
                 $('#spinner').toggle(true);
-                $http.post('@Url.Action("GetRecord","Report")', $scope.input)
-                    .success(function (d) {
-                        console.log(d);
-                        $('#spinner').toggle(false);
-                        if (d.Result) {
-                            $scope.itemCodes = d.Data;
-                            $scope.input.total = d.Total;
+
+                @*$http.post('@Url.Action("GetRecord","Report")', $scope.input)
+                        .success(function (d) {
+                            $('#spinner').toggle(false);
+                            if (d.Result) {
+                                $scope.itemCodes = d.Data;
+                                $scope.input.total = d.Total;
+                            }
+                        }).error(function (error) {
+                            $('#spinner').toggle(false);
+                            console.log(error);
+                        });*@
+                }
+
+
+
+            //aa
+
+            $scope.selected = [];
+
+            $scope.options = {
+                autoSelect: true,
+                boundaryLinks: false,
+                largeEditDialog: false,
+                pageSelector: false,
+                rowSelection: true
+            };
+
+            $scope.query = {
+                order: 'name',
+                limit: 20,
+                page: 1
+            };
+
+            $scope.desserts = {
+                "Total": 0,
+                "Data": [
+                ]
+            };
+
+            $scope.editComment = function (event, dessert) {
+                event.stopPropagation(); // in case autoselect is enabled
+
+                var editDialog = {
+                    modelValue: dessert.comment,
+                    placeholder: 'Add a comment',
+                    save: function (input) {
+                        if (input.$modelValue === 'Donald Trump') {
+                            return $q.reject();
                         }
-                    }).error(function (error) {
-                        $('#spinner').toggle(false);
-                        console.log(error);
+                        if (input.$modelValue === 'Bernie Sanders') {
+                            return dessert.comment = 'FEEL THE BERN!'
+                        }
+                        dessert.comment = input.$modelValue;
+                    },
+                    targetEvent: event,
+                    title: 'Add a comment',
+                    validators: {
+                        'md-maxlength': 30
+                    }
+                };
+
+                var promise;
+
+                if ($scope.options.largeEditDialog) {
+                    promise = $mdEditDialog.large(editDialog);
+                } else {
+                    promise = $mdEditDialog.small(editDialog);
+                }
+
+                promise.then(function (ctrl) {
+                    var input = ctrl.getInput();
+
+                    input.$viewChangeListeners.push(function () {
+                        input.$setValidity('test', input.$modelValue !== 'test');
                     });
+                });
+            };
+
+            $scope.getTypes = function () {
+                return ['Candy', 'Ice cream', 'Other', 'Pastry'];
+            };
+
+            $scope.loadStuff = function () {
+                $scope.promise = $timeout(function () {
+                    // loading
+                }, 2000);
             }
+
+            $scope.logItem = function (item) {
+                console.log(item.name, 'was selected');
+            };
+
+            $scope.logOrder = function (order) {
+                console.log('order: ', order);
+            };
+
+            $scope.logPagination = function (page, limit) {
+                console.log('page: ', page);
+                console.log('limit: ', limit);
+
+                $scope.input.page = 1;
+                $scope.input.pageSize = page * limit;
+
+                $http.post('@Url.Action("GetRecord","Report")', $scope.input)
+                .success(function (result) {
+                    $scope.desserts = result;
+                    
+                });
+            }
+
+            //aa
+                $scope.reloadTable = function () {
+
+
+                    $http.post('@Url.Action("GetRecord","Report")', $scope.input)
+                    .success(function (result) {
+                        $scope.desserts = result;
+                        
+                    });
+
+
+                    //$scope.desserts = {
+                    //    "count": 2,
+                    //    "data": [
+                    //      {
+                    //          "name": "Frozen yogurt",
+                    //          "type": "Ice cream",
+                    //          "calories": { "value": 159.0 },
+                    //          "fat": { "value": 6.0 },
+                    //          "carbs": { "value": 24.0 },
+                    //          "protein": { "value": 4.0 },
+                    //          "sodium": { "value": 87.0 },
+                    //          "calcium": { "value": 14.0 },
+                    //          "iron": { "value": 1.0 }
+                    //      }, {
+                    //          "name": "Ice cream sandwich",
+                    //          "type": "Ice cream",
+                    //          "calories": { "value": 237.0 },
+                    //          "fat": { "value": 9.0 },
+                    //          "carbs": { "value": 37.0 },
+                    //          "protein": { "value": 4.3 },
+                    //          "sodium": { "value": 129.0 },
+                    //          "calcium": { "value": 8.0 },
+                    //          "iron": { "value": 1.0 }
+                    //      }
+                    //    ]
+                    //};
+
+                };
+
+
         }]);
 
-        $(document).ready(function () {
-            $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-                return arg != value;
-            }, "Please select some value.");
 
-            $("#ValidateForm").validate({
-                rules: {
-                    gameId: { required: true, valueNotEquals: '? undefined:undefined ?' },
-                    promotionId: { required: true , valueNotEquals: '?' },
-                    startData: { required: true },
-                    endDate: { required: true },
+    $(document).ready(function () {
+        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+            return arg != value;
+        }, "Please select some value.");
 
-                },
-            });
+        $("#ValidateForm").validate({
+            rules: {
+                gameId: { required: true, valueNotEquals: '? undefined:undefined ?' },
+                promotionId: { required: true, valueNotEquals: '?' },
+                startData: { required: true },
+                endDate: { required: true },
 
-
-
+            },
         });
-     
+
+
+
+    });
+
     </script>
 }

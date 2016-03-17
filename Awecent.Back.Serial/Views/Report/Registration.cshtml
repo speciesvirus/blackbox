@@ -54,6 +54,31 @@
     }
 
 
+
+    .amChartsDataSetSelector {
+        font-size: 12px;
+        font-family: verdana,helvetica,arial,sans-serif;
+    }
+
+    #chartdiv, #chartdiv2 {
+        width: 100%;
+        height: 500px;
+        /*background: #3f3f4f !important;
+        background-color: #FFFFFF;*/
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 10px 0 rgba(0,0,0,0.2);
+        margin-bottom: 30px;
+    }
+
+    .amcharts-stock-div * {
+        -webkit-box-sizing: initial;
+        -moz-box-sizing: initial;
+        box-sizing: initial;
+    }
+
+
+
 </style>
 
 <div class="mg-2">
@@ -73,9 +98,23 @@
                         <div class="col-sm-10">
                             <select id="gameID" ng-model="input.gameId" ng-change="findPromotion()" class="form-control" name="gameID">
                                 @*<option value="0">Please select game</option>*@
-                                @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
+
+                                @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Server)
                                 {
-                                    <option value="@game.GameId">@game.GameName</option>
+                                    if (ViewBag.ServerName != game.GameId)
+                                    {
+                                        ViewBag.ServerName = game.GameId;
+                                        <optgroup label="@game.GameName">
+                                            @foreach (Awecent.Back.Serial.Models.Game server in ViewBag.Server)
+                                            {
+                                                if (game.GameId == server.GameId)
+                                                {
+                                                    <option value="@server.GameId-@server.ServerId">@server.GameName - @server.ServerName</option>
+                                                }
+                                            }
+                                        </optgroup>
+                                    }
+
                                 }
                             </select>
 
@@ -132,8 +171,8 @@
 
 
                 
-
-                <div id="chart2" style=" height: 400px; margin: 0 auto"></div>
+                <div id="chartdiv2"></div>
+                @*<div id="chart2" style=" height: 400px; margin: 0 auto"></div>*@
 
                 <table class="table table-striped table-chart2">
                     <thead>
@@ -155,8 +194,8 @@
             <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
 
 
-
-                <div id="chart" style="height: 400px; margin: 0 auto"></div>
+                <div id="chartdiv" class="amcharts-graph-dash"></div>
+                @*<div id="chart" style="height: 400px; margin: 0 auto"></div>*@
 
                 <table class="table table-striped table-chart">
                     <thead>
@@ -240,6 +279,228 @@
             resDate = $('#end').val().split("/"),
             $end = resDate[2].trim() + "-" + resDate[1] + "-" + resDate[0];
 
+
+
+            var chartConfig = ("chartdiv", {
+                "type": "serial",
+                "addClassNames": true,
+                "theme": "light",
+
+                "balloon": {
+                    "adjustBorderColor": false,
+                    "horizontalPadding": 10,
+                    "verticalPadding": 8,
+                },
+
+                "dataProvider": [],
+                "valueAxes": [{
+                    "position": "left",
+                    "title": "Visitors"
+                }],
+                "startDuration": 1,
+                "graphs": [{
+                    "alphaField": "alpha",
+                    "balloonText": "",//"balloonText": "[[category]]: <b>[[value]]</b>",
+                    "fillAlphas": 1,
+                    "title": "active",
+                    "type": "column",
+                    "valueField": "active",
+                    "dashLengthField": "dashLengthColumn",
+                    "labelText": "[[value]]",
+                }, {
+                    "alphaField": "alpha",
+                    "balloonText": "",//"balloonText": "[[category]]: <b>[[value]]</b>",
+                    "fillAlphas": 1,
+                    "title": "register",
+                    "type": "column",
+                    "valueField": "register",
+                    "dashLengthField": "dashLengthColumn",
+                    "labelText": "[[value]]",
+                }, {
+                    "balloonText": "",//"balloonText": "[[category]]: <b>[[value]]</b>",
+                    "bullet": "round",
+                    "lineThickness": 3,
+                    "bulletSize": 7,
+                    "bulletBorderAlpha": 1,
+                    "bulletColor": "#FFFFFF",
+                    "lineColor": "#FF9900",
+                    "useLineColorForBulletBorder": true,
+                    "bulletBorderThickness": 3,
+                    "fillAlphas": 0,
+                    "lineAlpha": 1,
+                    "title": "average",
+                    "valueField": "average",
+                    "labelText": "[[value]]",
+                }],
+                "categoryField": "title",
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "tickLength": 0,
+
+                    "axisAlpha": 0,
+                    "fillAlpha": 0.05,
+                    "fillColor": "#000000",
+                    "gridAlpha": 0,
+                    //"position": "top"
+                    //"minPeriod": "mm",
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "dashLength": 1,
+                    "minorGridEnabled": true,
+                    //"labelRotation": 90
+                },
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    //"zoomable": false,
+                    //"pan": true,
+                    "valueLineEnabled": true,
+                    "valueLineBalloonEnabled": false,
+                    "valueLineAlpha": 0.2,
+                    "categoryBalloonColor": "#000000",
+                    "categoryBalloonEnabled": false,
+                    "cursorColor": "#000000",
+                    //"categoryBalloonDateFormat": "DD MMMM YYYY",//"JJ:NN, DD MMMM YYYY"
+                    "cursorPosition": "mouse"
+                },
+                "legend": {
+                    "useGraphSettings": true,
+                    "position": "top"
+                },
+                "export": {
+                    "enabled": true
+                }
+            });
+
+
+
+            var chartConfig2 = ("chartdiv2", {
+                "theme": "light",
+                "type": "serial",
+                "startDuration": 1,
+                "dataProvider": [],
+                "valueAxes": [{
+                    "position": "left",
+                    "title": "Visitors"
+                }],
+                "graphs": [
+                    {
+                        "balloonText": "",//"[[category]]: <b>[[value]]</b>",
+                    "fillColorsField": "color",
+                    "id": "AmGraph-1",
+                    "fillAlphas": 1,
+                    "lineAlpha": 0.1,
+                    "type": "column",
+                    "title": "facebook_active",
+                    "valueField": "facebook_active",
+                    "labelText": "[[value]]",
+                        "marginBottom": 20,
+                    }, {
+                        "balloonText": "",//"[[category]]: <b>[[value]]</b>",
+                        "fillColorsField": "color",
+                        "id": "AmGraph-2",
+                        "fillAlphas": 1,
+                        "lineAlpha": 0.1,
+                        "type": "column",
+                        "title": "guest_active",
+                        "valueField": "guest_active",
+                        "labelText": "[[value]]",
+                        "labelOffset": 10,
+                    }, {
+                        "balloonText": "",//"[[category]]: <b>[[value]]</b>",
+                        "fillColorsField": "color",
+                        "id": "AmGraph-3",
+                        "fillAlphas": 1,
+                        "lineAlpha": 0.1,
+                        "type": "column",
+                        "title": "facebook_register",
+                        "valueField": "facebook_register",
+                        "labelText": "[[value]]",
+                    }, {
+                        "balloonText": "",//"[[category]]: <b>[[value]]</b>",
+                        "fillColorsField": "color",
+                        "id": "AmGraph-4",
+                        "fillAlphas": 1,
+                        "lineAlpha": 0.8,
+                        "type": "column",
+                        "title": "guest_register",
+                        "valueField": "guest_register",
+                        "labelText": "[[value]]",
+                    }
+                ],
+                "marginBottom": 30,
+                "depth3D": 5,
+                "angle": 20,
+                //"chartCursor": {
+                //    "categoryBalloonEnabled": false,
+                //    "cursorAlpha": 0,
+                //    "zoomable": false
+                //},
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    //"zoomable": false,
+                    //"pan": true,
+                    "valueLineEnabled": true,
+                    "valueLineBalloonEnabled": false,
+                    "valueLineAlpha": 0.2,
+                    "categoryBalloonColor": "#000000",
+                    "categoryBalloonEnabled": false,
+                    "cursorColor": "#000000",
+                    //"categoryBalloonDateFormat": "DD MMMM YYYY",//"JJ:NN, DD MMMM YYYY"
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "title",
+                //"categoryAxis": {
+                //    "gridPosition": "start",
+                //    "labelRotation": 90
+                //},
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "fillAlpha": 0.05,
+                    "fillColor": "#000000",
+                    "gridAlpha": 0,
+                    //"position": "top"
+                    //"minPeriod": "mm",
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "dashLength": 1,
+                    "minorGridEnabled": true,
+                    //"labelRotation": 90
+                },
+                //"balloon": {
+                //    "borderThickness": 1,
+                //    "shadowAlpha": 0
+                //},
+                "legend": {
+                    "useGraphSettings": true,
+                    "position": "top"
+                },
+                "chartScrollbar": {
+                    "graph": "AmGraph-1",
+                    "oppositeAxis": false,
+                    "offset": 30,
+                    "scrollbarHeight": 40,
+                    "backgroundAlpha": 0,
+                    "selectedBackgroundAlpha": 0.1,
+                    "selectedBackgroundColor": "#888888",
+                    "graphFillAlpha": 0,
+                    "graphLineAlpha": 0.5,
+                    "selectedGraphFillAlpha": 0,
+                    "selectedGraphLineAlpha": 1,
+                    "autoGridCount": true,
+                    "color": "#AAAAAA",
+                    "selectedGraphLineColor": "#888888",
+                    "selectedGraphLineAlpha": 1
+                },
+
+                "export": {
+                    "enabled": true
+                }
+
+            });
+
+
             $('#spinner').toggle(true);
             $.ajax({
                 type: 'POST',
@@ -285,9 +546,21 @@
                         $register[key] = value.countRegisterTotal;
                         //ja[key] = value.count;//{ x: $vas, y: value.count }
 
+                        //amchart
+                        var d = new Date(value.curTime);
+                        var e = d;//new Date(d - 1000 * 3600 * 7);
+                        chartConfig.dataProvider.push({
+                            title: e,
+                            active: value.countActiveTotal,
+                            register: value.countRegisterTotal,
+                            average: (value.countActiveTotal + value.countRegisterTotal) / 2,
+                        });
+                        //end amchart
+
+
                         //set line X (category)
                         var d = new Date(value.curTime);
-                        var e = formatDate(d);
+                        var e = d; //formatDate(d);
                         options.xAxis.categories.push(e);
 
                         $html += "<tr><td>" + e + "</td><td>" + value.countActiveTotal + "</td><td>" + value.countRegisterTotal + "</td></tr>";
@@ -302,9 +575,23 @@
                         $registerGuest[key] = value.countRegisterGuest;
                         //ja[key] = value.count;//{ x: $vas, y: value.count }
 
+
+                        // amchart
+                        var d = new Date(value.curTime);
+                        var e = d;//new Date(d - 1000 * 3600 * 7);
+                        chartConfig2.dataProvider.push({
+                            title: e,
+                            facebook_active: value.countActiveFacebook,
+                            guest_active: value.countActiveGuest,
+                            facebook_register: value.countRegisterFacebook,
+                            guest_register: value.countRegisterGuest
+                        });
+                        // end amchart
+
+
                         //set line X (category)
                         var d = new Date(value.curTime);
-                        var e = formatDate(d);
+                        var e = d;//formatDate(d);
                         options2.xAxis.categories.push(e);
 
                         $html2 += "<tr><td>" + e + "</td><td>" + value.countActiveFacebook + "</td><td>" + value.countRegisterFacebook + "</td><td>" + value.countActiveGuest + "</td><td>" + value.countRegisterGuest + "</td></tr>";
@@ -369,10 +656,11 @@
                     });
 
 
-                    $option = options;
-                    var chart = new Highcharts.Chart(options);
+                    //$option = options;
+                    //var chart = new Highcharts.Chart(options);
 
-
+                    // make the amchart
+                    var chart = AmCharts.makeChart("chartdiv", chartConfig);
 
 
 
@@ -404,8 +692,8 @@
                         data: $.parseJSON($data)
                     });
 
-                    $option2 = options2;
-                    var chart = new Highcharts.Chart(options2);
+                    //$option2 = options2;
+                    //var chart = new Highcharts.Chart(options2);
 
 
 
@@ -413,6 +701,10 @@
 
                     $('#spinner').toggle(false);
 
+
+
+                    // make the amchart
+                    var chart2 = AmCharts.makeChart("chartdiv2", chartConfig2);
 
                 }//success
 
