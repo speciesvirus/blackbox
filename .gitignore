@@ -11,16 +11,16 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
+Awecent.Back.Serial/[Dd]ebug/
+Awecent.Back.Serial/[Dd]ebugPublic/
+Awecent.Back.Serial/[Rr]elease/
+Awecent.Back.Serial/[Rr]eleases/
+Awecent.Back.Serial/x64/
+Awecent.Back.Serial/x86/
+Awecent.Back.Serial/bld/
+Awecent.Back.Serial/[Bb]in/
+Awecent.Back.Serial/[Oo]bj/
+Awecent.Back.Serial/[Ll]og/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -28,17 +28,17 @@ bld/
 #wwwroot/
 
 # MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
+Awecent.Back.Serial/[Tt]est[Rr]esult*/
+Awecent.Back.Serial/[Bb]uild[Ll]og.*
 
 # NUNIT
 *.VisualState.xml
-TestResult.xml
+Awecent.Back.Serial/TestResult.xml
 
 # Build Results of an ATL Project
-[Dd]ebugPS/
-[Rr]eleasePS/
-dlldata.c
+Awecent.Back.Serial/[Dd]ebugPS/
+Awecent.Back.Serial/[Rr]eleasePS/
+Awecent.Back.Serial/dlldata.c
 
 # DNX
 project.lock.json
