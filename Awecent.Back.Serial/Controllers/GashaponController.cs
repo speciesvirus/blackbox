@@ -32,7 +32,7 @@ namespace Awecent.Back.Serial.Controllers
             if (String.IsNullOrEmpty(model.GameId.ToString()))
             {
                 model.Result = false;
-                model.Message = "model state valid fail.";
+                model.Message = "model state valid fail. ";
                 return Json(model);
             }
             GashaponHeaderList list = context.GetGashaponHeaderListDDL(model);
