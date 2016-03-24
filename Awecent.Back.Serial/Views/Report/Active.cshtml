@@ -181,12 +181,12 @@
         }
 
         $('#datetimepicker6').datetimepicker({
-            defaultDate: new Date(),
-            format: 'DD/MM/YYYY - 00:00'
+            defaultDate: new Date().setHours(12,0),
+            disabledDates: []
         });
         $('#datetimepicker7').datetimepicker({
-            defaultDate: new Date(),
-            format: 'DD/MM/YYYY - 23:59',
+            defaultDate: new Date().setHours(23,59),
+            disabledDates: [],
             useCurrent: false
         });
 
