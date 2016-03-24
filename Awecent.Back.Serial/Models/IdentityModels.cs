@@ -277,4 +277,61 @@ namespace Awecent.Back.Serial.Models
         public IEnumerable<Lot> Data { get; set; }
         public int Total { get; set; }
     }
+
+    public class ServerList : ResultModel
+    {
+        public List<Server> data { get; set; }
+        public int Total { get; set; }
+        public bool Result { get; set; }
+    }
+
+    //public class Server
+    //{
+    //    public int ServerByGameId { get; set; }
+    //    public int GameId { get; set; }
+    //    public int GameCode { get; set; }
+    //    public int CountryId { get; set; }
+    //    public string ServerCode { get; set; }
+    //    public string ServerName { get; set; }
+    //    public string ServerLocalName { get; set; }
+    //    public string ServerActive { get; set; }
+    //    public string CreateUser { get; set; }
+    //    public DateTime? CreateDate { get; set; }
+    //}
+
+    public class ProviderList : ResultModel
+    {
+        public List<Provider> data { get; set; }
+        public int Total { get; set; }
+        public bool Result { get; set; }
+    }
+
+    public class Provider
+    {
+        public int ProviderId { get; set; }
+        public string ProviderName { get; set; }
+        public string ProviderSecretPin { get; set; }
+        public string ProviderActive { get; set; }
+        public string CreateUser { get; set; }
+        public DateTime? CreateDate { get; set; }
+    }
+
+    public class DealerList : ResultModel
+    {
+        public List<Dealer> data { get; set; }
+        public int Total { get; set; }
+        public bool Result { get; set; }
+    }
+
+    public class Dealer
+    {
+        public int DealerId { get; set; }
+        public int ProviderId { get; set; }
+        public string DealerName { get; set; }
+        public string PaymentCode { get; set; }
+        public string CurrencyUnit { get; set; }
+        public string DealerActive { get; set; }
+        public string CreateUser { get; set; }
+        public DateTime? CreateDate { get; set; }
+    }
 }
