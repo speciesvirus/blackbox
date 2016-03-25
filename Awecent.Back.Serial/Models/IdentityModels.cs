@@ -334,4 +334,61 @@ namespace Awecent.Back.Serial.Models
         public string CreateUser { get; set; }
         public DateTime? CreateDate { get; set; }
     }
+
+    public class PaymentTransactionList : ResultModel
+    {
+        public List<PaymentTransaction> Data { get; set; }
+        public int Total { get; set; }
+        public bool Result { get; set; }
+    }
+
+    public class PaymentTransaction : ResultModel
+    {
+        public int PaymentTransactionId { get; set; }
+        public string ReferenceId { get; set; }
+        public string ProviderId { get; set; }
+        public string ProviderName { get; set; }
+        public string DealerId { get; set; }
+        public string DealerName { get; set; }
+        public string GameCode { get; set; }
+        public string ServerCode { get; set; }
+        public string ServerName { get; set; }
+        public string UserId { get; set; }
+        public string MerchantId { get; set; }
+        public string ItemName { get; set; }
+        public string Price { get; set; }
+        public string CurrencyUnit { get; set; }
+        public string PaymentCode { get; set; }
+        public string CustomerIp { get; set; }
+        public string RedirectUrl { get; set; }
+        public string Timestamp { get; set; }
+        public string Other { get; set; }
+        public string HashValue { get; set; }
+        public string RcvTransactionId { get; set; }
+        public string RcvReferenceId { get; set; }
+        public string RcvProviderId { get; set; }
+        public string RcvMerchantId { get; set; }
+        public string RcvPaymentCode { get; set; }
+        public string RcvPrice { get; set; }
+        public string RcvCurrencyUnit { get; set; }
+        public string RcvTimestamp { get; set; }
+        public string RcvRespCode { get; set; }
+        public string RcvRespMsg { get; set; }
+        public string RcvHashValue { get; set; }
+        public string ExceptionCode { get; set; }
+        public string ExceptionMsg { get; set; }
+        public string TransactionStatus { get; set; }
+        public string CreateUser { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public string UpdateUser { get; set; }
+        public DateTime? UpdateDate { get; set; }
+
+        //SearchPaymentTransaction
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
+        //page
+        public int Page { get; set; }
+        public int PageSize { get; set; }
+    }
 }

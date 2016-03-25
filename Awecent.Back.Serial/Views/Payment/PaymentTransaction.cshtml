@@ -101,7 +101,7 @@
 
                 <div class="row">
                     <div class="col-sm-2">
-                        <button class="btn btn-info" type="button" ng-click="reloadTable()" style="margin-top:23px;">Search</button>
+                        <button class="btn btn-info" type="button" ng-click="search()" style="margin-top:23px;">Search</button>
                     </div>
                 </div>
             </div>
@@ -112,29 +112,28 @@
                         <table md-table ng-model="selected" md-progress="promise">
                             <thead md-head md-order="query.order" md-on-reorder="logOrder">
                                 <tr md-row>
-                                    <th md-column md-order-by="PromotionID"><span>referenceId</span></th>
-                                    <th md-column md-order-by="LotID"><span>providerId</span></th>
-                                    <th md-column md-numeric md-order-by="Code" md-desc><span>dealerId</span></th>
-                                    <th md-column md-numeric md-order-by="UID"><span>serverCode</span></th>
-                                    <th md-column md-numeric md-order-by="FacebookID"><span>userId</span></th>
-                                    <th md-column md-order-by="TimeCreate"><span>itemName</span></th>
-                                    <th md-column md-order-by="TimeUse"><span>price</span></th>
-                                    <th md-column md-order-by="TimeUse"><span>rcvPrice</span></th>
-                                    <th md-column md-order-by="TimeUse"><span>rcvCurrencyUnit</span></th>
-                                    <th md-column md-order-by="TimeUse"><span>transactionStatus</span></th>
-                                    <th md-column md-order-by="TimeUse"><span>price</span></th>
-                                    <th md-column md-order-by="TimeUse"><span>price</span></th>
+                                    <th md-column md-order-by="referenceId"><span>referenceId</span></th>
+                                    <th md-column md-order-by="providerId"><span>providerId</span></th>
+                                    <th md-column md-numeric md-order-by="dealerId" md-desc><span>dealerId</span></th>
+                                    <th md-column md-numeric md-order-by="serverCode"><span>serverCode</span></th>
+                                    <th md-column md-numeric md-order-by="userId"><span>userId</span></th>
+                                    <th md-column md-order-by="itemName"><span>itemName</span></th>
+                                    <th md-column md-order-by="rcvPrice"><span>rcvPrice</span></th>
+                                    <th md-column md-order-by="rcvCurrencyUnit"><span>rcvCurrencyUnit</span></th>
+                                    <th md-column md-order-by="transactionStatus"><span>transactionStatus</span></th>
                                 </tr>
                             </thead>
                             <tbody md-body>
                                 <tr md-row md-select="dessert" md-on-select="logItem" md-auto-select="options.autoSelect" ng-repeat="dessert in desserts.Data | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit">
-                                    <td md-cell>{{dessert.PromotionID}}</td>
-                                    <td md-cell>{{dessert.LotID}}</td>
-                                    <td md-cell>{{dessert.Code}}</td>
-                                    <td md-cell>{{dessert.UID}}</td>
-                                    <td md-cell>{{dessert.FacebookID}}</td>
-                                    <td md-cell>{{dessert.TimeCreate}}</td>
-                                    <td md-cell>{{dessert.TimeUse}}</td>
+                                    <td md-cell>{{dessert.referenceId}}</td>
+                                    <td md-cell>{{dessert.providerId}}</td>
+                                    <td md-cell>{{dessert.dealerId}}</td>
+                                    <td md-cell>{{dessert.serverCode}}</td>
+                                    <td md-cell>{{dessert.userId}}</td>
+                                    <td md-cell>{{dessert.itemName}}</td>
+                                    <td md-cell>{{dessert.rcvPrice}}</td>
+                                    <td md-cell>{{dessert.rcvCurrencyUnit}}</td>
+                                    <td md-cell>{{dessert.transactionStatus}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -209,7 +208,42 @@
                         }
                     });
             }
-            
+
+            $scope.search = function () {
+                $scope.input.pageSize = parseInt($scope.input.pageSize);
+
+                if ($scope.input.endDate < $scope.input.startDate) { alert('Please select EndDate > StartDate'); return; }
+                if (!$("#ValidateForm").valid()) return;
+                $('#spinner').toggle(true);
+                $http.post('@Url.Action("SearchTransaction", "Payment")', $scope.input).success(function (response) {
+                    $('#spinner').toggle(false);
+                    if (response.Result) {
+                        $scope.desserts = response.Data;
+                        $scope.input.total = response.Total;
+                        notifyInfo("record " + response.Data.length + '/' + d.Total);
+                    } else {
+                        notifyWarning(d.Message);
+                    }
+                }).error(function (e) {
+                    $('#spinner').toggle(false);
+                    console.log(e);
+                    notifyError('500 server error.');
+                });
+            }
+
+            $scope.logPagination = function (page, limit) {
+                console.log('page: ', page);
+                console.log('limit: ', limit);
+
+                $scope.input.page = 1;
+                $scope.input.pageSize = page * limit;
+
+                $http.post('@Url.Action("GetRecord","Report")', $scope.input)
+                .success(function (result) {
+                    $scope.desserts = result;
+
+                });
+            }
         }]);
 
         $(document).ready(function () {
