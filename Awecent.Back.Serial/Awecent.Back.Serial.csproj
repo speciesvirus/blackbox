@@ -988,6 +988,7 @@
     <Content Include="Views\Report\Gashapon.cshtml" />
     <Content Include="Views\Report\ItemCode.cshtml" />
     <Content Include="Views\Payment\PaymentTransaction.cshtml" />
+    <Content Include="Views\Report\Payment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -63,7 +63,7 @@ namespace Awecent.Back.Serial.Controllers
         [HttpPost]
         public JsonResult SearchTransaction(PaymentTransaction model)
         {
-            if (model.GameId == null)
+            if (model.GameCode == null)
             {
                 model.Result = false;
                 model.Message = "Model state valid fail.";
