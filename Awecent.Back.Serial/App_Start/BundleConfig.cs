@@ -28,8 +28,8 @@ namespace Awecent.Back.Serial
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/Spiner.css"));
-
+                      "~/Content/Spiner.css",
+                      "~/Content/font-awesome.min.css"));
 
 
             bundles.Add(new ScriptBundle("~/bundles/report").Include(
