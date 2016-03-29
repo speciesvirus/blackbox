@@ -43,21 +43,21 @@ namespace Awecent.Back.Serial.Controllers
         public JsonResult GetServer(string id)
         {
             ServerList list = paymentContext.GetServerList(id);
-            return Json(list);
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
         public JsonResult GetProvider(string id)
         {
             ProviderList list = paymentContext.GetProviderList(id);
-            return Json(list);
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
         public JsonResult GetDealer(string id)
         {
             DealerList list = paymentContext.GetDealerList(id);
-            return Json(list);
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

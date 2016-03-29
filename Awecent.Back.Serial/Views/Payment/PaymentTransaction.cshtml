@@ -29,16 +29,16 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <label>Game Name</label>
-                        <select ng-model="input.gameId" ng-change="findProvider()" class="form-control" name="gameId">
+                        <select ng-model="input.gameCode" ng-change="findProvider()" class="form-control" name="gameId">
                             @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
                             {
                                 <option value="@game.GameId">@game.GameName</option>
                             }
                         </select>
                     </div>
-                    <div class="col-sm-3">
+                    <div class ="col-sm-3">
                         <label>Server Name</label>
-                        <select ng-model="input.serverId" class="form-control" name="serverId"
+                        <select ng-model="input.serverCode" class="form-control" name="serverId"
                                 ng-options="srv.ServerId as srv.ServerName for srv in servers"></select>
                     </div>
                     <div class="col-sm-3">
@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <button class="btn btn-info" type="button" ng-click="search()" style="margin-top:23px;">Search</button>
                     </div>
                 </div>
@@ -112,28 +112,70 @@
                         <table md-table ng-model="selected" md-progress="promise">
                             <thead md-head md-order="query.order" md-on-reorder="logOrder">
                                 <tr md-row>
-                                    <th md-column md-order-by="referenceId"><span>referenceId</span></th>
-                                    <th md-column md-order-by="providerId"><span>providerId</span></th>
-                                    <th md-column md-numeric md-order-by="dealerId" md-desc><span>dealerId</span></th>
-                                    <th md-column md-numeric md-order-by="serverCode"><span>serverCode</span></th>
-                                    <th md-column md-numeric md-order-by="userId"><span>userId</span></th>
-                                    <th md-column md-order-by="itemName"><span>itemName</span></th>
-                                    <th md-column md-order-by="rcvPrice"><span>rcvPrice</span></th>
-                                    <th md-column md-order-by="rcvCurrencyUnit"><span>rcvCurrencyUnit</span></th>
-                                    <th md-column md-order-by="transactionStatus"><span>transactionStatus</span></th>
+                                    <th md-column md-order-by="PaymentTransactionId"><span>PaymentTransactionId</span></th>
+                                    <th md-column md-order-by="ReferenceId"><span>ReferenceId</span></th>
+                                    <th md-column md-numeric md-order-by="ProviderName" md-desc><span>ProviderName</span></th>
+                                    <th md-column md-numeric md-order-by="DealerName"><span>DealerName</span></th>
+                                    <th md-column md-numeric md-order-by="GameName"><span>GameName</span></th>
+                                    <th md-column md-order-by="ServerName"><span>ServerName</span></th>
+                                    <th md-column md-order-by="UserId"><span>UserId</span></th>
+                                    @*<th md-column md-order-by="ItemName"><span>ItemName</span></th>*@
+                                    @*<th md-column md-order-by="Price"><span>Price</span></th>*@
+                                    @*<th md-column md-order-by="CurrencyUnit"><span>CurrencyUnit</span></th>*@
+                                    @*<th md-column md-order-by="PaymentCode"><span>PaymentCode</span></th>*@
+                                    <th md-column md-order-by="CustomerIp"><span>CustomerIp</span></th>
+                                    <th md-column md-order-by="CreateTransactionDate"><span>CreateTransactionDate</span></th>
+                                    @*<th md-column md-order-by="Other"><span>Other</span></th>*@
+                                    <th md-column md-order-by="RcvTransactionId"><span>RcvTransactionId</span></th>
+                                    <th md-column md-order-by="RcvReferenceId"><span>RcvReferenceId</span></th>
+                                    <th md-column md-order-by="RcvProviderName"><span>RcvProviderName</span></th>
+                                    <th md-column md-order-by="RcvPaymentCode"><span>RcvPaymentCode</span></th>
+                                    <th md-column md-order-by="RcvPrice"><span>RcvPrice</span></th>
+                                    <th md-column md-order-by="RcvCurrencyUnit"><span>RcvCurrencyUnit</span></th>
+                                    <th md-column md-order-by="RcvTransactionDate"><span>RcvTransactionDate</span></th>
+                                    <th md-column md-order-by="RcvRespCode"><span>RcvRespCode</span></th>
+                                    <th md-column md-order-by="RcvRespMsg"><span>RcvRespMsg</span></th>
+                                    <th md-column md-order-by="ExceptionCode"><span>ExceptionCode</span></th>
+                                    <th md-column md-order-by="ExceptionMsg"><span>ExceptionMsg</span></th>
+                                    <th md-column md-order-by="TransactionStatus"><span>TransactionStatus</span></th>
+                                    @*<th md-column md-order-by="CreateUser"><span>CreateUser</span></th>*@
+                                    @*<th md-column md-order-by="CreateDate"><span>CreateDate</span></th>*@
+                                    @*<th md-column md-order-by="UpdateUser"><span>UpdateUser</span></th>*@
+                                    @*<th md-column md-order-by="UpdateDate"><span>UpdateDate</span></th>*@
                                 </tr>
                             </thead>
                             <tbody md-body>
                                 <tr md-row md-select="dessert" md-on-select="logItem" md-auto-select="options.autoSelect" ng-repeat="dessert in desserts.Data | filter: filter.search | orderBy: query.order | limitTo: query.limit : (query.page -1) * query.limit">
-                                    <td md-cell>{{dessert.referenceId}}</td>
-                                    <td md-cell>{{dessert.providerId}}</td>
-                                    <td md-cell>{{dessert.dealerId}}</td>
-                                    <td md-cell>{{dessert.serverCode}}</td>
-                                    <td md-cell>{{dessert.userId}}</td>
-                                    <td md-cell>{{dessert.itemName}}</td>
-                                    <td md-cell>{{dessert.rcvPrice}}</td>
-                                    <td md-cell>{{dessert.rcvCurrencyUnit}}</td>
-                                    <td md-cell>{{dessert.transactionStatus}}</td>
+                                    <td md-cell>{{dessert.PaymentTransactionId}}</td>
+                                    <td md-cell>{{dessert.ReferenceId}}</td>
+                                    <td md-cell>{{dessert.ProviderName}}</td>
+                                    <td md-cell>{{dessert.DealerName}}</td>
+                                    <td md-cell>{{dessert.GameName}}</td>
+                                    <td md-cell>{{dessert.ServerName}}</td>
+                                    <td md-cell>{{dessert.UserId}}</td>
+                                    @*<td md-cell>{{dessert.ItemName}}</td>*@
+                                    @*<td md-cell>{{dessert.Price}}</td>*@
+                                    @*<td md-cell>{{dessert.CurrencyUnit}}</td>*@
+                                    @*<td md-cell>{{dessert.PaymentCode}}</td>*@
+                                    <td md-cell>{{dessert.CustomerIp}}</td>
+                                    <td md-cell>{{dessert.CreateTransactionDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>
+                                    @*<td md-cell>{{dessert.Other}}</td>*@
+                                    <td md-cell>{{dessert.RcvTransactionId}}</td>
+                                    <td md-cell>{{dessert.RcvReferenceId}}</td>
+                                    <td md-cell>{{dessert.RcvProviderName}}</td>
+                                    <td md-cell>{{dessert.RcvPaymentCode}}</td>
+                                    <td md-cell>{{dessert.RcvPrice}}</td>
+                                    <td md-cell>{{dessert.RcvCurrencyUnit}}</td>
+                                    <td md-cell>{{dessert.RcvTransactionDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>
+                                    <td md-cell>{{dessert.RcvRespCode}}</td>
+                                    <td md-cell>{{dessert.RcvRespMsg}}</td>
+                                    <td md-cell>{{dessert.ExceptionCode}}</td>
+                                    <td md-cell>{{dessert.ExceptionMsg}}</td>
+                                    <td md-cell>{{dessert.TransactionStatus}}</td>
+                                    @*<td md-cell>{{dessert.CreateUser}}</td>*@
+                                    @*<td md-cell>{{dessert.CreateDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>*@
+                                    @*<td md-cell>{{dessert.UpdateUser}}</td>*@
+                                    @*<td md-cell>{{dessert.UpdateDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>*@
                                 </tr>
                             </tbody>
                         </table>
@@ -164,8 +206,34 @@
             $scope.providers = [];
             $scope.StatusTransaction = [{ StatusId: '1', StatusName: 'Active' }, { StatusId: '2', StatusName: 'Inactive' }];
 
-            $scope.getTypes = function () {
-                return ['Candy', 'Ice cream', 'Other', 'Pastry'];
+            $scope.selected = [];
+
+            $scope.options = {
+                autoSelect: true,
+                boundaryLinks: false,
+                largeEditDialog: false,
+                pageSelector: false,
+                rowSelection: true
+            };
+
+            $scope.query = {
+                order: 'name',
+                limit: 20,
+                page: 1
+            };
+
+            $scope.desserts = {
+                "Total": 0,
+                "Data": [
+                ]
+            };
+
+            $scope.logItem = function (item) {
+                console.log(item.name, 'was selected');
+            };
+
+            $scope.logOrder = function (order) {
+                console.log('order: ', order);
             };
 
             $('#datetimepicker6').datetimepicker({
@@ -186,13 +254,13 @@
             });
 
             $scope.findProvider = function () {
-                $http.get('@Url.Action("GetServer", "Payment")/' + $scope.input.gameId)
+                $http.get('@Url.Action("GetServer", "Payment")/' + $scope.input.gameCode)
                     .success(function (d) {
                         if (d.Result) {
                             $scope.servers = d.data;
                         }
                     });
-                $http.get('@Url.Action("GetProvider", "Payment")/' + $scope.input.gameId)
+                $http.get('@Url.Action("GetProvider", "Payment")/' + $scope.input.gameCode)
                     .success(function (d) {
                         if (d.Result) {
                             $scope.providers = d.data;
@@ -208,7 +276,6 @@
                         }
                     });
             }
-
             $scope.search = function () {
                 $scope.input.pageSize = parseInt($scope.input.pageSize);
 
@@ -218,11 +285,11 @@
                 $http.post('@Url.Action("SearchTransaction", "Payment")', $scope.input).success(function (response) {
                     $('#spinner').toggle(false);
                     if (response.Result) {
-                        $scope.desserts = response.Data;
-                        $scope.input.total = response.Total;
-                        notifyInfo("record " + response.Data.length + '/' + d.Total);
+                        $scope.desserts = response;
+                        $scope.desserts.total = response.Total;
+                        notifyInfo("record " + response.Data.length + '/' + response.Total);
                     } else {
-                        notifyWarning(d.Message);
+                        notifyWarning(response.Message);
                     }
                 }).error(function (e) {
                     $('#spinner').toggle(false);
@@ -238,9 +305,10 @@
                 $scope.input.page = 1;
                 $scope.input.pageSize = page * limit;
 
-                $http.post('@Url.Action("GetRecord","Report")', $scope.input)
+                $http.post('@Url.Action("SearchTransaction", "Payment")', $scope.input)
                 .success(function (result) {
                     $scope.desserts = result;
+                    $scope.desserts.total = response.Total;
 
                 });
             }
@@ -254,9 +322,6 @@
             $("#ValidateForm").validate({
                 rules: {
                     gameId: { required: true, valueNotEquals: '? undefined:undefined ?' },
-                    promotionId: { required: true, valueNotEquals: '?' },
-                    startData: { required: true },
-                    endDate: { required: true },
                 },
             });
         });

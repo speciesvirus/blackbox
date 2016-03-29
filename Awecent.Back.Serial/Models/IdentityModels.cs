@@ -351,6 +351,7 @@ namespace Awecent.Back.Serial.Models
         public string DealerId { get; set; }
         public string DealerName { get; set; }
         public string GameCode { get; set; }
+        public string GameName { get; set; }
         public string ServerCode { get; set; }
         public string ServerName { get; set; }
         public string UserId { get; set; }
@@ -362,16 +363,19 @@ namespace Awecent.Back.Serial.Models
         public string CustomerIp { get; set; }
         public string RedirectUrl { get; set; }
         public string Timestamp { get; set; }
+        public DateTime? CreateTransactionDate { get; set; }
         public string Other { get; set; }
         public string HashValue { get; set; }
         public string RcvTransactionId { get; set; }
         public string RcvReferenceId { get; set; }
         public string RcvProviderId { get; set; }
+        public string RcvProviderName { get; set; }
         public string RcvMerchantId { get; set; }
         public string RcvPaymentCode { get; set; }
         public string RcvPrice { get; set; }
         public string RcvCurrencyUnit { get; set; }
         public string RcvTimestamp { get; set; }
+        public DateTime? RcvTransactionDate { get; set; }
         public string RcvRespCode { get; set; }
         public string RcvRespMsg { get; set; }
         public string RcvHashValue { get; set; }
