@@ -37,7 +37,7 @@ namespace Awecent.Back.Serial.Controllers
             }
             GashaponHeaderList list = context.GetGashaponHeaderListDDL(model);
             return Json(list);
-        } 
+        }
 
         public JsonResult SearchGashapon(GashaponHeader model)
         {

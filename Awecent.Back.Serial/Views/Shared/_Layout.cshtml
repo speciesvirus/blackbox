@@ -42,6 +42,8 @@
             flex: 1;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
             background-color: #fff;
+
+            width: calc( 100% - 230px );
         }
 
         .nav.nav-menu {
@@ -173,6 +175,11 @@
             margin: 0 0 5px;
             background: #000;
         }
+
+
+        .input-group-addon, .input-group-btn {
+            width: inherit;
+        }
     </style>
     <section class="mod model-10 loading" id="spinner">
         <div class="spinner"></div>
@@ -234,11 +241,34 @@
                     </div>
                 </a>
                 
-                
 
                 <a href="@Url.Action("Gashapon", "Report")">
                     <div class='link'>
                         Gashapon Report
+                    </div>
+                </a>
+                
+                <a href="@Url.Action("PaymentTransaction", "Payment")">
+                    <div class='link'>
+                        Payment Transection Report
+                    </div>
+                </a>
+
+            }
+
+
+            @if (User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
+            {
+
+                <div class='title'>Payment Refund</div>
+                <a href="@Url.Action("PaymentRefund", "Payment")">
+                    <div class='link'>
+                        Payment Refund 
+                    </div>
+                </a>
+                <a href="@Url.Action("ItemRefund", "Payment")">
+                    <div class='link'>
+                        Item Refund
                     </div>
                 </a>
 

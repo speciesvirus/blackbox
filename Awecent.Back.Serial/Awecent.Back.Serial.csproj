@@ -230,6 +230,7 @@
     <Compile Include="Controllers\ItemCodeController.cs" />
     <Compile Include="Controllers\MasterController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\ReportApiController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Global.asax.cs">
@@ -245,6 +246,8 @@
     <Compile Include="Models\MasterCodeContext.cs" />
     <Compile Include="Models\MemberContext.cs" />
     <Compile Include="Models\MySQLContext.cs" />
+    <Compile Include="Models\PaymentContext.cs" />
+    <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\ReportModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -985,10 +988,15 @@
     <Content Include="Views\Gashapon\_EditItemGashapon.cshtml" />
     <Content Include="Views\Report\Gashapon.cshtml" />
     <Content Include="Views\Report\ItemCode.cshtml" />
+    <Content Include="Views\Payment\PaymentTransaction.cshtml" />
+    <Content Include="Views\Payment\Refund.cshtml" />
+    <Content Include="Views\Payment\PaymentRefund.cshtml" />
+    <Content Include="Views\Payment\ItemRefund.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\ItemCode\" />
+    <Folder Include="Views\PaymentContext\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
