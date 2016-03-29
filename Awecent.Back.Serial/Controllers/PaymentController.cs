@@ -103,6 +103,28 @@ namespace Awecent.Back.Serial.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        public JsonResult SearchTransaction(PaymentTransaction model)
+        {
+            if (model.GameCode == null)
+            {
+                model.Result = false;
+                model.Message = "Model state valid fail.";
+                return Json(model);
+            }
+            PaymentTransactionList paymentTransactionList = paymentContext.SearchPaymentTransactionList(model);
+            return Json(paymentTransactionList);
+        }
+
+        //---------------------------------------------------Function private----------------------------------------------------------
+        private string ClaimName()
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            var name = identity.Claims.Where(c => c.Type == ClaimTypes.Name)
+                                 .Select(c => c.Value).SingleOrDefault();
+            return name;
+        }
+
 
 
 	}
