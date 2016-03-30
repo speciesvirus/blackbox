@@ -15,6 +15,55 @@
 
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <link href="~/Content/SignIn.css" rel="stylesheet" />
+
+
+    <style>
+
+        form.sky-form {
+            padding: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -webkit-transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 580px;
+        }
+
+            form.sky-form .label {
+                display: inline;
+                padding: .2em .6em .3em;
+                font-size: 119%;
+                font-weight: bold;
+                text-align: left;
+                line-height: 1;
+                color: #aaa;
+                text-align: right;
+                white-space: nowrap;
+                vertical-align: baseline;
+                border-radius: .25em;
+            }
+
+        span.red {
+            color: #db3236;
+
+        }
+        span.blue {
+            color: #4885ed;
+        }
+        span.yellow {
+            color: #f4c20d;
+        }
+        span.green {
+            color: #3cba54;
+        }
+        .t-logo {
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+    </style>
+
 </head>
 <body class="bg-cyan">
 
@@ -22,8 +71,11 @@
     <div class="container">
         <div class="row">
             <form action="@Url.Action("ValidateAccount", "Auth")" method="post" name="Sigin" id="Sigin"
-                  class="sky-form col-sm-6 col-sm-offset-3">
-                <header>Login form</header>
+                  class="sky-form">
+                <header>
+                    <span class="red t-logo">A</span><span class="blue t-logo">w</span><span class="yellow t-logo">e</span><span class="green t-logo">c</span><span class="red t-logo">e</span><span class="blue t-logo">n</span><span class="yellow t-logo">t</span> 
+                @*Authentication - Login*@
+                </header>
 
                 <fieldset>
                     <section>
@@ -54,7 +106,7 @@
 
                 </fieldset>
                 <footer>
-                    <button class="button" type="button" onclick="Send()">Log in</button>
+                    <button id="sb-form" class="button" type="button" onclick="Send()">Log in</button>
              
                 </footer>
             </form>
@@ -76,6 +128,23 @@
             if (!$("#Sigin").valid()) return;
             $("#Sigin").submit();
         }
+
+        $(function () {
+
+            $('input').keypress(function (e) {
+                if (e.which == 13) {
+
+                    $("#sb-form").click();
+                    $('form#login').submit();
+                    
+                }
+            });
+            
+
+        });
+        
+
+
 
     </script>
 </body>
