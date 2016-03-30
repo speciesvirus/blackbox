@@ -109,11 +109,6 @@ namespace Awecent.Back.Serial.Models
 
         }
 
-
-
-
-
-
         public RefundErrorList GetRefundList(ReportRefund model)
         {
             using (MySqlConnection con = new MySqlConnection(PaymentConnection))
@@ -181,16 +176,6 @@ namespace Awecent.Back.Serial.Models
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
 
         public PaymentTransactionList SearchPaymentTransactionList(PaymentTransaction model)
         {
@@ -265,9 +250,52 @@ namespace Awecent.Back.Serial.Models
             }
         }
 
+        public PaymentTransactionList SearchPaymentList(PaymentTransaction model)
+        {
+            using (MySqlConnection con = new MySqlConnection(PaymentConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_storePaymentGetListPayment", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new MySqlParameter("pi_gameCode", model.GameCode));
+                    cmd.Parameters.Add(new MySqlParameter("pi_serverCode", model.ServerCode));
+                    cmd.Parameters.Add(new MySqlParameter("pi_userId", model.UserId));
+                    cmd.Parameters.Add(new MySqlParameter("pi_providerId", model.ProviderId));
+                    cmd.Parameters.Add(new MySqlParameter("pi_dealerId", model.DealerId));
+                    cmd.Parameters.Add(new MySqlParameter("pi_startDate", model.StartDate));
+                    cmd.Parameters.Add(new MySqlParameter("pi_endDate", model.EndDate));
+                    cmd.Parameters.Add(new MySqlParameter("pi_page", model.Page));
+                    cmd.Parameters.Add(new MySqlParameter("pi_pageSize", model.PageSize));
+                    cmd.Parameters.Add(new MySqlParameter("po_countRow", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
 
-
-
-
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    int row = Convert.ToInt32(cmd.Parameters["po_CountRow"].Value.ToString());
+                    if (row <= 0) return new PaymentTransactionList { Result = false };
+                    PaymentTransactionList paymentTransactionList = new PaymentTransactionList();
+                    paymentTransactionList.Result = true;
+                    paymentTransactionList.Total = row;
+                    var q = dt.AsEnumerable().Select(x => new PaymentTransaction()
+                    {
+                        GameName = x.Field<string>("gameName"),
+                        ServerName = x.Field<string>("serverName"),
+                        ProviderName = x.Field<string>("providerName"),
+                        DealerName = x.Field<string>("dealerName"),
+                        TotalPrice = x.Field<double>("totalPrice"),
+                        CurrencyUnit = x.Field<string>("rcvCurrencyUnit"),
+                        TransactionDate = x.Field<DateTime?>("rcvTransactionDate").Value,
+                    }).ToList();
+                    paymentTransactionList.Data = q;
+                    return paymentTransactionList;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Data = model, Exception = ex.Message, Function = "SearchPaymentTransactionList" });
+                    return new PaymentTransactionList { Result = false, Message = ex.Message };
+                }
+            }
+        }
 	}
 }

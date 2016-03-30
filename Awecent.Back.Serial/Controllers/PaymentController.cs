@@ -39,6 +39,24 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
+        [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter")]
+        public ActionResult Payment()
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            // Get the claims values
+            var name = identity.Claims.Where(c => c.Type == "GameList")
+                               .Select(c => c.Value).SingleOrDefault();
+            List<Game> list = JsonConvert.DeserializeObject<List<Game>>(name);
+            ViewBag.Games = list;
+
+            var server = identity.Claims.Where(c => c.Type == "ServerList")
+                   .Select(c => c.Value).SingleOrDefault();
+            List<Game> ServerList = JsonConvert.DeserializeObject<List<Game>>(server);
+            ViewBag.Server = ServerList;
+
+            return View();
+        }
         [HttpGet]
         public JsonResult GetServer(string id)
         {
@@ -116,6 +134,18 @@ namespace Awecent.Back.Serial.Controllers
             return Json(paymentTransactionList);
         }
 
+        [HttpPost]
+        public JsonResult SearchPayment(PaymentTransaction model)
+        {
+            if (model.GameCode == null)
+            {
+                model.Result = false;
+                model.Message = "Model state valid fail.";
+                return Json(model);
+            }
+            PaymentTransactionList paymentList = paymentContext.SearchPaymentList(model);
+            return Json(paymentList);
+        }
         //---------------------------------------------------Function private----------------------------------------------------------
         private string ClaimName()
         {

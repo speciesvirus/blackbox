@@ -390,6 +390,8 @@ namespace Awecent.Back.Serial.Models
         //SearchPaymentTransaction
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public double TotalPrice { get; set; }
+        public DateTime? TransactionDate { get; set; }
 
         //page
         public int Page { get; set; }
