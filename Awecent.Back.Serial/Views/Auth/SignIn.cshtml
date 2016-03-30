@@ -43,6 +43,25 @@
                 vertical-align: baseline;
                 border-radius: .25em;
             }
+
+        span.red {
+            color: #db3236;
+
+        }
+        span.blue {
+            color: #4885ed;
+        }
+        span.yellow {
+            color: #f4c20d;
+        }
+        span.green {
+            color: #3cba54;
+        }
+        .t-logo {
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
     </style>
 
 </head>
@@ -53,7 +72,10 @@
         <div class="row">
             <form action="@Url.Action("ValidateAccount", "Auth")" method="post" name="Sigin" id="Sigin"
                   class="sky-form">
-                <header>Awecent Authentication - Login</header>
+                <header>
+                    <span class="red t-logo">A</span><span class="blue t-logo">w</span><span class="yellow t-logo">e</span><span class="green t-logo">c</span><span class="red t-logo">e</span><span class="blue t-logo">n</span><span class="yellow t-logo">t</span> 
+                @*Authentication - Login*@
+                </header>
 
                 <fieldset>
                     <section>
