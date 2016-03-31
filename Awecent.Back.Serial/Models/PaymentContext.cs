@@ -115,7 +115,7 @@ namespace Awecent.Back.Serial.Models
             {
                 try
                 {
-                    MySqlCommand cmd = new MySqlCommand("awe_storeProductGetListTransactionRefun", con);
+                    MySqlCommand cmd = new MySqlCommand("awe_storeProductGetListTransactionRefund", con);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
                     cmd.Parameters.Add(new MySqlParameter("pi_gameCode", model.gameId));
@@ -135,7 +135,7 @@ namespace Awecent.Back.Serial.Models
 
                     var q = dt.AsEnumerable().Select(row => new RefundError()
                     {
-                        paymentTransactionId = row["paymentTransactionId"].ToString(),
+                        productTransactionId = row["productTransactionId"].ToString(),
                         referenceId = row["referenceId"].ToString(),
                         providerName = row["providerName"].ToString(),
                         dealerName = row["dealerName"].ToString(),
@@ -145,6 +145,7 @@ namespace Awecent.Back.Serial.Models
                         pointGame = row["pointGame"].ToString(),
                         pointUnit = row["pointUnit"].ToString(),
                         productCode = row["productCode"].ToString(),
+                        paymentTransactionId = row["paymentTransactionId"].ToString(),
                         rcvRespCode = row["rcvRespCode"].ToString(),
                         rcvRespMsg = row["rcvRespMsg"].ToString(),
                         exceptionCode = row["exceptionCode"].ToString(),
@@ -176,6 +177,7 @@ namespace Awecent.Back.Serial.Models
                 }
             }
         }
+
 
         public PaymentTransactionList SearchPaymentTransactionList(PaymentTransaction model)
         {

@@ -302,6 +302,8 @@
             $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
             $scope.format = $scope.formats[1];
 
+            $scope.refund = {};
+
             @*$scope.findPromotion = function () {
                 $http.get('@Url.Action("GetPromotions","Report")/' + $scope.input.gameId)
                     .success(function (d) {
@@ -433,13 +435,26 @@
                       .ok('Please do it!')
                       .cancel('Cancel');
                 $mdDialog.show(confirm).then(function () {
-                    $http.post('@Url.Action("GetRefund", "Payment")', $scope.input)
+                   
+                    $scope.refund.productTransactionId = dessert.productTransactionId;
+                    $scope.refund.paymentTransactionId = dessert.paymentTransactionId;
+
+     
+                    $http.post('@Url.Action("RefundItem", "Payment")', $scope.refund)
                     .success(function (result) {
-                        $scope.desserts = result;
+                        console.log('plai : ', result);
+                        alert(result.resp_msg);
+                        //$scope.desserts = result;
+                        $http.post('@Url.Action("GetRefund", "Payment")', $scope.input)
+                        .success(function (result) {
+                            console.log("sss : ", result)
+                            $scope.desserts = result;
+                        });
                     });
+
                     $scope.status = 'You decided to get rid of your debt.';
                 }, function () {
-                    alert('bbb');
+
                     $scope.status = 'You decided to keep your debt.';
                 });
 

@@ -34,6 +34,12 @@ namespace Awecent.Back.Serial.Models
     //    }
     //}
 
+    public class MyHttpResponse
+    {
+        public int status { get; set; }
+        public string response { get; set; }
+    }
+
     public class UserandRole
     {
         public int UserId { get; set; }

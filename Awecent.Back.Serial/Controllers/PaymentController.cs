@@ -1,5 +1,6 @@
 ﻿using Awecent.Back.Serial.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -121,6 +122,26 @@ namespace Awecent.Back.Serial.Controllers
             return Json(result);
         }
 
+
+        [HttpPost]
+        public JsonResult RefundItem(RefundError model)
+        {
+
+            string requestJson = Newtonsoft.Json.JsonConvert.SerializeObject(model);
+            MyHttpRequest http = new MyHttpRequest();
+            //MyHttpResponse response = http.Send("https://paymentapitest.awecent.com:9001/PaymentService/ItemRefund", "POST", requestJson);
+            MyHttpResponse response = http.Send("http://localhost:30048/PaymentService/ItemRefund", "POST", requestJson);
+            JObject json = JObject.Parse(response.response);
+
+            //int JsonSuccess = Convert.ToInt16(json["Code"].ToString());
+            return Json(new
+            {
+                resp_code = json["resp_code"].ToString(),
+                resp_msg = json["resp_msg"].ToString()
+            });
+        }
+
+
         [HttpPost]
         public JsonResult SearchTransaction(PaymentTransaction model)
         {
@@ -154,6 +175,9 @@ namespace Awecent.Back.Serial.Controllers
                                  .Select(c => c.Value).SingleOrDefault();
             return name;
         }
+
+
+
 
 
 

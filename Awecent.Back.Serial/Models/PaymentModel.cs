@@ -25,7 +25,7 @@ namespace Awecent.Back.Serial.Models
 
     public class RefundError
     {
-        public string paymentTransactionId { get; set; }
+        public string productTransactionId { get; set; }
         public string referenceId { get; set; }
         public string providerName { get; set; }
         public string dealerName { get; set; }
@@ -35,6 +35,7 @@ namespace Awecent.Back.Serial.Models
         public string pointGame { get; set; }
         public string pointUnit { get; set; }
         public string productCode { get; set; }
+        public string paymentTransactionId { get; set; }
         public string rcvRespCode { get; set; }
         public string rcvRespMsg { get; set; }
         public string exceptionCode { get; set; }

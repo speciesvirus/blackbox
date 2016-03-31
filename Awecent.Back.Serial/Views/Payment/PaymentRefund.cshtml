@@ -304,6 +304,8 @@
             $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
             $scope.format = $scope.formats[1];
 
+            $scope.refund = {};
+
             @*$scope.findPromotion = function () {
                 $http.get('@Url.Action("GetPromotions","Report")/' + $scope.input.gameId)
                     .success(function (d) {
