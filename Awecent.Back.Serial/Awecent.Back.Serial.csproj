@@ -245,6 +245,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MasterCodeContext.cs" />
     <Compile Include="Models\MemberContext.cs" />
+    <Compile Include="Models\MyHttpRequest.cs" />
     <Compile Include="Models\MySQLContext.cs" />
     <Compile Include="Models\PaymentContext.cs" />
     <Compile Include="Models\PaymentModel.cs" />
