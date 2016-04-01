@@ -49,13 +49,13 @@
 
                 <div class="row">
                     <div class="col-sm-3">
-                        <label>Provider Name</label>
+                        <label>Provider Names</label>
                         <select ng-model="input.providerId" ng-change="findDealer()" class="form-control" name="providerId"
                                 ng-options="pro.ProviderId as pro.ProviderName for pro in providers"></select>
                     </div>
 
                     <div class="col-sm-3">
-                        <label>Dealer Name</label>
+                        <label>Dealer Names</label>
                         <select ng-model="input.dealerId" class="form-control" name="dealerId"
                                 ng-options="del.DealerId as del.DealerName for del in dealers"></select>
                     </div>
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         <div class="col-sm-3">
-                            <label>End Dates</label>
+                            <label>End Date</label>
                             <div class="float-left">
                                 <div class='input-group date' id='datetimepicker7'>
                                     <input type='text' class="form-control" ng-model="input.endDate" name="endDate" />
@@ -107,7 +107,7 @@
                                 <th md-column md-order-by="ProviderName" md-desc><span>Provider Name</span></th>
                                 <th md-column md-order-by="DealerName"><span>Dealer Name</span></th>
                                 <th md-column md-numeric md-order-by="TotalPrice"><span>Total Price</span></th>
-                                <th md-column md-order-by="CurrencyUnit"><span>CurrencyUnit</span></th>
+                                <th md-column md-order-by="CurrencyUnit"><span>Currency Unit</span></th>
                                 <th md-column md-order-by="TransactionDate"><span>Transaction Date</span></th>
                             </tr>
                         </thead>
