@@ -110,15 +110,25 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
 
-
         [HttpPost]
-        public JsonResult GetRefund(ReportRefund model)
+        public JsonResult GetPaymentRefund(ReportRefund model)
         {
             string[] element = model.gameId.Split('-');
             model.gameId = element[0];
             model.serverId = element[1] == "0" ? "1" : element[1];
 
-            var result = paymentContext.GetRefundList(model);
+            var result = paymentContext.GetPaymentRefundList(model);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult GetProductRefund(ReportRefund model)
+        {
+            string[] element = model.gameId.Split('-');
+            model.gameId = element[0];
+            model.serverId = element[1] == "0" ? "1" : element[1];
+
+            var result = paymentContext.GetProductRefundList(model);
             return Json(result);
         }
 
