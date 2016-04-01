@@ -182,7 +182,7 @@
                                             <md-option ng-value="type" ng-repeat="type in getTypes()">{{type}}</md-option>
                                         </md-select>
                                     </td>*@
-                                <td md-cell>Game : {{dessert.gameCode}} & Server : {{dessert.serverCode}}</td>
+                                <td md-cell>{{dessert.gameName}} - {{dessert.serverName}}</td>
                                 <td md-cell>{{dessert.dealerName}}</td>
                                 <td md-cell>{{dessert.pointGame}} {{dessert.pointUnit}}</td>
                                 <td md-cell>{{dessert.productCode}}</td>
@@ -445,7 +445,7 @@
                         console.log('plai : ', result);
                         alert(result.resp_msg);
                         //$scope.desserts = result;
-                        $http.post('@Url.Action("GetRefund", "Payment")', $scope.input)
+                        $http.post('@Url.Action("GetProductRefund", "Payment")', $scope.input)
                         .success(function (result) {
                             console.log("sss : ", result)
                             $scope.desserts = result;
@@ -468,7 +468,7 @@
                     $scope.input.startDate = start_date;
                     $scope.input.endDate = end_date;
 
-                    $http.post('@Url.Action("GetRefund", "Payment")', $scope.input)
+                    $http.post('@Url.Action("GetProductRefund", "Payment")', $scope.input)
                     .success(function (result) {
                         console.log("sss : ",result)
                         $scope.desserts = result;

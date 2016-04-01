@@ -109,20 +109,21 @@ namespace Awecent.Back.Serial.Models
 
         }
 
-        public RefundErrorList GetRefundList(ReportRefund model)
+
+        public RefundErrorList GetPaymentRefundList(ReportRefund model)
         {
             using (MySqlConnection con = new MySqlConnection(PaymentConnection))
             {
                 try
                 {
-                    MySqlCommand cmd = new MySqlCommand("awe_storeProductGetListTransactionRefund", con);
+                    MySqlCommand cmd = new MySqlCommand("awe_storePaymentGetListTransactionRefund", con);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
                     cmd.Parameters.Add(new MySqlParameter("pi_gameCode", model.gameId));
                     cmd.Parameters.Add(new MySqlParameter("pi_serverCode", model.serverId));
                     cmd.Parameters.Add(new MySqlParameter("pi_userId", model.UID));
-                    cmd.Parameters.Add(new MySqlParameter("pi_startData", model.startDate.Value));
-                    cmd.Parameters.Add(new MySqlParameter("pi_endData", model.endDate.Value));
+                    cmd.Parameters.Add(new MySqlParameter("pi_startDate", model.startDate.Value));
+                    cmd.Parameters.Add(new MySqlParameter("pi_endDate", model.endDate.Value));
                     //_PageSize , _Page , _row
                     cmd.Parameters.Add(new MySqlParameter("pi_page", model.page));
                     cmd.Parameters.Add(new MySqlParameter("pi_pageSize", model.pageSize));
@@ -139,8 +140,78 @@ namespace Awecent.Back.Serial.Models
                         referenceId = row["referenceId"].ToString(),
                         providerName = row["providerName"].ToString(),
                         dealerName = row["dealerName"].ToString(),
-                        gameCode = row["gameCode"].ToString(),
-                        serverCode = row["serverCode"].ToString(),
+                        gameName = row["gameName"].ToString(),
+                        serverName = row["serverName"].ToString(),
+                        userId = row["userId"].ToString(),
+                        pointGame = row["pointGame"].ToString(),
+                        pointUnit = row["pointUnit"].ToString(),
+                        productCode = row["productCode"].ToString(),
+                        paymentTransactionId = row["paymentTransactionId"].ToString(),
+                        rcvRespCode = row["rcvRespCode"].ToString(),
+                        rcvRespMsg = row["rcvRespMsg"].ToString(),
+                        exceptionCode = row["exceptionCode"].ToString(),
+                        exceptionMsg = row["exceptionMsg"].ToString(),
+                        createDate = row["createDate"].ToString()
+                        //createDate = (DateTime?)(row["createDate"] == DBNull.Value ? new DateTime?() : Convert.ToDateTime(row["createDate"]))
+                    }).ToList();
+
+
+
+                    if (q != null)
+                    {
+                        list.Result = true;
+                        list.Data = q;
+                    }
+                    else
+                    {
+                        list.Result = false;
+                        list.Data = q;
+                    }
+
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    new LogFile().WriterError(new LogModel { Exception = ex.Message, Data = model });
+                    return new RefundErrorList { Result = false, Message = ex.Message };
+                    //hendle exception
+                }
+            }
+        }
+
+
+        public RefundErrorList GetProductRefundList(ReportRefund model)
+        {
+            using (MySqlConnection con = new MySqlConnection(PaymentConnection))
+            {
+                try
+                {
+                    MySqlCommand cmd = new MySqlCommand("awe_storeProductGetListTransactionRefund", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add(new MySqlParameter("pi_gameCode", model.gameId));
+                    cmd.Parameters.Add(new MySqlParameter("pi_serverCode", model.serverId));
+                    cmd.Parameters.Add(new MySqlParameter("pi_userId", model.UID));
+                    cmd.Parameters.Add(new MySqlParameter("pi_startDate", model.startDate.Value));
+                    cmd.Parameters.Add(new MySqlParameter("pi_endDate", model.endDate.Value));
+                    //_PageSize , _Page , _row
+                    cmd.Parameters.Add(new MySqlParameter("pi_page", model.page));
+                    cmd.Parameters.Add(new MySqlParameter("pi_pageSize", model.pageSize));
+                    cmd.Parameters.Add(new MySqlParameter("po_countRow", MySqlDbType.Int32) { Direction = ParameterDirection.InputOutput });
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    RefundErrorList list = new RefundErrorList();
+                    list.Total = Convert.ToInt32(cmd.Parameters["po_countRow"].Value.ToString());
+
+                    var q = dt.AsEnumerable().Select(row => new RefundError()
+                    {
+                        productTransactionId = row["productTransactionId"].ToString(),
+                        referenceId = row["referenceId"].ToString(),
+                        providerName = row["providerName"].ToString(),
+                        dealerName = row["dealerName"].ToString(),
+                        gameName = row["gameName"].ToString(),
+                        serverName = row["serverName"].ToString(),
                         userId = row["userId"].ToString(),
                         pointGame = row["pointGame"].ToString(),
                         pointUnit = row["pointUnit"].ToString(),

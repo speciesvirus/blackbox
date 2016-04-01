@@ -19,9 +19,7 @@
     }
 
 
-    .input-group-addon, .input-group-btn {
-        width: inherit;
-    }
+
 
     .float-left {
         float: left;
@@ -184,7 +182,7 @@
                                             <md-option ng-value="type" ng-repeat="type in getTypes()">{{type}}</md-option>
                                         </md-select>
                                     </td>*@
-                                <td md-cell>Game : {{dessert.gameCode}} ,  Server : {{dessert.serverCode}}</td>
+                                <td md-cell>{{dessert.gameName}} - {{dessert.serverName}}</td>
                                 <td md-cell>{{dessert.dealerName}}</td>
                                 <td md-cell>{{dessert.pointGame}} {{dessert.pointUnit}}</td>
                                 <td md-cell>{{dessert.productCode}}</td>
@@ -425,7 +423,6 @@
             }
 
 
-
             $scope.editRefund = function (event, dessert) {
 
                 event.stopPropagation();
@@ -438,13 +435,26 @@
                       .ok('Please do it!')
                       .cancel('Cancel');
                 $mdDialog.show(confirm).then(function () {
-                    $http.post('@Url.Action("GetRefund", "Payment")', $scope.input)
+
+                    $scope.refund.productTransactionId = dessert.productTransactionId;
+                    $scope.refund.paymentTransactionId = dessert.paymentTransactionId;
+
+
+                    $http.post('@Url.Action("RefundItem", "Payment")', $scope.refund)
                     .success(function (result) {
-                        $scope.desserts = result;
+                        console.log('plai : ', result);
+                        alert(result.resp_msg);
+                        //$scope.desserts = result;
+                        $http.post('@Url.Action("GetPaymentRefund", "Payment")', $scope.input)
+                        .success(function (result) {
+                            console.log("sss : ", result)
+                            $scope.desserts = result;
+                        });
                     });
+
                     $scope.status = 'You decided to get rid of your debt.';
                 }, function () {
-                    alert('bbb');
+
                     $scope.status = 'You decided to keep your debt.';
                 });
 
@@ -458,7 +468,7 @@
                     $scope.input.startDate = start_date;
                     $scope.input.endDate = end_date;
 
-                    $http.post('@Url.Action("GetRefund", "Payment")', $scope.input)
+                    $http.post('@Url.Action("GetPaymentRefund", "Payment")', $scope.input)
                     .success(function (result) {
                         console.log("sss : ",result)
                         $scope.desserts = result;
@@ -495,7 +505,18 @@
                 };
 
 
-        }]);
+        }])
+        .filter('datetime1', function ($filter) {
+            return function (input) {
+                if (input == null) { return ""; }
+
+                var _date = $filter('date')(new Date(input),
+                                            'MM dd yyyy - HH:mm:ss');
+
+                return _date.toUpperCase();
+
+            };
+        });
 
 
 

@@ -29,8 +29,8 @@ namespace Awecent.Back.Serial.Models
         public string referenceId { get; set; }
         public string providerName { get; set; }
         public string dealerName { get; set; }
-        public string gameCode { get; set; }
-        public string serverCode { get; set; }
+        public string gameName { get; set; }
+        public string serverName { get; set; }
         public string userId { get; set; }
         public string pointGame { get; set; }
         public string pointUnit { get; set; }
