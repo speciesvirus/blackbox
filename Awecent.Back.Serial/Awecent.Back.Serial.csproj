@@ -233,7 +233,6 @@
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\ReportApiController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
-    <Compile Include="Controllers\ReportControllers.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

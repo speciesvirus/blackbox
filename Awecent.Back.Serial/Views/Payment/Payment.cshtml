@@ -50,7 +50,9 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <label>Provider Names</label>
-                        <select ng-model="input.providerId" ng-change="findDealer()" class="form-control" name="providerId"
+
+                        <select ng-model="input.providerId" ng-change="findDealer()" class="form-control" name="providerId"          
+
                                 ng-options="pro.ProviderId as pro.ProviderName for pro in providers"></select>
                     </div>  
 
@@ -105,7 +107,7 @@
                             <tr md-row>
                                 <th md-column md-order-by="GameName"><span>Game Name</span></th>
                                 <th md-column md-order-by="ServerName"><span>Server Name</span></th>
-                                <th md-column md-order-by="ProviderName" md-desc><span>Provider Name</span></th>
+                                <th md-column md-order-by="ProviderName" md-desc><span>Provider Names</span></th>
                                 <th md-column md-order-by="DealerName"><span>Dealer Name</span></th>
                                 <th md-column md-numeric md-order-by="TotalPrice"><span>Total Price</span></th>
                                 <th md-column md-order-by="CurrencyUnit"><span>Currency Unit</span></th>
