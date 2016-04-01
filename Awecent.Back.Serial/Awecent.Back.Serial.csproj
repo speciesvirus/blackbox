@@ -1002,11 +1002,11 @@
     <Content Include="Views\Payment\PaymentRefund.cshtml" />
     <Content Include="Views\Payment\ItemRefund.cshtml" />
     <Content Include="Views\Payment\Payment.cshtml" />
+    <Content Include="Views\Payment\TEST.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\ItemCode\" />
-    <Folder Include="Views\PaymentContext\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
