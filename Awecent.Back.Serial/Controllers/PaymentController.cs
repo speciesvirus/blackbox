@@ -39,7 +39,24 @@ namespace Awecent.Back.Serial.Controllers
 
             return View();
         }
+        [Authorize]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter")]
+        public ActionResult TEST()
+        {
+            var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
+            // Get the claims values
+            var name = identity.Claims.Where(c => c.Type == "GameList")
+                               .Select(c => c.Value).SingleOrDefault();
+            List<Game> list = JsonConvert.DeserializeObject<List<Game>>(name);
+            ViewBag.Games = list;
 
+            var server = identity.Claims.Where(c => c.Type == "ServerList")
+                   .Select(c => c.Value).SingleOrDefault();
+            List<Game> ServerList = JsonConvert.DeserializeObject<List<Game>>(server);
+            ViewBag.Server = ServerList;
+
+            return View();
+        }
         [Authorize]
         [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter")]
         public ActionResult Payment()
