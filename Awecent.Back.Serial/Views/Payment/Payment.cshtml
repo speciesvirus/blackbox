@@ -30,7 +30,7 @@
                     <div class="col-sm-3">
                         <label>Game Name</label>
                         <select ng-model="input.gameCode" ng-change="findProvider()" class="form-control" name="gameId">
-                            @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)
+                            @foreach (Awecent.Back.Serial.Models.Game game in ViewBag.Games)   
                             {
                                 <option value="@game.GameId">@game.GameName</option>
                             }
@@ -104,7 +104,7 @@
                             <tr md-row>
                                 <th md-column md-order-by="GameName"><span>Game Name</span></th>
                                 <th md-column md-order-by="ServerName"><span>Server Name</span></th>
-                                <th md-column md-order-by="ProviderName" md-desc><span>Provider Name</span></th>
+                                <th md-column md-order-by="ProviderName" md-desc><span>Provider Names</span></th>
                                 <th md-column md-order-by="DealerName"><span>Dealer Name</span></th>
                                 <th md-column md-numeric md-order-by="TotalPrice"><span>Total Price</span></th>
                                 <th md-column md-order-by="CurrencyUnit"><span>Currency Unit</span></th>
