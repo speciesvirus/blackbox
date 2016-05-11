@@ -266,12 +266,12 @@
             @if (User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
             {
 
-                <div class='title'>Payment Refund</div>
+                @*<div class='title'>Payment Refund</div>
                 <a href="@Url.Action("PaymentRefund", "Payment")">
                     <div class='link'>
                         Payment Refund 
                     </div>
-                </a>
+                </a>*@
                 <a href="@Url.Action("ItemRefund", "Payment")">
                     <div class='link'>
                         Item Refund
