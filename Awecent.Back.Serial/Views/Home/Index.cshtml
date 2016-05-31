@@ -80,20 +80,22 @@
 
 }
 
-<div class="row section-dashboard">
-    <header class="rad-page-title">
-        <small class="md-txt">Report</small>
-    </header>
+
+
 
     @if (User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
     {
+        
+        <div class="row section-dashboard">
+            <header class="rad-page-title">
+        <small class="md-txt">Report</small>
+    </header>
+        
         <a href="@Url.Action("ItemCode", "Report")">
             <div class="rad-info-box rad-txt-success">
                 <span class="heading">Item Code</span>
             </div>
         </a>
-
-
 
         <a href="@Url.Action("Registration", "Report")">
             <div class="rad-info-box rad-txt-success">
@@ -105,32 +107,65 @@
             <div class="rad-info-box rad-txt-success">
                 <span class="heading">Active Users / Hour</span>
             </div>
-        </a>
-        
-        
+        </a>              
         
         <a href="@Url.Action("Gashapon", "Report")">
             <div class="rad-info-box rad-txt-success">
                 <span class="heading">Gashapon Report</span>
             </div>
         </a>
+        
 
+            <a href="@Url.Action("ItemRefund", "Payment")">
+                <div class="rad-info-box rad-txt-success">
+                    <span class="heading">Item Refund</span>
+                </div>
+            </a>
+
+
+        </div>
+        
         
     }
+    
+    @if (User.IsInRole("PaymentReporter") || User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
+{
 
 
-</div>
+    <div class="row section-dashboard">
+
+        <header class="rad-page-title">
+            <small class="md-txt">Payment</small>
+        </header>
+
+        <a href="@Url.Action("Payment", "Payment")">
+            <div class="rad-info-box rad-txt-success">
+                <span class="heading">Payment</span>
+            </div>
+        </a>
+
+        <a href="@Url.Action("PaymentTransaction", "Payment")">
+            <div class="rad-info-box rad-txt-success">
+                <span class="heading">Payment Transaction</span>
+            </div>
+        </a>
+
+
+    </div>
+}
+
+
+
 
 
 <script type="text/javascript">
 
-    window.opener.postMessage('replace your location', '*');
+    //window.opener.postMessage('replace your location', '*');
 
-    // opener:
-    window.onmessage = function (e) {
-        if (e.data === 'replace your location') {
-            window.location.replace(...);
-        }
-    };
+    //window.onmessage = function (e) {
+    //    if (e.data === 'replace your location') {
+    //        window.location.replace(...);
+    //    }
+    //};
 
 </script>

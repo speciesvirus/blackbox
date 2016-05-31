@@ -70,7 +70,8 @@
                             <label>Start Date</label>
                             <div class="float-left rg-2m">
                                 <div class='input-group date' id='datetimepicker6'>
-                                    <input type='text' class="form-control" ng-model="input.startDate" name="startDate" />
+                                    @*<input type='text' class="form-control" ng-model="input.startDate" name="startDate" />*@
+                                    <input type='text' class="form-control"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -81,7 +82,8 @@
                             <label>End Date</label>
                             <div class="float-left">
                                 <div class='input-group date' id='datetimepicker7'>
-                                    <input type='text' class="form-control" ng-model="input.endDate" name="endDate" />
+                                    @*<input type='text' class="form-control" ng-model="input.endDate" name="endDate" />*@
+                                    <input type='text' class="form-control"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -182,14 +184,17 @@
                 console.log('order: ', order);
             };
 
+
             $('#datetimepicker6').datetimepicker({
-                defaultDate: new Date().setHours(0, 0),
-                disabledDates: []
+                defaultDate: new Date().setHours(00, 00),
+                disabledDates: [],
+                format: "YYYY-MM-DD HH:mm"
             });
             $('#datetimepicker7').datetimepicker({
-                defaultDate: new Date().setHours(24, 00),
+                defaultDate: new Date().setHours(23, 59, 59),
                 disabledDates: [],
-                useCurrent: false
+                useCurrent: false,
+                format: "YYYY-MM-DD HH:mm"
             });
 
             $("#datetimepicker6").on("dp.change", function (e) {
@@ -225,10 +230,13 @@
 
             $scope.search = function () {
                 $scope.input.pageSize = parseInt($scope.input.pageSize);
-                var start_date = $('input[name="startDate"]').val(), end_date = $('input[name="endDate"]').val();
-                $scope.input.startDate = start_date;
-                $scope.input.endDate = end_date;
-                if ($scope.input.endDate < $scope.input.startDate) { alert('Please select EndDate > StartDate'); return; }
+                var start_date = $('#datetimepicker6 input').val(),
+                    end_date = $('#datetimepicker7 input').val();
+
+                $scope.input.StartDate = start_date;
+                $scope.input.EndDate = end_date;
+
+                if ($scope.input.EndDate < $scope.input.StartDate || $scope.input.StartDate.trim() == "") { alert('Please select EndDate > StartDate'); return; }
                 if (!$("#ValidateForm").valid()) return;
                 $('#spinner').toggle(true);
                 $http.post('@Url.Action("SearchPayment", "Payment")', $scope.input).success(function (response) {
@@ -238,6 +246,8 @@
                         $scope.desserts.total = response.Total;
                         notifyInfo("record " + response.Data.length + '/' + response.Total);
                     } else {
+                        $scope.desserts = response;
+                        $scope.desserts.total = response.Total;
                         notifyWarning(response.Message);
                     }
                 }).error(function (e) {

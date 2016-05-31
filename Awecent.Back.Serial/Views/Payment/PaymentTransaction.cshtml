@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "PaymentTransaction";
 }
 
@@ -36,7 +35,7 @@
                             }
                         </select>
                     </div>
-                    <div class ="col-sm-3">
+                    <div class="col-sm-3">
                         <label>Server Name</label>
                         <select ng-model="input.serverCode" class="form-control" name="serverId"
                                 ng-options="srv.ServerId as srv.ServerName for srv in servers"></select>
@@ -93,8 +92,12 @@
                         </div>
                         <div class="col-sm-3">
                             <label>Stutus</label>
-                            <select ng-model="input.statusTransaction" class="form-control" name="statusTransaction"
-                                    ng-options="sta.StatusId as sta.StatusName for sta in StatusTransaction"></select>
+                            @*<select ng-model="input.TransactionStatus" class="form-control" name="TransactionStatus"
+                                    ng-options="sta.StatusId as sta.StatusName for sta in TransactionStatus"></select>*@
+
+                            <select name="TransactionState" id="TransactionState" class="form-control"
+                                    ng-options="option.StatusName for option in input.TransactionState.availableOptions track by option.StatusId"
+                                    ng-model="input.TransactionState.selectedOption"></select>
                         </div>
                     </div>
                 </div>
@@ -113,25 +116,20 @@
                     <table md-table ng-model="selected" md-progress="promise">
                         <thead md-head md-order="query.order" md-on-reorder="logOrder">
                             <tr md-row>
-                                <th md-column md-order-by="PaymentTransactionId"><span>PaymentTransactionId</span></th>
+                                <th md-column md-numeric md-order-by="PaymentTransactionId"><span>PaymentTransactionId</span></th>
                                 <th md-column md-order-by="ReferenceId"><span>ReferenceId</span></th>
-                                <th md-column md-numeric md-order-by="ProviderName" md-desc><span>ProviderName</span></th>
-                                <th md-column md-numeric md-order-by="DealerName"><span>DealerName</span></th>
-                                <th md-column md-numeric md-order-by="GameName"><span>GameName</span></th>
+                                <th md-column md-order-by="ProviderName" md-desc><span>ProviderName</span></th>
+                                <th md-column md-order-by="DealerName"><span>DealerName</span></th>
+                                <th md-column md-order-by="GameName"><span>GameName</span></th>
                                 <th md-column md-order-by="ServerName"><span>ServerName</span></th>
                                 <th md-column md-order-by="UserId"><span>UserId</span></th>
-                                @*<th md-column md-order-by="ItemName"><span>ItemName</span></th>*@
-                                @*<th md-column md-order-by="Price"><span>Price</span></th>*@
-                                @*<th md-column md-order-by="CurrencyUnit"><span>CurrencyUnit</span></th>*@
-                                @*<th md-column md-order-by="PaymentCode"><span>PaymentCode</span></th>*@
                                 <th md-column md-order-by="CustomerIp"><span>CustomerIp</span></th>
                                 <th md-column md-order-by="CreateTransactionDate"><span>CreateTransactionDate</span></th>
-                                @*<th md-column md-order-by="Other"><span>Other</span></th>*@
                                 <th md-column md-order-by="RcvTransactionId"><span>RcvTransactionId</span></th>
                                 <th md-column md-order-by="RcvReferenceId"><span>RcvReferenceId</span></th>
                                 <th md-column md-order-by="RcvProviderName"><span>RcvProviderName</span></th>
                                 <th md-column md-order-by="RcvPaymentCode"><span>RcvPaymentCode</span></th>
-                                <th md-column md-order-by="RcvPrice"><span>RcvPrice</span></th>
+                                <th md-column md-numeric md-order-by="RcvPrice"><span>RcvPrice</span></th>
                                 <th md-column md-order-by="RcvCurrencyUnit"><span>RcvCurrencyUnit</span></th>
                                 <th md-column md-order-by="RcvTransactionDate"><span>RcvTransactionDate</span></th>
                                 <th md-column md-order-by="RcvRespCode"><span>RcvRespCode</span></th>
@@ -139,10 +137,6 @@
                                 <th md-column md-order-by="ExceptionCode"><span>ExceptionCode</span></th>
                                 <th md-column md-order-by="ExceptionMsg"><span>ExceptionMsg</span></th>
                                 <th md-column md-order-by="TransactionStatus"><span>TransactionStatus</span></th>
-                                @*<th md-column md-order-by="CreateUser"><span>CreateUser</span></th>*@
-                                @*<th md-column md-order-by="CreateDate"><span>CreateDate</span></th>*@
-                                @*<th md-column md-order-by="UpdateUser"><span>UpdateUser</span></th>*@
-                                @*<th md-column md-order-by="UpdateDate"><span>UpdateDate</span></th>*@
                             </tr>
                         </thead>
                         <tbody md-body>
@@ -154,13 +148,8 @@
                                 <td md-cell>{{dessert.GameName}}</td>
                                 <td md-cell>{{dessert.ServerName}}</td>
                                 <td md-cell>{{dessert.UserId}}</td>
-                                @*<td md-cell>{{dessert.ItemName}}</td>*@
-                                @*<td md-cell>{{dessert.Price}}</td>*@
-                                @*<td md-cell>{{dessert.CurrencyUnit}}</td>*@
-                                @*<td md-cell>{{dessert.PaymentCode}}</td>*@
                                 <td md-cell>{{dessert.CustomerIp}}</td>
                                 <td md-cell>{{dessert.CreateTransactionDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>
-                                @*<td md-cell>{{dessert.Other}}</td>*@
                                 <td md-cell>{{dessert.RcvTransactionId}}</td>
                                 <td md-cell>{{dessert.RcvReferenceId}}</td>
                                 <td md-cell>{{dessert.RcvProviderName}}</td>
@@ -173,10 +162,6 @@
                                 <td md-cell>{{dessert.ExceptionCode}}</td>
                                 <td md-cell>{{dessert.ExceptionMsg}}</td>
                                 <td md-cell>{{dessert.TransactionStatus}}</td>
-                                @*<td md-cell>{{dessert.CreateUser}}</td>*@
-                                @*<td md-cell>{{dessert.CreateDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>*@
-                                @*<td md-cell>{{dessert.UpdateUser}}</td>*@
-                                @*<td md-cell>{{dessert.UpdateDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>*@
                             </tr>
                         </tbody>
                     </table>
@@ -198,132 +183,187 @@
     <script src="~/Scripts/md-data-table/md-data-table2.js"></script>
 
     <script type="text/javascript">
-        angular.module('MyApp', ['ui.bootstrap', 'ngMaterial', 'md.data.table']).controller('PaymentTransactionController', ['$scope', '$http', '$mdEditDialog', '$q', '$timeout', function ($scope, $http, $mdEditDialog, $q, $timeout) {
-            $scope.input = {};
-            $scope.input.page = 1;
-            $scope.input.pageSize = 20;
-            $scope.input.total = 0;
-            $scope.providers = [];
-            $scope.StatusTransaction = [{ StatusId: '1', StatusName: 'Active' }, { StatusId: '2', StatusName: 'Inactive' }];
+    angular.module('MyApp', ['ui.bootstrap', 'ngMaterial', 'md.data.table']).controller('PaymentTransactionController', ['$scope', '$http', '$mdEditDialog', '$q', '$timeout', function ($scope, $http, $mdEditDialog, $q, $timeout) {
+        $scope.input = {};
+        $scope.input.page = 1;
+        $scope.input.pageSize = 20;
+        $scope.input.total = 0;
+        $scope.providers = [];
+        $scope.selected = [];
 
-            $scope.selected = [];
-
-            $scope.options = {
-                autoSelect: true,
-                boundaryLinks: false,
-                largeEditDialog: false,
-                pageSelector: false,
-                rowSelection: true
+        if ('@ViewBag.Role' == 'PaymentReporter') {
+            
+            $scope.input.TransactionState = {
+                availableOptions: [
+                  { StatusId: '3', StatusName: 'Transaction Success' }
+                ],
+                selectedOption: { StatusId: '3', StatusName: 'Transaction Success' }
+                //TransactionStatus: { StatusId: '3', StatusName: 'Transaction Success' }
             };
 
-            $scope.query = {
-                order: 'name',
-                limit: 20,
-                page: 1
+        } else {
+
+            $scope.input.TransactionState = {
+                availableOptions: [
+                  { StatusId: '', StatusName: 'All' }
+                        , { StatusId: '1', StatusName: 'Transaction Open' }
+                        , { StatusId: '2', StatusName: 'Transaction Reject' }
+                        , { StatusId: '3', StatusName: 'Transaction Success' }
+                        , { StatusId: '4', StatusName: 'Transaction Close' }
+                ],
+                selectedOption: { StatusId: '', StatusName: 'All' }
+                //TransactionStatus: { StatusId: '', StatusName: 'All' }
             };
+        }
 
-            $scope.desserts = {
-                "Total": 0,
-                "Data": [
-                ]
-            };
 
-            $scope.logItem = function (item) {
-                console.log(item.name, 'was selected');
-            };
+        
 
-            $scope.logOrder = function (order) {
-                console.log('order: ', order);
-            };
 
-            $('#datetimepicker6').datetimepicker({
-                defaultDate: new Date().setHours(12, 0),
-                disabledDates: []
-            });
-            $('#datetimepicker7').datetimepicker({
-                defaultDate: new Date().setHours(23, 59),
-                disabledDates: [],
-                useCurrent: false
-            });
+        $scope.options = {
+            autoSelect: true,
+            boundaryLinks: false,
+            largeEditDialog: false,
+            pageSelector: false,
+            rowSelection: true
+        };
 
-            $("#datetimepicker6").on("dp.change", function (e) {
-                $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-            });
-            $("#datetimepicker7").on("dp.change", function (e) {
-                $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-            });
+        $scope.query = {
+            order: 'name',
+            limit: 20,
+            page: 1
+        };
 
-            $scope.findProvider = function () {
-                $http.get('@Url.Action("GetServer", "Payment")/' + $scope.input.gameCode)
-                    .success(function (d) {
-                        if (d.Result) {
-                            $scope.servers = d.data;
-                        }
-                    });
-                $http.get('@Url.Action("GetProvider", "Payment")/' + $scope.input.gameCode)
-                    .success(function (d) {
-                        if (d.Result) {
-                            $scope.providers = d.data;
-                        }
-                    });
-            }
+        $scope.desserts = {
+            "Total": 0,
+            "Data": [
+            ]
+        };
 
-            $scope.findDealer = function () {
-                $http.get('@Url.Action("GetDealer", "Payment")/' + $scope.input.providerId)
-                    .success(function (d) {
-                        if (d.Result) {
-                            $scope.dealers = d.data;
-                        }
-                    });
-            }
-            $scope.search = function () {
-                $scope.input.pageSize = parseInt($scope.input.pageSize);
+        $scope.logItem = function (item) {
+            console.log(item.name, 'was selected');
+        };
 
-                if ($scope.input.endDate < $scope.input.startDate) { alert('Please select EndDate > StartDate'); return; }
-                if (!$("#ValidateForm").valid()) return;
-                $('#spinner').toggle(true);
-                $http.post('@Url.Action("SearchTransaction", "Payment")', $scope.input).success(function (response) {
-                    $('#spinner').toggle(false);
-                    if (response.Result) {
-                        $scope.desserts = response;
-                        $scope.desserts.total = response.Total;
-                        notifyInfo("record " + response.Data.length + '/' + response.Total);
-                    } else {
-                        notifyWarning(response.Message);
-                    }
-                }).error(function (e) {
-                    $('#spinner').toggle(false);
-                    console.log(e);
-                    notifyError('500 server error.');
-                });
-            }
+        $scope.logOrder = function (order) {
+            console.log('order: ', order);
+        };
 
-            $scope.logPagination = function (page, limit) {
-                console.log('page: ', page);
-                console.log('limit: ', limit);
-
-                $scope.input.page = 1;
-                $scope.input.pageSize = page * limit;
-
-                $http.post('@Url.Action("SearchTransaction", "Payment")', $scope.input)
-                .success(function (result) {
-                    $scope.desserts = result;
-                    $scope.desserts.total = response.Total;
-
-                });
-            }
-        }]);
-
-        $(document).ready(function () {
-            $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-                return arg != value;
-            }, "Please select some value.");
-
-            $("#ValidateForm").validate({
-                rules: {
-                    gameId: { required: true, valueNotEquals: '? undefined:undefined ?' },
-                },
-            });
+        $('#datetimepicker6').datetimepicker({
+            defaultDate: new Date().setHours(00, 00),
+            disabledDates: [],
+            format: "YYYY-MM-DD HH:mm"
         });
-    </script>
+        $('#datetimepicker7').datetimepicker({
+            defaultDate: new Date().setHours(23, 59, 59),
+            disabledDates: [],
+            useCurrent: false,
+            format: "YYYY-MM-DD HH:mm"
+        });
+
+        $("#datetimepicker6").on("dp.change", function (e) {
+            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+        });
+        $("#datetimepicker7").on("dp.change", function (e) {
+            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+        });
+
+        $scope.findProvider = function () {
+            $http.get('@Url.Action("GetServer", "Payment")/' + $scope.input.gameCode)
+                .success(function (d) {
+                    if (d.Result) {
+                        $scope.servers = d.data;
+                    }
+                });
+            $http.get('@Url.Action("GetProvider", "Payment")/' + $scope.input.gameCode)
+                .success(function (d) {
+                    if (d.Result) {
+                        $scope.providers = d.data;
+                    }
+                });
+        }
+
+        $scope.findDealer = function () {
+            $http.get('@Url.Action("GetDealer", "Payment")/' + $scope.input.providerId)
+                .success(function (d) {
+                    if (d.Result) {
+                        $scope.dealers = d.data;
+                    }
+                });
+        }
+
+        $scope.search = function () {
+
+            //console.log($scope.input.TransactionStatus.selectedOption.StatusId);
+            $scope.input.pageSize = parseInt($scope.input.pageSize);
+            var start_date = $('#datetimepicker6 input').val(),
+                end_date = $('#datetimepicker7 input').val();
+
+            $scope.input.StartDate = start_date;
+            $scope.input.EndDate = end_date;
+
+            
+            $scope.input.TransactionStatus = $scope.input.TransactionState.selectedOption.StatusId;
+            
+
+            if ($scope.input.EndDate < $scope.input.StartDate || $scope.input.StartDate.trim() == "") { alert('Please select EndDate > StartDate'); return; }
+            if (!$("#ValidateForm").valid()) return;
+            $('#spinner').toggle(true);
+            $http.post('@Url.Action("SearchTransaction", "Payment")', $scope.input ).success(function (response) {
+                $('#spinner').toggle(false);
+                if (response.Result) {
+                    $scope.desserts = response;
+                    $scope.desserts.total = response.Total;
+                    notifyInfo("record " + response.Data.length + '/' + response.Total);
+                } else {
+                    $scope.desserts = {
+                        "Total": 0,
+                        "Data": [
+                        ]
+                    };
+                    notifyWarning(response.Message);
+                }
+            }).error(function (e) {
+                $('#spinner').toggle(false);
+                console.log(e);
+                notifyError('500 server error.');
+            });
+        }
+
+        $scope.logPagination = function (page, limit) {
+            console.log('page: ', page);
+            console.log('limit: ', limit);
+
+            $scope.input.page = 1;
+            $scope.input.pageSize = page * limit;
+
+            var start_date = $('#datetimepicker6 input').val(),
+                end_date = $('#datetimepicker7 input').val();
+
+            $scope.input.StartDate = start_date;
+            $scope.input.EndDate = end_date;
+
+
+            $scope.input.TransactionStatus = $scope.input.TransactionState.selectedOption.StatusId;
+
+            $http.post('@Url.Action("SearchTransaction", "Payment")', $scope.input)
+            .success(function (result) {
+                $scope.desserts = result;
+                $scope.desserts.total = response.Total;
+
+            });
+        }
+    }]);
+
+    $(document).ready(function () {
+        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+            return arg != value;
+        }, "Please select some value.");
+
+        $("#ValidateForm").validate({
+            rules: {
+                gameId: { required: true, valueNotEquals: '? undefined:undefined ?' },
+            },
+        });
+    });
+</script>
 }

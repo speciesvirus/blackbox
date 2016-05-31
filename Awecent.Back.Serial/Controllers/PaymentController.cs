@@ -13,6 +13,12 @@ namespace Awecent.Back.Serial.Controllers
 {
     public class PaymentController : Controller
     {
+
+        protected static string awecentPayment = System.Web.Configuration.WebConfigurationManager.AppSettings["AwecentPayment"].ToString();
+
+        protected static string ItemGameUrl = "https://" + awecentPayment + "/PaymentService/ItemRefund";
+
+
         private PaymentContext paymentContext = new PaymentContext();
 
         // GET: /Payment/
@@ -22,7 +28,7 @@ namespace Awecent.Back.Serial.Controllers
         }
 
         [Authorize]
-        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter")]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter", "PaymentReporter")]
         public ActionResult PaymentTransaction()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -36,6 +42,9 @@ namespace Awecent.Back.Serial.Controllers
                    .Select(c => c.Value).SingleOrDefault();
             List<Game> ServerList = JsonConvert.DeserializeObject<List<Game>>(server);
             ViewBag.Server = ServerList;
+
+            ViewBag.Role = identity.Claims.Where(c => c.Type == ClaimTypes.Role)
+                   .Select(c => c.Value).SingleOrDefault();
 
             return View();
         }
@@ -58,7 +67,7 @@ namespace Awecent.Back.Serial.Controllers
             return View();
         }
         [Authorize]
-        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter")]
+        [ClaimsAuthorize(ClaimTypes.Role, "Administrator", "Product", "Reporter", "PaymentReporter")]
         public ActionResult Payment()
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
@@ -141,6 +150,7 @@ namespace Awecent.Back.Serial.Controllers
         [HttpPost]
         public JsonResult GetProductRefund(ReportRefund model)
         {
+            if (model.gameId == null) return Json(null);
             string[] element = model.gameId.Split('-');
             model.gameId = element[0];
             model.serverId = element[1] == "0" ? "1" : element[1];
@@ -157,7 +167,7 @@ namespace Awecent.Back.Serial.Controllers
             string requestJson = Newtonsoft.Json.JsonConvert.SerializeObject(model);
             MyHttpRequest http = new MyHttpRequest();
             //MyHttpResponse response = http.Send("https://paymentapitest.awecent.com:9001/PaymentService/ItemRefund", "POST", requestJson);
-            MyHttpResponse response = http.Send("http://localhost:30048/PaymentService/ItemRefund", "POST", requestJson);
+            MyHttpResponse response = http.Send(ItemGameUrl, "POST", requestJson);
             JObject json = JObject.Parse(response.response);
 
             //int JsonSuccess = Convert.ToInt16(json["Code"].ToString());

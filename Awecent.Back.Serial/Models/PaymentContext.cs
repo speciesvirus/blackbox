@@ -83,7 +83,7 @@ namespace Awecent.Back.Serial.Models
             {
                 try
                 {
-                    MySqlCommand cmd = new MySqlCommand("awe_storePaymentGetListDealer", con);
+                    MySqlCommand cmd = new MySqlCommand("awe_storePaymentGetListDealerBackEnd", con);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(new MySqlParameter("pi_providerId", ProviderId));
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);

@@ -247,27 +247,33 @@
                         Gashapon Report
                     </div>
                 </a>
-                
-                <a href="@Url.Action("Payment", "Payment")">
-                    <div class='link'>
-                        Payment Report
-                    </div>
-                </a>
-                
-                <a href="@Url.Action("PaymentTransaction", "Payment")">
-                    <div class='link'>
-                        Payment Transection Report
-                    </div>
-                </a>
+
 
             }
+            
+            @if (User.IsInRole("PaymentReporter") || User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
+            {
+            <a href="@Url.Action("Payment", "Payment")">
+                <div class='link'>
+                    Payment Summary Report
+                </div>
+            </a>
+
+            <a href="@Url.Action("PaymentTransaction", "Payment")">
+                <div class='link'>
+                    Payment Transection Report
+                </div>
+            </a>
+
+            }
+
 
 
             @if (User.IsInRole("Reporter") || User.IsInRole("Administrator") || User.IsInRole("Product"))
             {
 
-                @*<div class='title'>Payment Refund</div>
-                <a href="@Url.Action("PaymentRefund", "Payment")">
+                <div class='title'>Payment Refund</div>
+                @*<a href="@Url.Action("PaymentRefund", "Payment")">
                     <div class='link'>
                         Payment Refund 
                     </div>
