@@ -127,10 +127,18 @@
                                 <td md-cell>{{dessert.TransactionDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy' : +0700}}</td>
                             </tr>
                         </tbody>
+                        <tfoot md-foot>
+                            <tr md-row>
+                                <td md-cell colspan="6"></td>
+                                <td md-cell>Total : </td>
+                                <td md-cell><strong>{{desserts.Total}}</strong></td>            
+                            </tr>
+                        </tfoot>
                     </table>
                 </md-table-container>
 
                 <md-table-pagination md-limit="query.limit" md-options="[5, 10, 20, 50, 100]" md-page="query.page" md-total="{{desserts.Total}}" md-page-select="options.pageSelector" md-boundary-links="options.boundaryLinks" md-on-paginate="logPagination"></md-table-pagination>
+
 
             </div>
         </div>
@@ -241,6 +249,7 @@
                 $('#spinner').toggle(true);
                 $http.post('@Url.Action("SearchPayment", "Payment")', $scope.input).success(function (response) {
                     $('#spinner').toggle(false);
+                    console.log(response);
                     if (response.Result) {
                         $scope.desserts = response;
                         $scope.desserts.total = response.Total;

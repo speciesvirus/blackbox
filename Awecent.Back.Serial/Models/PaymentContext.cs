@@ -293,7 +293,8 @@ namespace Awecent.Back.Serial.Models
                         CurrencyUnit = x.Field<string>("currencyUnit"),
                         PaymentCode = x.Field<string>("paymentCode"),
                         CustomerIp = x.Field<string>("customerIp"),
-                        CreateTransactionDate = x.Field<DateTime?>("createTransactionDate").Value,
+                        //CreateTransactionDate = x.Field<DateTime?>("createTransactionDate").Value,
+                        CreateTransactionDate = x.Field<string>("createTransactionDate"),
                         Other = x.Field<string>("other"),
                         RcvTransactionId = x.Field<string>("rcvTransactionId"),
                         RcvReferenceId = x.Field<string>("rcvReferenceId"),
@@ -301,7 +302,8 @@ namespace Awecent.Back.Serial.Models
                         RcvPaymentCode = x.Field<string>("rcvPaymentCode"),
                         RcvPrice = x.Field<string>("rcvPrice"),
                         RcvCurrencyUnit = x.Field<string>("rcvCurrencyUnit"),
-                        RcvTransactionDate = x.Field<DateTime?>("rcvTransactionDate"),
+                        //RcvTransactionDate = x.Field<DateTime?>("rcvTransactionDate"),
+                        RcvTransactionDate = x.Field<string>("rcvTransactionDate"),
                         RcvRespCode = x.Field<string>("rcvRespCode"),
                         RcvRespMsg = x.Field<string>("rcvRespMsg"),
                         ExceptionCode = x.Field<string>("exceptionCode"),
@@ -358,7 +360,8 @@ namespace Awecent.Back.Serial.Models
                         DealerName = x.Field<string>("dealerName"),
                         TotalPrice = x.Field<double>("totalPrice"),
                         CurrencyUnit = x.Field<string>("rcvCurrencyUnit"),
-                        TransactionDate = x.Field<DateTime?>("rcvTransactionDate").Value,
+                        //TransactionDate = x.Field<DateTime?>("rcvTransactionDate").Value,
+                        TransactionDate = x.Field<string>("rcvTransactionDate"),
                     }).ToList();
                     paymentTransactionList.Data = q;
                     return paymentTransactionList;

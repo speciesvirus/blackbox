@@ -369,7 +369,8 @@ namespace Awecent.Back.Serial.Models
         public string CustomerIp { get; set; }
         public string RedirectUrl { get; set; }
         public string Timestamp { get; set; }
-        public DateTime? CreateTransactionDate { get; set; }
+        //public DateTime? CreateTransactionDate { get; set; }
+        public string CreateTransactionDate { get; set; }
         public string Other { get; set; }
         public string HashValue { get; set; }
         public string RcvTransactionId { get; set; }
@@ -381,7 +382,8 @@ namespace Awecent.Back.Serial.Models
         public string RcvPrice { get; set; }
         public string RcvCurrencyUnit { get; set; }
         public string RcvTimestamp { get; set; }
-        public DateTime? RcvTransactionDate { get; set; }
+        //public DateTime? RcvTransactionDate { get; set; }
+        public string RcvTransactionDate { get; set; }
         public string RcvRespCode { get; set; }
         public string RcvRespMsg { get; set; }
         public string RcvHashValue { get; set; }
@@ -397,7 +399,8 @@ namespace Awecent.Back.Serial.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public double TotalPrice { get; set; }
-        public DateTime? TransactionDate { get; set; }
+        //public DateTime? TransactionDate { get; set; }
+        public string TransactionDate { get; set; }
 
         //page
         public int Page { get; set; }

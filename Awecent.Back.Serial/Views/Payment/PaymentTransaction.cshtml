@@ -149,14 +149,16 @@
                                 <td md-cell>{{dessert.ServerName}}</td>
                                 <td md-cell>{{dessert.UserId}}</td>
                                 <td md-cell>{{dessert.CustomerIp}}</td>
-                                <td md-cell>{{dessert.CreateTransactionDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>
+                                @*<td md-cell>{{dessert.CreateTransactionDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>*@
+                                <td md-cell>{{dessert.CreateTransactionDate}}</td>
                                 <td md-cell>{{dessert.RcvTransactionId}}</td>
                                 <td md-cell>{{dessert.RcvReferenceId}}</td>
                                 <td md-cell>{{dessert.RcvProviderName}}</td>
                                 <td md-cell>{{dessert.RcvPaymentCode}}</td>
                                 <td md-cell>{{dessert.RcvPrice}}</td>
                                 <td md-cell>{{dessert.RcvCurrencyUnit}}</td>
-                                <td md-cell>{{dessert.RcvTransactionDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>
+                                @*<td md-cell>{{dessert.RcvTransactionDate.replace('/Date(','').replace(')/','') | date:'dd-MM-yyyy HH:mm:ss' : +0700}}</td>*@
+                                <td md-cell>{{dessert.RcvTransactionDate}}</td>
                                 <td md-cell>{{dessert.RcvRespCode}}</td>
                                 <td md-cell>{{dessert.RcvRespMsg}}</td>
                                 <td md-cell>{{dessert.ExceptionCode}}</td>
